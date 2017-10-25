@@ -1,0 +1,28 @@
+{
+    "elements":
+            [ {
+                    "name": "Line",
+                    "type": "Select",
+                    "caption": "Videoline:",
+                    "options": [
+                        {
+                            "label": "1",
+                            "value": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "Rename",
+                    "type": "CheckBox",
+                    "caption": "Rename instance"
+                }
+            ],
+    "actions":
+            [
+                {
+                    "type": "Button",
+                    "label": "Read Device",
+                    "onClick": "BVIP_RequestState($id);"
+                }
+            ]
+}

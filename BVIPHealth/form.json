@@ -1,0 +1,17 @@
+{
+    "elements":
+            [{
+                    "name": "Interval",
+                    "type": "IntervalBox",
+                    "caption": "seconds"
+                }
+            ],
+    "actions":
+            [
+                {
+                    "type": "Button",
+                    "label": "Read Device",
+                    "onClick": "BVIP_Scan($id);"
+                }
+            ]
+}

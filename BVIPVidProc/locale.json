@@ -1,0 +1,19 @@
+{
+    "translations": {
+        "de": {
+            "Videoline:": "Videokanal:",
+            "Rename instance": "Instanz umbenenen",
+            "Read Device": "Gerät auslesen",
+            "MOTION": "Bewegung",
+            "GLOBAL_CHANGE": "Globale Änderung",
+            "SIGNAL_TOO_BRIGHT": "Bild zu hell",
+            "SIGNAL_TOO_DARK": "Bild zu dunkel",
+            "SIGNAL_TOO_NOISY": "Bild verrauscht",
+            "SIGNAL_TOO_BLURRY": "Bild verschwommen",
+            "SIGNAL_LOSS": "Signalverlust",
+            "REFERENCE_IMAGE_FAILED": "Referenzbildvergleich fehlgeschlagen",
+            "INVALID_CONFIGURATION": "Konfiguration ungültig",
+            "Cameraline not valid.": "Videokanal ungültig."
+        }
+    }
+}

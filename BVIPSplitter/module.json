@@ -1,0 +1,11 @@
+{
+    "id": "{58E3A4FB-61F2-4C30-8563-859722F6522D}",
+    "name": "BVIP Splitter",
+    "type": 2,
+    "vendor": "BOSCH",
+    "aliases": [],
+    "parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+    "childRequirements": ["{B974BF3E-45B8-4648-BC7F-952AC79929B7}"],
+    "implemented": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}", "{0E1D027B-E420-4F8E-91E7-59FFA485F8FD}"],
+    "prefix": "BVIP"
+}

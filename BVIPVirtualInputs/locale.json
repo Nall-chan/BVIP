@@ -1,0 +1,12 @@
+{
+    "translations": {
+        "de": {
+            "Read Device": "Gerät auslesen",
+            "IDENT invalid.": "IDENT ungültig.",
+            "Value must be %s.": "Value muß vom Typ %s sein.",
+            "Error write VirtualAlarmState.": "Fehler beim schalten des VirtualAlarm.",
+            "VirtualAlarm-String max size is 32 char.": "VirtualAlarm-String max. Größe sind 32 Zeichen.",
+            "Device-Firmware must be 5.0 or higher.": "Geräte-Firmware muss 5.0 oder höher sein."
+        }
+    }
+}

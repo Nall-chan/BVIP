@@ -1,0 +1,11 @@
+{
+    "translations": {
+        "de": {
+            "Rename variables:": "Variablen umbenennen:",
+            "Read Device": "Gerät auslesen",
+            "IDENT invalid.": "IDENT ungültig.",
+            "%s must be bool.": "%s muß vom Typ Bool sein.",
+            "Error write RelayState.": "Fehler beim schalten des Relay"
+        }
+    }
+}

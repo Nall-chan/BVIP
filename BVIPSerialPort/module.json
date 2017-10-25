@@ -1,0 +1,11 @@
+{
+    "id": "{CBEA6475-2EE1-4EC7-85F0-0B042FED87BB}",
+    "name": "BVIP SerialPort",
+    "type": 2,
+    "vendor": "BOSCH",
+    "aliases": [],
+    "parentRequirements": ["{0E1D027B-E420-4F8E-91E7-59FFA485F8FD}"],
+    "childRequirements": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}"],
+    "implemented": ["{B974BF3E-45B8-4648-BC7F-952AC79929B7}","{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+    "prefix": "BVIP"
+}

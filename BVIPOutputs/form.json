@@ -1,0 +1,18 @@
+{
+    "elements":
+            [
+                {
+                    "name": "Rename",
+                    "type": "CheckBox",
+                    "caption": "Rename variables:"
+                }
+            ],
+    "actions":
+            [
+                {
+                    "type": "Button",
+                    "label": "Read Device",
+                    "onClick": "BVIP_Scan($id);"
+                }
+            ]
+}

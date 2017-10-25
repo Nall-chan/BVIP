@@ -1,0 +1,8 @@
+{
+    "translations": {
+        "de": {
+            "Port not valid.": "Port ungültig.",
+            "Device has no serial port!": "Gerät besitzt keinen SerialPort!"
+        }
+    }
+}

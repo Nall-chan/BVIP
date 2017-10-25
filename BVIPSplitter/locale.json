@@ -1,0 +1,14 @@
+{
+    "translations": {
+        "de": {
+            "Authority": "Berechtigung",
+            "Password": "Passwort",
+            "Interface is open": "Verbindung hergestellt",
+            "Interface is closed": "Verbindung geschlossen",
+            "Interface is an error state. Please check message log for more information.": "Verbindung fehlerhaft. Bitte Meldungslog prüfen für mehr Informationen.",
+            "No connect. Please check adresse.": "Keine Verbindung. Bitte Adresse prüfen.",
+            "Login invalid. Please check password.": "Login Fehler. Bitte Passwort prüfen.",
+            "Could not login.": "Login fehlerhaft."
+        }
+    }
+}

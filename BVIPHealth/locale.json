@@ -1,0 +1,9 @@
+{
+    "translations": {
+        "de": {
+            "seconds": "sekunden",
+            "Rename instance": "Instanz umbenenen",
+            "Read Device": "Gerät auslesen"
+        }
+    }
+}

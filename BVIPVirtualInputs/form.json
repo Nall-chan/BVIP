@@ -1,0 +1,10 @@
+{
+    "actions":
+            [
+                {
+                    "type": "Button",
+                    "label": "Read Device",
+                    "onClick": "BVIP_Scan($id);"
+                }
+            ]
+}

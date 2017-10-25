@@ -1,0 +1,11 @@
+{
+    "id": "{1DC90109-FBDD-4F5B-8E29-5E95B8029F20}",
+    "name": "BVIP Inputs",
+    "type": 3,
+    "vendor": "BOSCH",
+    "aliases": [],
+    "parentRequirements": ["{0E1D027B-E420-4F8E-91E7-59FFA485F8FD}"],
+    "childRequirements": [],
+    "implemented": ["{B974BF3E-45B8-4648-BC7F-952AC79929B7}"],
+    "prefix": "BVIP"
+}

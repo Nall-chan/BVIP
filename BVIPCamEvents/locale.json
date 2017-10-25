@@ -1,0 +1,12 @@
+{
+    "translations": {
+        "de": {
+            "Videoline:": "Videokanal:",
+            "Rename instance": "Instanz umbenenen",
+            "Read Device": "Gerät auslesen",
+            "MOTION_SUMMARY": "Summe Bewegung",
+            "VIDEOLOSS": "Signalverlust",
+            "Cameraline not valid.": "Videokanal ungültig."
+        }
+    }
+}
