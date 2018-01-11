@@ -1,5 +1,5 @@
 [![Version](https://img.shields.io/badge/Symcon-PHPModul-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-[![Version](https://img.shields.io/badge/Modul%20Version-2.00-blue.svg)]()
+[![Version](https://img.shields.io/badge/Modul%20Version-2.01-blue.svg)]()
 [![Version](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
 [![Version](https://img.shields.io/badge/Symcon%20Version-4.3%20%3E-green.svg)](https://www.symcon.de/forum/threads/30857-IP-Symcon-4-3-%28Stable%29-Changelog)
 
@@ -17,6 +17,7 @@ Ermöglich die Einbindung von RCP+ Geräten in IP-Symcon.
 5. [Anhang](#5-anhang)  
     1. [GUID der Module](#1-guid-der-module)
     2. [Changlog](#2-changlog)
+    3. [Spenden](#3-spenden)
 6. [Lizenz](#6-lizenz)
 
 ## 1. Funktionsumfang
@@ -67,11 +68,20 @@ Es wird empfohlen die Einrichtung mit dem BVIP Konfigurator zu starten (BVIPConf
 
 ### 2. Changlog
 
+Version 2.01:  
+ - Fixes für IPS 5.0
+
 Version 2.0:  
  - Komplett überarbeitete Version für IPS 4.3 und höher  
 
 Version 1.0:  
  - Erstes offizielles Release  für IPS 3.4
+
+### 3. Spenden  
+  
+  Die Library ist für die nicht kommzerielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:  
+
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G2SLW2MEMQZH2" target="_blank"><img src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_LG.gif" border="0" /></a>
 
 ## 6. Lizenz
 

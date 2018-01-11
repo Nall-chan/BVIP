@@ -90,7 +90,7 @@ class BVIPSplitter extends IPSModule
      */
     public function Destroy()
     {
-        
+        parent::Destroy();
     }
 
     /**
@@ -101,8 +101,8 @@ class BVIPSplitter extends IPSModule
     public function ApplyChanges()
     {
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
-        $this->RegisterMessage($this->InstanceID, DM_CONNECT);
-        $this->RegisterMessage($this->InstanceID, DM_DISCONNECT);
+        $this->RegisterMessage($this->InstanceID, FM_CONNECT);
+        $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
         $this->ReplyRCPData = array();
         $this->Buffer = "";
         $this->Host = "";
