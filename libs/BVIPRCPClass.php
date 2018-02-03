@@ -1,9 +1,8 @@
-<?
+<?php
 
 class RCPTag
 {
-
-//----------------------------------------------------------------------------//
+    //----------------------------------------------------------------------------//
 //------------------------------RCP-TAGs--------------------------------------//
 //----------------------------------------------------------------------------//
 //-------------------------------CONNECTION-----------------------------------//
@@ -13,7 +12,7 @@ class RCPTag
     //0x00,0x00,NUM_MESSAGE(2B)
     // TAG1(2B)....TAG n (2B)
     //
-	// TAG= 0xffff = Alle Tags
+    // TAG= 0xffff = Alle Tags
     const TAG_CLIENT_UNREGISTER = 0xff01; // only write (P_OCTET)                                   **
     const TAG_CLIENT_TIMEOUT_WARNING = 0xff03; //only incoming 1min befor Server kick Client             **
     const TAG_REG_MD5_RANDOM = 0xff05;
@@ -33,7 +32,7 @@ class RCPTag
       CRYPT_KEYVIDEO_DEC
       CRYPT_KEY_GENERATE_ALL
       } */
-//-----------------------------IDENTIFICATION---------------------------------//
+    //-----------------------------IDENTIFICATION---------------------------------//
     const TAG_UNIT_NAME = 0x0024; // R/W (P_UNICODE)                                      **
     const TAG_UNIT_ID = 0x0025; // R/W (P_UNICODE)
     const TAG_CAMNAME = 0x0019; // R/W (P_UNICODE) NUM = VideoLine                      **
@@ -61,12 +60,12 @@ class RCPTag
       DAY_LIGHT_SAVE_TIME
       FORCE_TIME_SET
       } */
-//-------------------------------CONNECTION-----------------------------------//
+    //-------------------------------CONNECTION-----------------------------------//
     /* {PASSWORD_SETTINGS
       REMOTE_PASSWORD
       MASTERPWD_CHALLENGE
       } */
-//--------------------------------STATUS--------------------------------------//
+    //--------------------------------STATUS--------------------------------------//
 
     const TAG_NBR_OF_TEMP_SENS = 0x09c4; // only read                                            **
     const TAG_TEMP_SENS = 0x09c5; // only read [or pushed] (t_dword) num:temp sens        **
@@ -79,7 +78,7 @@ class RCPTag
     /* {	BOOT_STATE
       UPLOAD_PROGRESS	HEATER_MODE
       } */
-//--------------------------------------VIDPROC-------------------------------//
+    //--------------------------------------VIDPROC-------------------------------//
     const TAG_VIPROC_ALARM = 0x0807; // only read [or pushed] (P_OCTET) num:video line       **
     //PAYLOAD:
     //ALAM FLAGs:
@@ -142,9 +141,9 @@ class RCPTag
       SENSITIVITY_OBJECT_BASED_VCA
       REFERENCE_IMAGE_CHECK_INFO_MESSAGE
       IVA_COUNTER_VALUES} */
-//----------------------------------DEBUG-------------------------------------//
-//SYSUPTIME
-//-----------------------------------AUX--------------------------------------//
+    //----------------------------------DEBUG-------------------------------------//
+    //SYSUPTIME
+    //-----------------------------------AUX--------------------------------------//
 
     /* 	{
       OEM_DEVICE_NAME
@@ -180,7 +179,7 @@ class RCPTag
       INSTALLER_SEQUENCE ??
       UPLOAD_HISTORY
       } */
-//-------------------------------VIDEO--INPUT---------------------------------//
+    //-------------------------------VIDEO--INPUT---------------------------------//
     /* {
       LOW_LIGHT_MIN_FPS
       VID_IN_CONTRAST
@@ -203,7 +202,7 @@ class RCPTag
       ILLUMINATION_MODE
       MAINS_FREQUENCY
       } */
-//-------------------------------VIDEO--OUTPUT---------------------------------//
+    //-------------------------------VIDEO--OUTPUT---------------------------------//
     /* {
       OUTPUT
       VIDEO_OUT_STANDARD
@@ -221,15 +220,14 @@ class RCPTag
       DECODED_FRAMES
       NBR_OF_VIDEO_OUT} */
 
-
-//-------------------------------------OSD------------------------------------//
+    //-------------------------------------OSD------------------------------------//
     /* {
       ENABLE_OSD
       OSD_ACCESS
       OSD_POS
       } */
 
-//-------------------------------------AUDIO----------------------------------//
+    //-------------------------------------AUDIO----------------------------------//
     /* {
       AUDIO_INPUT_LEVEL
       AUDIO_OUTPUT_LEVEL
@@ -249,14 +247,13 @@ class RCPTag
       NBR_OF_AUDIO_IN
       } */
 
-
-//--------------------------------ALARM-SOURCE
+    //--------------------------------ALARM-SOURCE
 
     const TAG_ALARM_INPUT_LH_VAL = 0x008d; // R/W Input active low/high num:Alarm Input
     const TAG_INPUT_PIN_NAME = 0x0108; // R/W Input Name (P_UNICODE) num:Alarm Input             **
     /* {
       VCD_OPERATOR_PARAMS
-     * 
+     *
      */
     const TAG_VIPROC_RE_TASK_NAMES = 0x0b2b; // R/W VCA Task Name & Typ
 
@@ -275,7 +272,7 @@ class RCPTag
       ALARM_CONNECTION_USE_SSL
       CONNECT_URL
       } */
-//------------------------------DIGITAL-IO
+    //------------------------------DIGITAL-IO
     const TAG_VIDEO_ALARM_STATE = 0x01c2; // only read (FLAG) 0=off; 1=Alarm num: Video Line
     const TAG_INPUT_PIN_STATE = 0x01c0; // only Read (FLAG) 0=off, 1=Alarm num:Alarm Input  **
     const TAG_MOTION_ALARM_STATE = 0x01c3; // only Read (FLAG) 0=off, 1=Alarm (alles außer Video loss) num:Video Line
@@ -314,7 +311,7 @@ class RCPTag
       KBD_KEY_LABEL
       KBD_SET_ALARM
       } */
-//------------------------------NETWORK
+    //------------------------------NETWORK
     /* {
       MAC_ADDRESS
       IP
@@ -384,13 +381,13 @@ class RCPTag
       DIFF_SERV_POST_ALARM_TIME
       IPV4_FILTER
       } */
-//DDNS
+    //DDNS
     /* {
       DYNDNS_SERVER
       DYNDNS_TIMEOUT
       DYNDNS_SERVER_REPLY
       } */
-//DYNDNS
+    //DYNDNS
     /* {
       DYNDNS_HOST_NAME
       DYNDNS_USER_NAME
@@ -400,13 +397,13 @@ class RCPTag
       DYNDNS_LAST_REGISTER
       DYNDNS_FORCE_REGISTER_NOW
       } */
-//DISCOVERY
+    //DISCOVERY
     /* {
       AUTODETECT_REPLY_GROUP
       UNSOLICITED_AUTODETECT_REPLY_TIME
       DISCOVER_PORT
       } */
-//HTTP
+    //HTTP
     /* {
       LOCAL_HTTP_PORT
       LOCAL_HTTPS_PORT
@@ -418,7 +415,7 @@ class RCPTag
       TCP_FWD
       ADD_DEVICE
       } */
-//DHCP
+    //DHCP
     /* {
       DHCP_VAL
       DHCP_ON
@@ -426,7 +423,7 @@ class RCPTag
       DHCP_STABLE
       DHCP_COMPLIANCY
       } */
-//ISCSI
+    //ISCSI
     /* {
       ISCSI_IP
       ISCSI_PORT
@@ -448,7 +445,7 @@ class RCPTag
       ISCSI_LOWERDATARATE
       ISCSI_READDATARATE
       } */
-//---------------------------------RECORD
+    //---------------------------------RECORD
     /* {
       HD_MAX_NUMBER_OF_PARTITIONS                         //
       HD_MAX_SLICES_PER_TRACK                             //
@@ -500,8 +497,8 @@ class RCPTag
       MANAGING_VRM
       REC_STORAGE_REQ_CFG
       } */
-//Replay
-//HD_REPLAY_START
+    //Replay
+    //HD_REPLAY_START
     const TAG_HD_REPLAY_STOP = 0x0903;
 
     /* {
@@ -522,10 +519,9 @@ class RCPTag
       BACKUP_STATUS
       } */
 
-    static function ToString($RCPTag)
+    public static function ToString($RCPTag)
     {
-        switch ($RCPTag)
-        {
+        switch ($RCPTag) {
             case self::TAG_CLIENT_REGISTRATION:
                 return 'CLIENT_REGISTRATION';
             case self::TAG_CLIENT_UNREGISTER:
@@ -646,12 +642,10 @@ class RCPTag
                 return '';
         }
     }
-
 }
 
 class RCPDataType
 {
-
     const RCP_F_FLAG = 0x00; //payload: (1 Byte)
     const RCP_T_OCTET = 0x01; //payload: (1 Byte)
     const RCP_T_WORD = 0x02; //payload: (2 Byte)
@@ -661,10 +655,9 @@ class RCPDataType
     const RCP_P_STRING = 0x10; //payload: (N Byte)
     const RCP_P_UNICODE = 0x14; //payload: (N Byte)
 
-    static function ToString($DataType)
+    public static function ToString($DataType)
     {
-        switch ($DataType)
-        {
+        switch ($DataType) {
 
             case self::RCP_F_FLAG:
                 return 'F_FLAG';
@@ -686,19 +679,16 @@ class RCPDataType
                 return '';
         }
     }
-
 }
 
 class RCPReadWrite
 {
-
     const RCP_DO_READ = 0x30;
     const RCP_DO_WRITE = 0x31;
 
-    static function ToString($ReadWrite)
+    public static function ToString($ReadWrite)
     {
-        switch ($ReadWrite)
-        {
+        switch ($ReadWrite) {
             case self::RCP_DO_READ:
                 return 'READ';
             case self::RCP_DO_WRITE:
@@ -707,21 +697,18 @@ class RCPReadWrite
                 return '';
         }
     }
-
 }
 
 class RCPAction
 {
-
     const RCP_Request = 0x00;
     const RCP_Reply = 0x01;
     const RCP_Message = 0x02;
     const RCP_Error = 0x03;
 
-    static function ToString($Action)
+    public static function ToString($Action)
     {
-        switch ($Action)
-        {
+        switch ($Action) {
             case self::RCP_Request:
                 return'Request';
             case self::RCP_Reply:
@@ -734,12 +721,10 @@ class RCPAction
                 return '';
         }
     }
-
 }
 
 class RCPError
 {
-
     const RCP_ERROR_NO_ERROR = 0x00;
     const RCP_ERROR_CANNOT_SEND = 0xFE;
     const RCP_ERROR_REPLY_TIMEOUT = 0xFD;
@@ -763,10 +748,9 @@ class RCPError
     const RCP_ERROR_COMMAND_SPECIFIC = 0xf0;
     const RCP_ERROR_ADDRESS_FORMAT = 0xf1;
 
-    static function ToString($Error)
+    public static function ToString($Error)
     {
-        switch ($Error)
-        {
+        switch ($Error) {
             case self::RCP_ERROR_NO_ERROR:
                 return '';
             case self::RCP_ERROR_CANNOT_SEND:
@@ -815,19 +799,17 @@ class RCPError
                 return '';
         }
     }
-
 }
 
 class RCPData
 {
-
     /**
-     * toSplitter
+     * toSplitter.
      */
     const IIPSSendBVIPData = '{0E1D027B-E420-4F8E-91E7-59FFA485F8FD}';
 
     /**
-     * toDevices
+     * toDevices.
      */
     const IIPSReceiveBVIP = '{B974BF3E-45B8-4648-BC7F-952AC79929B7}';
 
@@ -835,37 +817,31 @@ class RCPData
 
     /**
      * @var RCPTag
-     * @access public
      */
     public $Tag;
 
     /**
      * @var RCPDataType
-     * @access public
      */
     public $DataType;
 
     /**
      * @var RCPReadWrite
-     * @access public
      */
     public $RW;
 
     /**
      * @var int
-     * @access public
      */
     public $Num = 0;
 
     /**
      * @var string|bool|int
-     * @access public
      */
     public $Payload = '';
 
     /**
      * @var RCP
-     * @access public
      */
     public $Error = RCPError::RCP_ERROR_NO_ERROR;
 
@@ -888,38 +864,40 @@ class RCPData
         $this->RW = $RCPFrame->RW;
         $this->Num = $RCPFrame->Num;
         //$this->Payload = $RCPFrame->Payload;
-        if ($RCPFrame->Action == RCPAction::RCP_Error)
+        if ($RCPFrame->Action == RCPAction::RCP_Error) {
             $this->Error = ord($RCPFrame->Payload[0]);
-        else
-        {
+        } else {
             $this->Error = RCPError::RCP_ERROR_NO_ERROR;
-            switch ($this->DataType)
-            {
+            switch ($this->DataType) {
                 case RCPDataType::RCP_F_FLAG:
-                    if (strlen($RCPFrame->Payload) != 1)
+                    if (strlen($RCPFrame->Payload) != 1) {
                         $this->Error = RCPError::RCP_ERROR_PACKET_SIZE;
-                    else
+                    } else {
                         $this->Payload = (bool) (ord($RCPFrame->Payload[0]));
+                    }
                     break;
 
                 case RCPDataType::RCP_T_OCTET:
-                    if (strlen($RCPFrame->Payload) != 1)
+                    if (strlen($RCPFrame->Payload) != 1) {
                         $this->Error = RCPError::RCP_ERROR_PACKET_SIZE;
-                    else
+                    } else {
                         $this->Payload = ord($RCPFrame->Payload[0]);
+                    }
                     break;
                 case RCPDataType::RCP_T_WORD:
-                    if (strlen($RCPFrame->Payload) != 2)
+                    if (strlen($RCPFrame->Payload) != 2) {
                         $this->Error = RCPError::RCP_ERROR_PACKET_SIZE;
-                    else
-                        $this->Payload = unpack("n", $RCPFrame->Payload)[1];
+                    } else {
+                        $this->Payload = unpack('n', $RCPFrame->Payload)[1];
+                    }
                     break;
                 case RCPDataType::RCP_T_INT:
                 case RCPDataType::RCP_T_DWORD:
-                    if (strlen($RCPFrame->Payload) != 4)
+                    if (strlen($RCPFrame->Payload) != 4) {
                         $this->Error = RCPError::RCP_ERROR_PACKET_SIZE;
-                    else
-                        $this->Payload = unpack("N", $RCPFrame->Payload)[1];
+                    } else {
+                        $this->Payload = unpack('N', $RCPFrame->Payload)[1];
+                    }
                     break;
                 case RCPDataType::RCP_P_STRING:
                     $end = strpos($RCPFrame->Payload, chr(0));
@@ -937,111 +915,97 @@ class RCPData
         }
         $this->DataID = self::IIPSReceiveBVIP;
     }
-
 }
 
 class RCPFrame
 {
-
     /**
      * @var RCPTag
-     * @access public
      */
     public $Tag;
 
     /**
      * @var RCPDataType
-     * @access public
      */
     public $DataType;
 
     /**
      * @var RCPReadWrite
-     * @access public
      */
     public $RW;
 
     /**
      * @var int
-     * @access public
      */
     public $Num = 0;
 
     /**
      * @var string
-     * @access public
      */
     public $Payload = '';
     public $Continuation = false;
 
     /**
      * @var RCPAction
-     * @access public
      */
     public $Action;
 
     /**
      * @var int
-     * @access public
      */
     public $Reserved;
 
     /**
      * @var int
-     * @access public
      */
     public $ClientID = "\x00\x00";
 
     /**
      * @var int
-     * @access public
      */
     public $SessionID = "\x00\x00\x00\x00";
 
     public function __construct($Data)
     {
-        if (is_a($Data, 'RCPData'))
-        {
+        if (is_a($Data, 'RCPData')) {
             $this->Tag = $Data->Tag;
             $this->DataType = $Data->DataType;
             $this->RW = $Data->RW;
             $this->Num = $Data->Num;
             $this->Action = RCPAction::RCP_Request;
-            switch ($Data->DataType)
-            {
+            switch ($Data->DataType) {
                 case RCPDataType::RCP_F_FLAG:
-                    if ($Data->Payload === true)
+                    if ($Data->Payload === true) {
                         $this->Payload = chr(0x01);
-                    else
+                    } else {
                         $this->Payload = chr(0x00);
+                    }
                     break;
 
                 case RCPDataType::RCP_T_OCTET:
                     $this->Payload = chr($Data->Payload);
                     break;
                 case RCPDataType::RCP_T_WORD:
-                    $this->Payload = pack("n", $Data->Payload);
+                    $this->Payload = pack('n', $Data->Payload);
                     break;
                 case RCPDataType::RCP_T_INT:
                 case RCPDataType::RCP_T_DWORD:
-                    $this->Payload = pack("N", $Data->Payload);
+                    $this->Payload = pack('N', $Data->Payload);
                     break;
                 case RCPDataType::RCP_P_STRING:
-                    $this->Payload = $Data->Payload . chr(0);
+                    $this->Payload = $Data->Payload.chr(0);
                     break;
                 case RCPDataType::RCP_P_UNICODE:
-                    $this->Payload = mb_convert_encoding($Data->Payload, 'UTF-16', 'UTF-8') . chr(0) . chr(0);
+                    $this->Payload = mb_convert_encoding($Data->Payload, 'UTF-16', 'UTF-8').chr(0).chr(0);
                     break;
 
                 case RCPDataType::RCP_P_OCTET:
                     $this->Payload = $Data->Payload;
                     break;
             }
-        }
-        elseif (is_string($Data))
-        {
+        } elseif (is_string($Data)) {
             // Datapaket zerlegen in RCPFrame
-            $this->Tag = unpack("n", substr($Data, 0, 2))[1];
+            $this->Tag = unpack('n', substr($Data, 0, 2))[1];
             $this->DataType = ord($Data[2]);
             $this->RW = ord($Data[3]);
             $this->Action = ord($Data[4]) & 0xEF;
@@ -1049,8 +1013,8 @@ class RCPFrame
             $this->Reserved = ord($Data[5]);
             $this->ClientID = substr($Data, 6, 2);
             $this->SessionID = substr($Data, 8, 4);
-            $this->Num = unpack("n", substr($Data, 12, 2))[1];
-            $len = unpack("n", substr($Data, 14, 2))[1];
+            $this->Num = unpack('n', substr($Data, 12, 2))[1];
+            $len = unpack('n', substr($Data, 14, 2))[1];
             $this->Payload = substr($Data, 16, $len); //RAW Payload
         }
     }
@@ -1060,28 +1024,29 @@ class RCPFrame
         $SendData = new stdClass();
         $SendData->DataID = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
         $SendData->Buffer = utf8_encode($this->EncodeFrame());
+
         return json_encode($SendData);
     }
 
     public function EncodeFrame()
     {
         //RCPFrame in Stream bauen.
-        $RCP_Frame = pack("n", $this->Tag);
+        $RCP_Frame = pack('n', $this->Tag);
         $RCP_Frame .= chr($this->DataType);
         $RCP_Frame .= chr($this->RW);
         $RCP_Frame .= chr($this->Action);
         $RCP_Frame .= chr($this->Reserved);
         $RCP_Frame .= $this->ClientID;
         $RCP_Frame .= $this->SessionID;
-        $RCP_Frame .= pack("n", $this->Num);
-        $RCP_Frame .= pack("n", strlen($this->Payload));
+        $RCP_Frame .= pack('n', $this->Num);
+        $RCP_Frame .= pack('n', strlen($this->Payload));
         $RCP_Frame .= $this->Payload;
 
         $TCP_Frame = chr(0x03);
         $TCP_Frame .= chr(0x00);
-        $TCP_Frame .= pack("n", 4 + strlen($RCP_Frame));
+        $TCP_Frame .= pack('n', 4 + strlen($RCP_Frame));
         $TCP_Frame .= $RCP_Frame;
+
         return $TCP_Frame;
     }
-
 }

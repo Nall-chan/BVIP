@@ -1,10 +1,9 @@
-<?
+<?php
 
-require_once(__DIR__ . "/BVIPTraits.php");  // diverse Klassen
+require_once __DIR__.'/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
-
     use VariableProfile,
         VariableHelper,
         DebugHelper,
@@ -17,30 +16,26 @@ abstract class BVIPBase extends IPSModule
         InstanceStatus::RegisterParent as IORegisterParent;
     }
 
-    static protected $RCPTags;
+    protected static $RCPTags;
 
     public function Create()
     {
         parent::Create();
-        $this->ConnectParent("{58E3A4FB-61F2-4C30-8563-859722F6522D}");
+        $this->ConnectParent('{58E3A4FB-61F2-4C30-8563-859722F6522D}');
     }
 
     public function ApplyChanges()
     {
         parent::ApplyChanges();
 
-        if (count(static::$RCPTags) > 0)
-        {
-            foreach (static::$RCPTags as $RCPTag)
-            {
-                $Lines[] = '.*"Tag":' . $RCPTag . '.*';
+        if (count(static::$RCPTags) > 0) {
+            foreach (static::$RCPTags as $RCPTag) {
+                $Lines[] = '.*"Tag":'.$RCPTag.'.*';
             }
             $Line = implode('|', $Lines);
-            $this->SetReceiveDataFilter("(" . $Line . ")");
+            $this->SetReceiveDataFilter('('.$Line.')');
             $this->SendDebug('FILTER', $Line, 0);
-        }
-        else
-        {
+        } else {
             $this->SetReceiveDataFilter('.*"Tag":"NOTING".*');
             $this->SendDebug('FILTER', 'NOTHING', 0);
         }
@@ -48,14 +43,14 @@ abstract class BVIPBase extends IPSModule
 //        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
-        if (IPS_GetKernelRunlevel() <> KR_READY)
+        if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
+        }
         $this->RegisterParent();
     }
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-
         $this->IOMessageSink($TimeStamp, $SenderID, $Message, $Data);
 
 //        switch ($Message)
@@ -69,12 +64,11 @@ abstract class BVIPBase extends IPSModule
     protected function RegisterParent()
     {
         $SplitterId = $this->IORegisterParent();
-        if ($SplitterId > 0)
-        {
+        if ($SplitterId > 0) {
             $IOId = @IPS_GetInstance($SplitterId)['ConnectionID'];
-            if ($IOId > 0)
-            {
+            if ($IOId > 0) {
                 $this->SetSummary(IPS_GetProperty($IOId, 'Host'));
+
                 return;
             }
         }
@@ -83,17 +77,15 @@ abstract class BVIPBase extends IPSModule
 
     /**
      * Wird ausgeführt wenn sich der Status vom Parent ändert.
-     * @access protected
      */
     protected function IOChangeState($State)
     {
         $SplitterId = $this->ParentID;
-        if ($SplitterId > 0)
-        {
+        if ($SplitterId > 0) {
             $IOId = @IPS_GetInstance($SplitterId)['ConnectionID'];
-            if ($IOId > 0)
-            {
+            if ($IOId > 0) {
                 $this->SetSummary(IPS_GetProperty($IOId, 'Host'));
+
                 return;
             }
         }
@@ -118,32 +110,28 @@ abstract class BVIPBase extends IPSModule
       } */
 
     /**
-     * 
      * @param RCPData $RCPData
      */
     protected function Send(RCPData $RCPData)
     {
-        try
-        {
-            if (!$this->HasActiveParent())
+        try {
+            if (!$this->HasActiveParent()) {
                 throw new Exception($this->Translate('Instance has no active parent.'), E_USER_NOTICE);
-
+            }
             $this->SendDebug('Send', '~~~', 0);
             $this->SendDebug('Send', $RCPData, 0);
             $RCPData = $this->EncodeUTF8($RCPData);
             $RCPData->DataID = RCPData::IIPSSendBVIPData;
             $anwser = $this->SendDataToParent(json_encode($RCPData));
-            if ($anwser === false)
-            {
+            if ($anwser === false) {
                 $this->SendDebug('Response', 'No valid answer', 0);
+
                 throw new Exception($this->Translate('No valid answer.'), E_USER_NOTICE);
             }
             $RCPData = unserialize($anwser);
             $this->SendDebug('RAW', $anwser, 0);
             $this->SendDebug('Response', $RCPData, 0);
-        }
-        catch (Exception $exc)
-        {
+        } catch (Exception $exc) {
             trigger_error($exc->getMessage(), E_USER_NOTICE);
             $RCPData->Error = RCPError::RCP_ERROR_SEND_ERROR;
         }
@@ -167,19 +155,21 @@ abstract class BVIPBase extends IPSModule
 
     protected function GetFirmware()
     {
-        if ($this->ParentID > 0)
-        {
+        if ($this->ParentID > 0) {
             $vid = @IPS_GetObjectIDByIdent('Firmware', $this->ParentID);
-            if ($vid > 0)
+            if ($vid > 0) {
                 return (float) substr(GetValueString($vid), 0, 5);
+            }
         }
+
         return false;
     }
 
     protected function ReadNbrOfVideoIn()
     {
-        if (!$this->HasActiveParent())
+        if (!$this->HasActiveParent()) {
             return 16;
+        }
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_NBR_OF_VIDEO_IN;
         $RCPData->DataType = RCPDataType::RCP_T_DWORD;
@@ -187,10 +177,11 @@ abstract class BVIPBase extends IPSModule
         $RCPData->Num = 0;
         $RCPReplyData = @$this->Send($RCPData);
         /* @var $RCPReplyData RCPData */
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR)
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
             return $RCPReplyData->Payload;
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR)
+        }
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
             return 16;
+        }
     }
-
 }
