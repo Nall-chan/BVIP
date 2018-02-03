@@ -1,6 +1,6 @@
-<?
+<?php
 
-require_once(__DIR__ . "/../libs/BVIPBase.php");
+require_once __DIR__.'/../libs/BVIPBase.php';
 
 /*
  * @addtogroup bvip
@@ -18,45 +18,44 @@ require_once(__DIR__ . "/../libs/BVIPBase.php");
 /**
  * BVIPViProc Klasse implementiert eine Device für VCA.
  * Erweitert BVIPBase.
- * 
- * @package       BVIP
+ *
  * @author        Michael Tröger <micha@nall-chan.net>
  * @copyright     2017 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
+ *
  * @version       1.0
+ *
  * @example <b>Ohne</b>
+ *
  * @todo VCA Alarme und Task Namen
  */
 class BVIPVidProc extends BVIPBase
 {
-
-    static protected $RCPTags = array(RCPTag::TAG_VIPROC_ALARM);
+    protected static $RCPTags = [RCPTag::TAG_VIPROC_ALARM];
 
     /**
      * Interne Funktion des SDK.
-     *
-     * @access public
      */
     public function Create()
     {
         parent::Create();
-        $this->RegisterPropertyBoolean("Rename", false);
-        $this->RegisterPropertyInteger("Line", 1);
+        $this->RegisterPropertyBoolean('Rename', false);
+        $this->RegisterPropertyInteger('Line', 1);
     }
 
     /**
      * Interne Funktion des SDK.
-     * 
-     * @access public
      */
     public function ApplyChanges()
     {
         parent::ApplyChanges();
-        if (IPS_GetKernelRunlevel() <> KR_READY)
+        if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
+        }
 
-        if ($this->HasActiveParent())
+        if ($this->HasActiveParent()) {
             $this->IOChangeState(IS_ACTIVE);
+        }
     }
 
     protected function KernelReady()
@@ -67,33 +66,30 @@ class BVIPVidProc extends BVIPBase
     protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
-        if ($State == IS_ACTIVE)
-        {
-            if ($this->ReadPropertyBoolean("Rename") === true)
+        if ($State == IS_ACTIVE) {
+            if ($this->ReadPropertyBoolean('Rename') === true) {
                 $this->RequestName();
-            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line'))
-            {
+            }
+            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line')) {
                 $this->SetStatus(IS_ACTIVE);
                 $this->RequestState();
-            }
-            else
-            {
+            } else {
                 $this->SetStatus(IS_EBASE + 2);
-            trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+                trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
             }
         }
     }
 
     public function GetConfigurationForm()
     {
-        $data = json_decode(file_get_contents(__DIR__ . "/form.json"), true);
+        $data = json_decode(file_get_contents(__DIR__.'/form.json'), true);
         $Lines = $this->ReadNbrOfVideoIn();
-        $Options = array();
-        for ($Line = 1; $Line <= $Lines; $Line++)
-        {
-            $Options[] = array('label' => (string) $Line, 'value' => $Line);
+        $Options = [];
+        for ($Line = 1; $Line <= $Lines; $Line++) {
+            $Options[] = ['label' => (string) $Line, 'value' => $Line];
         }
         $data['elements'][0]['options'] = $Options;
+
         return json_encode($data);
     }
 
@@ -106,30 +102,30 @@ class BVIPVidProc extends BVIPBase
         $RCPData->Num = $this->ReadPropertyInteger('Line');
         $RCPReplyData = $this->Send($RCPData);
         /* @var $RCPReplyData RCPData */
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR)
-        {
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
             $this->DecodeRCPEvent($RCPReplyData);
+
             return true;
+        } else {
+            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+                trigger_error('VIPROC_ALARM - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            }
         }
-        else
-        {
-            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR)
-                trigger_error('VIPROC_ALARM - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
-        }
+
         return false;
     }
 
     public function RequestVcaName()
     {
         $Line = $this->ReadPropertyInteger('Line');
-        if ($Line == 0)
-        {
+        if ($Line == 0) {
             trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+
             return false;
         }
-        if ($this->ReadNbrOfVideoIn() < $Line)
-        {
+        if ($this->ReadNbrOfVideoIn() < $Line) {
             trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+
             return false;
         }
         $RCPData = new RCPData();
@@ -139,27 +135,28 @@ class BVIPVidProc extends BVIPBase
         $RCPData->Num = $Line;
         $RCPReplyData = $this->Send($RCPData);
         /* @var $RCPReplyData RCPData */
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR)
-        {
-            // TODO 
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            // TODO
             return true;
         }
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR)
-            trigger_error('Write Name Line' . $Line . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+            trigger_error('Write Name Line'.$Line.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+        }
+
         return false;
     }
 
     public function RequestName()
     {
         $Line = $this->ReadPropertyInteger('Line');
-        if ($Line == 0)
-        {
+        if ($Line == 0) {
             trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+
             return false;
         }
-        if ($this->ReadNbrOfVideoIn() < $Line)
-        {
+        if ($this->ReadNbrOfVideoIn() < $Line) {
             trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+
             return false;
         }
         $RCPData = new RCPData();
@@ -169,29 +166,35 @@ class BVIPVidProc extends BVIPBase
         $RCPData->Num = $Line;
         $RCPReplyData = $this->Send($RCPData);
         /* @var $RCPReplyData RCPData */
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR)
-        {
-            if (IPS_GetName($this->InstanceID) <> $RCPReplyData->Payload)
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            if (IPS_GetName($this->InstanceID) != $RCPReplyData->Payload) {
                 IPS_SetName($this->InstanceID, $RCPReplyData->Payload);
+            }
+
             return true;
         }
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR)
-            trigger_error('Write Name Line' . $Line . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+            trigger_error('Write Name Line'.$Line.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+        }
+
         return false;
     }
 
     protected function GetOrCreateVariable(string $Ident)
     {
         $vid = @$this->GetIDForIdent($Ident);
-        if ($vid == false)
+        if ($vid == false) {
             $vid = $this->RegisterVariableBoolean($Ident, $this->Translate($Ident), '~Alert');
+        }
+
         return $vid;
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        if ($RCPData->Num <> $this->ReadPropertyInteger('Line'))
+        if ($RCPData->Num != $this->ReadPropertyInteger('Line')) {
             return;
+        }
 
         $this->GetOrCreateVariable('MOTION');
         $this->SetValueBoolean('MOTION', ord($RCPData->Payload[0]) & 0b10000000);
@@ -216,7 +219,6 @@ class BVIPVidProc extends BVIPBase
         $this->GetOrCreateVariable('INVALID_CONFIGURATION');
         $this->SetValueBoolean('INVALID_CONFIGURATION', ord($RCPData->Payload[1]) & 0b10000000);
     }
-
 }
 
-/** @} */
+/* @} */
