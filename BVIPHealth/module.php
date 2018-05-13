@@ -143,7 +143,9 @@ class BVIPHealth extends BVIPBase
         }
 
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('READ NBR_OF_FANS - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            if ($RCPReplyData->Error != RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
+                trigger_error('READ NBR_OF_FANS - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            }
         }
 
         return 0;
@@ -214,7 +216,7 @@ class BVIPHealth extends BVIPBase
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
                 if ($RCPReplyData->Error == RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
-                    $this->Number_Temp= $index - 1;
+                    $this->Number_Temp = $index - 1;
                     break;
                 } else {
                     trigger_error('TEMP_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
@@ -242,7 +244,7 @@ class BVIPHealth extends BVIPBase
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
                 if ($RCPReplyData->Error == RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
-                    $this->Number_Fan =  $index - 1;
+                    $this->Number_Fan = $index - 1;
                     break;
                 } else {
                     trigger_error('FAN_SPEED_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
