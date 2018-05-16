@@ -171,7 +171,7 @@ class BVIPCamImages extends BVIPBase
                 break;
         }
         $this->SetValueString('IMAGE', $htmlData);
-        if (!$this->ReadPropertyBoolean('MediaObject') or ( $this->GetFirmware() < 5)) {
+        if (!$this->ReadPropertyBoolean('MediaObject') or ($this->GetFirmware() < 5)) {
             // todo unregister Media
         } else {
             if ($this->GetFirmware() < 6) {
@@ -270,9 +270,7 @@ class BVIPCamImages extends BVIPBase
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        
     }
-
 }
 
 /* @} */

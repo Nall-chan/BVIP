@@ -16,7 +16,7 @@
 require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /**
- * BVIPConfigurator Klasse implementiert 
+ * BVIPConfigurator Klasse implementiert
  *
  * @author        Michael Tröger <micha@nall-chan.net>
  * @copyright     2018 Michael Tröger
@@ -36,7 +36,7 @@ class BVIPConfigurator extends BVIPBase
     public function Create()
     {
         parent::Create();
-        $this->ConnectParent('{58E3A4FB-61F2-4C30-8563-859722F6522D}');        
+        $this->ConnectParent('{58E3A4FB-61F2-4C30-8563-859722F6522D}');
     }
 
     /**
@@ -68,7 +68,6 @@ class BVIPConfigurator extends BVIPBase
      */
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-        
     }
 
     /**
@@ -145,14 +144,11 @@ class BVIPConfigurator extends BVIPBase
 
     public function RequestState()
     {
-        
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        
     }
-
 }
 
 /* @} */
