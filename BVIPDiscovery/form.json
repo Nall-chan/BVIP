@@ -1,0 +1,62 @@
+{
+    "elements": [{
+            "name": "User",
+            "type": "Select",
+            "caption": "Authority",
+            "options": [
+                {
+                    "label": "service",
+                    "value": "service"
+                },
+                {
+                    "label": "user",
+                    "value": "user"
+                },
+                {
+                    "label": "live",
+                    "value": "live"
+                }
+            ]
+        },
+        {
+            "name": "Password",
+            "type": "PasswordTextBox",
+            "caption": "Password"
+        }
+    ],
+    "actions": [
+        {
+            "type": "Configurator",
+            "name": "Discovery",
+            "rowCount": 15,
+            "add": false,
+            "delete": true,
+            "sort": {
+                "column": "unitIPAddress",
+                "direction": "ascending"
+            },
+            "columns": [{
+                    "caption": "Host",
+                    "name": "unitIPAddress",
+                    "width": "160px"
+                }, {
+                    "caption": "TypeName",
+                    "name": "friendlyName",
+                    "width": "250px"
+                }, {
+                    "caption": "UnitName",
+                    "name": "unitName",
+                    "width": "200px"
+                }, {
+                    "caption": "DeviceType",
+                    "name": "deviceType",
+                    "width": "200px"
+                }, {
+                    "caption": "Name",
+                    "name": "name",
+                    "width": "auto"
+                }
+            ],
+            "values": []
+        }]
+}

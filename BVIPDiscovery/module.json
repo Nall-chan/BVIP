@@ -1,0 +1,11 @@
+{
+    "id": "{7013126D-4AAB-41C2-BAE0-FD7A5C59B89C}",
+    "name": "BVIP Discovery",
+    "type": 5,
+    "vendor": "BOSCH",
+    "aliases": [],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "BVIP"
+}

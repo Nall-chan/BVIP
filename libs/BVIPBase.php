@@ -1,27 +1,27 @@
 <?php
 
-require_once __DIR__.'/BVIPTraits.php';  // diverse Klassen
+require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
+
     use VariableProfile,
         VariableHelper,
         DebugHelper,
         BufferHelper,
         InstanceStatus,
         Semaphore,
-        UTF8Coder
-    {
+        UTF8Coder {
         InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
         InstanceStatus::RegisterParent as IORegisterParent;
     }
-
     protected static $RCPTags;
 
     public function Create()
     {
         parent::Create();
-        $this->ConnectParent('{58E3A4FB-61F2-4C30-8563-859722F6522D}');
+        $this->ParentID = 0;
+        //$this->ConnectParent('{58E3A4FB-61F2-4C30-8563-859722F6522D}');
     }
 
     public function ApplyChanges()
@@ -30,10 +30,10 @@ abstract class BVIPBase extends IPSModule
 
         if (count(static::$RCPTags) > 0) {
             foreach (static::$RCPTags as $RCPTag) {
-                $Lines[] = '.*"Tag":'.$RCPTag.'.*';
+                $Lines[] = '.*"Tag":' . $RCPTag . '.*';
             }
             $Line = implode('|', $Lines);
-            $this->SetReceiveDataFilter('('.$Line.')');
+            $this->SetReceiveDataFilter('(' . $Line . ')');
             $this->SendDebug('FILTER', $Line, 0);
         } else {
             $this->SetReceiveDataFilter('.*"Tag":"NOTING".*');
@@ -108,7 +108,6 @@ abstract class BVIPBase extends IPSModule
       {
       //We dont need any Data...here
       } */
-
     /**
      * @param RCPData $RCPData
      */
@@ -152,7 +151,6 @@ abstract class BVIPBase extends IPSModule
     }
 
     abstract protected function DecodeRCPEvent(RCPData $RCPData);
-
     protected function GetFirmware()
     {
         if ($this->ParentID > 0) {
@@ -184,4 +182,5 @@ abstract class BVIPBase extends IPSModule
             return 16;
         }
     }
+
 }

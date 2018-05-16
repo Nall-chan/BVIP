@@ -1,0 +1,11 @@
+{
+    "id": "{F9C6AC71-533B-4F93-8C9C-B348FAA336D2}",
+    "name": "BVIP Configurator",
+    "type": 4,
+    "vendor": "BOSCH",
+    "aliases": [],
+    "parentRequirements": ["{0E1D027B-E420-4F8E-91E7-59FFA485F8FD}"],
+    "childRequirements": [],
+    "implemented": ["{B974BF3E-45B8-4648-BC7F-952AC79929B7}"],
+    "prefix": "BVIP"
+}

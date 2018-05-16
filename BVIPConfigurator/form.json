@@ -1,0 +1,32 @@
+{
+    "actions": [
+        {
+            "type": "Configurator",
+            "name": "Configurator",
+            "add": false,
+            "delete": true,
+            "sort": {
+                "column": "Type",
+                "direction": "ascending"
+            },
+            "columns": [{
+                    "caption": "Type",
+                    "name": "Type",
+                    "width": "160px"
+                }, {
+                    "caption": "Videoline",
+                    "name": "Videoline",
+                    "width": "100px"
+                }, {
+                    "caption": "Name",
+                    "name": "Name",
+                    "width": "200px"
+                }, {
+                    "caption": "Name",
+                    "name": "name",
+                    "width": "auto"
+                }
+            ],
+            "values": []
+        }]
+}
