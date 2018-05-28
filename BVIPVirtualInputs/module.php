@@ -224,7 +224,6 @@ class BVIPVirtualInputs extends BVIPBase
             IPS_ApplyChanges($this->InstanceID);
         }
     }
-
 }
 
 /* @} */
