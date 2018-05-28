@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../libs/BVIPBase.php';
+require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /*
  * @addtogroup bvip
@@ -71,62 +71,17 @@ class BVIPVirtualInputs extends BVIPBase
 
     public function Scan()
     {
-        if ($this->GetFirmware() > 4) {
-            $RCPData = new RCPData();
-            $RCPData->Tag = RCPTag::TAG_NBR_OF_VIRTUAL_ALARMS;
-            $RCPData->DataType = RCPDataType::RCP_T_DWORD;
-            $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-            /* @var $RCPReplyData RCPData */
-            $RCPReplyData = $this->Send($RCPData);
-            if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-                if ($this->ReadPropertyInteger('Number') != $RCPReplyData->Payload) {
-                    IPS_SetProperty($this->InstanceID, 'Number', $RCPReplyData->Payload);
-                    IPS_ApplyChanges($this->InstanceID);
-                }
-
-                return true;
-            }
-            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
-            }
-
-            return false;
-        } else {
-            $RCPData = new RCPData();
-            $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
-            $RCPData->DataType = RCPDataType::RCP_P_OCTET;
-            $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-            /* @var $RCPReplyData RCPData */
-            $RCPReplyData = $this->Send($RCPData);
-            if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-                $i = 0;
-                $pointer = 6;
-                $NbrSection = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
-                for ($Section = 1; $Section <= $NbrSection; $Section++) {
-                    $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
-                    if (ord($RCPReplyData->Payload[$pointer + 1]) == 0x04) {
-                        $NbrElement = unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
-                        for ($Element = 1; $Element <= $$NbrElement; $Element++) {
-                            if (ord($RCPReplyData->Payload[$pointer + 3 + ($Element * 4)]) == 0x03) {
-                                if (ord($RCPReplyData->Payload[$pointer + 5 + ($Element * 4)]) > $i) {
-                                    $i = ord($ReplyData->Payload[$pointer + 5 + ($Element * 4)]);
-                                }
-                            }
-                        }
-                    }
-                    $pointer = $pointer + $len;
-                }
-                IPS_SetProperty($this->InstanceID, 'Number', $i);
-                IPS_ApplyChanges($this->InstanceID);
-
-                return true;
-            }
-            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
-            }
-
+        $Nbr = $this->GetNbrOfVirtualAlarms();
+        if ($Nbr === false) {
             return false;
         }
+
+        if ($this->ReadPropertyInteger('Number') != $Nbr) {
+            IPS_SetProperty($this->InstanceID, 'Number', $Nbr);
+            IPS_ApplyChanges($this->InstanceID);
+        }
+
+        return true;
     }
 
     public function WriteBoolean(string $Ident, bool $Value)
@@ -241,7 +196,7 @@ class BVIPVirtualInputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('VIRTUAL_'.$index.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error('VIRTUAL_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
             }
         }
 
@@ -261,14 +216,15 @@ class BVIPVirtualInputs extends BVIPBase
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        $this->GetOrCreateVariable('VIRTUAL_'.$RCPData->Num);
-        $this->SetValueBoolean('VIRTUAL_'.$RCPData->Num, $RCPData->Payload);
+        $this->GetOrCreateVariable('VIRTUAL_' . $RCPData->Num);
+        $this->SetValueBoolean('VIRTUAL_' . $RCPData->Num, $RCPData->Payload);
 
         if ($this->ReadPropertyInteger('Number') < $RCPData->Num) {
             IPS_SetProperty($this->InstanceID, 'Number', $RCPData->Num);
             IPS_ApplyChanges($this->InstanceID);
         }
     }
+
 }
 
 /* @} */

@@ -97,32 +97,6 @@ class BVIPSerialPort extends BVIPBase
         }
     }
 
-    protected function GetNbrOfSerialPorts()
-    {
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
-        $RCPData->DataType = RCPDataType::RCP_P_OCTET;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        /* @var $RCPReplyData RCPData */
-        $RCPReplyData = @$this->Send($RCPData);
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            $i = 0;
-            $pointer = 6;
-            $NbrSection = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
-            for ($Section = 1; $Section <= $NbrSection; $Section++) {
-                $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
-                if (ord($RCPReplyData->Payload[$pointer + 1]) == 0x03) {
-                    return unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
-                }
-                $pointer = $pointer + $len;
-            }
-
-            return 0;
-        }
-
-        return 0;
-    }
-
     protected function ConfigAndOpenPort()
     {
         $Result = true;

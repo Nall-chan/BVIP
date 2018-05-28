@@ -163,6 +163,84 @@ abstract class BVIPBase extends IPSModule
         return false;
     }
 
+    protected function GetCapability()
+    {
+        if (!$this->HasActiveParent()) {
+            return false;
+        }
+        $RCPData = new RCPData();
+        $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
+        $RCPData->DataType = RCPDataType::RCP_P_OCTET;
+        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+        /* @var $RCPReplyData RCPData */
+        $RCPReplyData = @$this->Send($RCPData);
+        $Capas = [];
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            $i = 0;
+            $pointer = 6;
+            $NbrOfSections = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
+            $Capas = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
+            for ($Section = 1; $Section <= $NbrOfSections; $Section++) {
+                $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
+                $SectionTyp = unpack('n', substr($RCPReplyData->Payload, $pointer, 2))[1];
+                $NbrOfSectionElements = unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
+                $FullSectionData = substr($RCPReplyData->Payload, $pointer + 6, $len - 6);
+                switch ($SectionTyp) {
+                    case 0x0001: // Video - 10
+                        $ElementsData = str_split($FullSectionData, 10);
+                        $Video = [];
+                        for ($i = 1; $i <= $NbrOfSectionElements; $i++) {
+                            /*
+                              Type        2 Bytes
+                              Identifier  2 Bytes
+                              Compression 2 Bytes
+                              InputNo     2 Bytes
+                              Resolution  2 Bytes
+                             */
+                            $ElementData = str_split($ElementsData[$i - 1], 2);
+                            $Video[unpack('n', $ElementData[3])[1]][] = [
+                                'Compression' => unpack('n', $ElementData[2])[1],
+                                'Resolution'  => unpack('n', $ElementData[4])[1]
+                            ];
+                            $Typ = unpack('n', $ElementData[0])[1];
+                            switch ($Typ) {
+                                case 0x0001:
+                                    $Capas['Video']['Encoder'] = $Video;
+                                    break;
+                                case 0x0002:
+                                    $Capas['Video']['Decoder'] = $Video;
+                                    break;
+                                case 0x0003:
+                                    $Capas['Video']['Transcoder'] = $Video;
+                                    break;
+                            }
+                        }
+
+                        break;
+                    case 0x0003: // Serial - 4
+                        $Capas['SerialPorts'] = $NbrOfSectionElements;
+                        break;
+                    case 0x0004: // IO - 4
+                        $ElementsData = str_split($FullSectionData, 4);
+                        $IOs = [1 => 0, 2 => 0, 3 => 0];
+                        for ($i = 1; $i <= $NbrOfSectionElements; $i++) {
+                            /*
+                              Type        2 Bytes
+                              Identifier  2 Bytes
+                             */
+                            $ElementData = str_split($ElementsData[$i - 1], 2);
+                            $IOs[unpack('n', $ElementData[0])[1]] ++;
+                        }
+                        $Capas['IO'] = ['Input' => $IOs[1], 'Output' => $IOs[2], 'Virtual' => $IOs[3]];
+                        break;
+                }
+                $pointer = $pointer + $len;
+            }
+
+            return $Capas;
+        }
+    }
+
     protected function ReadNbrOfVideoIn()
     {
         if (!$this->HasActiveParent()) {
@@ -180,6 +258,83 @@ abstract class BVIPBase extends IPSModule
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
             return 16;
+        }
+    }
+
+    protected function GetNbrOfSerialPorts()
+    {
+        $RCPData = new RCPData();
+        $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
+        $RCPData->DataType = RCPDataType::RCP_P_OCTET;
+        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+        /* @var $RCPReplyData RCPData */
+        $RCPReplyData = @$this->Send($RCPData);
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            $i = 0;
+            $pointer = 6;
+            $NbrSection = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
+            for ($Section = 1; $Section <= $NbrSection; $Section++) {
+                $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
+                if (ord($RCPReplyData->Payload[$pointer + 1]) == 0x03) {
+                    return unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
+                }
+                $pointer = $pointer + $len;
+            }
+
+            return 0;
+        }
+
+        return 0;
+    }
+
+    protected function GetNbrOfVirtualAlarms()
+    {
+        if ($this->GetFirmware() > 4) {
+            $RCPData = new RCPData();
+            $RCPData->Tag = RCPTag::TAG_NBR_OF_VIRTUAL_ALARMS;
+            $RCPData->DataType = RCPDataType::RCP_T_DWORD;
+            $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+            /* @var $RCPReplyData RCPData */
+            $RCPReplyData = $this->Send($RCPData);
+            if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+                return $RCPReplyData->Payload;
+            }
+            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+                trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            }
+            return false;
+        } else {
+            $RCPData = new RCPData();
+            $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
+            $RCPData->DataType = RCPDataType::RCP_P_OCTET;
+            $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+            /* @var $RCPReplyData RCPData */
+            $RCPReplyData = $this->Send($RCPData);
+            if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+                $i = 0;
+                $pointer = 6;
+                $NbrSection = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
+                for ($Section = 1; $Section <= $NbrSection; $Section++) {
+                    $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
+                    if (ord($RCPReplyData->Payload[$pointer + 1]) == 0x04) {
+                        $NbrElement = unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
+                        for ($Element = 1; $Element <= $$NbrElement; $Element++) {
+                            if (ord($RCPReplyData->Payload[$pointer + 3 + ($Element * 4)]) == 0x03) {
+                                if (ord($RCPReplyData->Payload[$pointer + 5 + ($Element * 4)]) > $i) {
+                                    $i = ord($ReplyData->Payload[$pointer + 5 + ($Element * 4)]);
+                                }
+                            }
+                        }
+                    }
+                    $pointer = $pointer + $len;
+                }
+                return $i;
+            }
+            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+                trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            }
+
+            return false;
         }
     }
 

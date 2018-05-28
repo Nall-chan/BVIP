@@ -36,7 +36,7 @@ class BVIPConfigurator extends BVIPBase
     public function Create()
     {
         parent::Create();
-        $this->ConnectParent('{58E3A4FB-61F2-4C30-8563-859722F6522D}');        
+        $this->RequireParent('{58E3A4FB-61F2-4C30-8563-859722F6522D}');
     }
 
     /**
@@ -71,12 +71,30 @@ class BVIPConfigurator extends BVIPBase
         
     }
 
+    public function GetCapability()
+    {
+        return parent::GetCapability();
+    }
+
     /**
      * Interne Funktion des SDK.
      */
     public function GetConfigurationForm()
     {
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $Capas = $this->GetCapability();
+        if ($Capas === false) {
+            return json_encode($Form);
+        }
+        $NbrOfVideoIn = count($Capas['Video']['Encoder']);
+        $HasInput = $Capas['IO']['Input'] > 0;
+        $HasOutput = $Capas['IO']['Output'] > 0;
+        $HasVirtual = $Capas['IO']['Virtual'] > 0;
+        $Serials = $Capas['SerialPorts'];
+        
+        $Instances='';
+        
+        
         /*
           if (count($this->Devices) == 0) {
           $this->Discover();
