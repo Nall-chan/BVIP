@@ -16,7 +16,7 @@
 require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /**
- * BVIPConfigurator Klasse implementiert 
+ * BVIPConfigurator Klasse implementiert
  *
  * @author        Michael Tröger <micha@nall-chan.net>
  * @copyright     2018 Michael Tröger
@@ -68,7 +68,6 @@ class BVIPConfigurator extends BVIPBase
      */
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-        
     }
 
     public function GetCapability()
@@ -163,14 +162,11 @@ class BVIPConfigurator extends BVIPBase
 
     public function RequestState()
     {
-        
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        
     }
-
 }
 
 /* @} */
