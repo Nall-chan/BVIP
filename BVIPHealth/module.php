@@ -26,7 +26,7 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @version       1.0
  *
  * @example <b>Ohne</b>
- * 
+ *
  * @property int $Number_Fan
  * @property int $Number_CPU
  * @property int $Number_Temp
@@ -377,7 +377,6 @@ class BVIPHealth extends BVIPBase
     {
         // empty
     }
-
 }
 
 /* @} */
