@@ -379,7 +379,6 @@ class BVIPHealth extends BVIPBase
     {
         // empty
     }
-
 }
 
 /* @} */
