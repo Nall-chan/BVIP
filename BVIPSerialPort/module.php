@@ -84,12 +84,12 @@ class BVIPSerialPort extends BVIPBase
     {
         $Ports = @$this->GetNbrOfSerialPorts();
         if ($Ports == 0) {
-            return '{"elements":[{"type":"Label","label":"Device has no serial port!"}]}';
+            return '{"elements":[{"type":"Label","caption":"Device has no serial port!"}]}';
         } else {
             $data = json_decode(file_get_contents(__DIR__.'/form.json'), true);
             $Options = [];
             for ($Port = 1; $Port <= $Ports; $Port++) {
-                $Options[] = ['label' => 'COM'.$Port, 'value' => $Port];
+                $Options[] = ['caption' => 'COM'.$Port, 'value' => $Port];
             }
             $data['elements'][0]['options'] = $Options;
 

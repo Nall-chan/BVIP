@@ -4,10 +4,10 @@
     "name": "BOSCH Video Library",
     "url": "https://github.com/Nall-chan/IPSBVIP",
     "compatibility": {
-        "version": "4.3",
-        "date": 1498241677
+        "version": "5.0",
+        "date": 1529057247
     },
-    "version": "2.0",
+    "version": "2.5",
     "build": 0,
-    "date": 1498241677
+    "date": 1529057247
 }

@@ -3,7 +3,7 @@
     "name": "BVIP Inputs",
     "type": 3,
     "vendor": "BOSCH",
-    "aliases": [],
+    "aliases": ["BVIP Inputs"],
     "parentRequirements": ["{0E1D027B-E420-4F8E-91E7-59FFA485F8FD}"],
     "childRequirements": [],
     "implemented": ["{B974BF3E-45B8-4648-BC7F-952AC79929B7}"],

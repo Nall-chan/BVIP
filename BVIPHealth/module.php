@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /*
@@ -52,7 +54,7 @@ class BVIPHealth extends BVIPBase
         $this->Number_Fan = 0;
         $this->Number_CPU = 0;
         $this->Number_ETH = 0;
-        $this->RegisterPropertyInteger('Interval', 1);
+        $this->RegisterPropertyInteger('Interval', 5);
         $this->RegisterTimer('RequestState', 0, 'BVIP_RequestState($_IPS[\'TARGET\']);');
     }
 
@@ -377,6 +379,7 @@ class BVIPHealth extends BVIPBase
     {
         // empty
     }
+
 }
 
 /* @} */

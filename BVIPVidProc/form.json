@@ -6,7 +6,7 @@
                     "caption": "Videoline:",
                     "options": [
                         {
-                            "label": "1",
+                            "caption": "1",
                             "value": 1
                         }
                     ]
@@ -21,7 +21,7 @@
             [
                 {
                     "type": "Button",
-                    "label": "Read Device",
+                    "caption": "Read Device",
                     "onClick": "BVIP_RequestState($id);"
                 }
             ]

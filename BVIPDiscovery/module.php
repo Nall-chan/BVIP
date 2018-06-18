@@ -1,6 +1,9 @@
 <?php
 
-//declare(strict_types=1);
+declare(strict_types = 1);
+
+require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
+
 /*
  * @addtogroup bvip
  * @{
@@ -13,7 +16,6 @@
  * @version       1.0
  *
  */
-require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
 
 /**
  * BVIPDiscovery Klasse implementiert
@@ -29,6 +31,7 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  */
 class BVIPDiscovery extends ipsmodule
 {
+
     use DebugHelper,
         BufferHelper;
     /**
@@ -81,10 +84,7 @@ class BVIPDiscovery extends ipsmodule
      */
     public function GetConfigurationForm()
     {
-        if (count($this->Devices) == 0) {
-            $this->Discover();
-        }
-        $Devices = $this->Devices;
+        $Devices = $this->DiscoverDevices();
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $InstanceIDListConfigurators = IPS_GetInstanceListByModuleID('{F9C6AC71-533B-4F93-8C9C-B348FAA336D2}');
         $DevicesIPAddress = [];
@@ -102,7 +102,7 @@ class BVIPDiscovery extends ipsmodule
             $InstanceIDConfigurator = array_search($Device['unitIPAddress'], $DevicesIPAddress);
             if ($InstanceIDConfigurator === false) {
                 $Device['instanceID'] = 0;
-                $Device['name'] = '';
+                $Device['name'] = $Device['unitName'];
             } else {
                 unset($DevicesIPAddress[$InstanceIDConfigurator]);
                 $Device['name'] = IPS_GetLocation($InstanceIDConfigurator);
@@ -181,7 +181,7 @@ class BVIPDiscovery extends ipsmodule
         $Name = "";
         while ($i) {
             $ret = @socket_recvfrom($socket, $buf, 2048, 0, $Name, $Port);
-            if ($ret === false) {
+            if ($ret == 0) {
                 $i--;
                 continue;
             }
@@ -200,9 +200,12 @@ class BVIPDiscovery extends ipsmodule
 
     public function Discover()
     {
+        $this->LogMessage($this->Translate('Background Discovery of BVIP Devices'), KL_NOTIFY);
+
         $this->Devices = $this->DiscoverDevices();
         // Alt neu vergleich fehlt, sowie die Events an IPS senden wenn neues Gerät im Netz gefunden wurde.
     }
+
 }
 
 /* @} */

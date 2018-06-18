@@ -14,31 +14,31 @@
                     "caption": "Baudrate",
                     "options": [
                         {
-                            "label": "300",
+                            "caption": "300",
                             "value": 300
                         },
                         {
-                            "label": "600",
+                            "caption": "600",
                             "value": 600
                         },
                         {
-                            "label": "1200",
+                            "caption": "1200",
                             "value": 1200
                         },
                         {
-                            "label": "2400",
+                            "caption": "2400",
                             "value": 2400
                         },
                         {
-                            "label": "4800",
+                            "caption": "4800",
                             "value": 4800
                         },
                         {
-                            "label": "9600",
+                            "caption": "9600",
                             "value": 9600
                         },
                         {
-                            "label": "19200",
+                            "caption": "19200",
                             "value": 19200
                         }
                     ]
@@ -49,11 +49,11 @@
                     "caption": "Data Bits",
                     "options": [
                         {
-                            "label": "7",
+                            "caption": "7",
                             "value": 7
                         },
                         {
-                            "label": "8",
+                            "caption": "8",
                             "value": 8
                         }
                     ]
@@ -64,11 +64,11 @@
                     "caption": "Stop Bits",
                     "options": [
                         {
-                            "label": "1",
+                            "caption": "1",
                             "value": 1
                         },
                         {
-                            "label": "2",
+                            "caption": "2",
                             "value": 2
                         }
                     ]
@@ -79,15 +79,15 @@
                     "caption": "Parity",
                     "options": [
                         {
-                            "label": "no Parity",
+                            "caption": "no Parity",
                             "value": 0
                         },
                         {
-                            "label": "even",
+                            "caption": "even",
                             "value": 1
                         },
                         {
-                            "label": "odd",
+                            "caption": "odd",
                             "value": 2
                         }
                     ]
@@ -98,11 +98,11 @@
                     "caption": "Modus",
                     "options": [
                         {
-                            "label": "RS232",
+                            "caption": "RS232",
                             "value": 1
                         },
                         {
-                            "label": "RS422/RS485",
+                            "caption": "RS422/RS485",
                             "value": 2
                         }
                     ]
@@ -113,11 +113,11 @@
                     "caption": "Duplex",
                     "options": [
                         {
-                            "label": "full",
+                            "caption": "full",
                             "value": 0
                         },
                         {
-                            "label": "half",
+                            "caption": "half",
                             "value": 2
                         }
                     ]

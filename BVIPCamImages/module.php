@@ -92,14 +92,14 @@ class BVIPCamImages extends BVIPBase
         $Lines = $this->ReadNbrOfVideoIn();
         $Options = [];
         for ($Line = 1; $Line <= $Lines; $Line++) {
-            $Options[] = ['label' => (string) $Line, 'value' => $Line];
+            $Options[] = ['caption' => (string) $Line, 'value' => $Line];
         }
         $data['elements'][0]['options'] = $Options;
 
         if ($this->GetFirmware() < 5) {
             array_splice($data['elements'], 2, 1);
         } else {
-            $data['elements'][3]['options'][] = ['label' => 'JPEG-Push', 'value' => 3];
+            $data['elements'][3]['options'][] = ['caption' => 'JPEG-Push', 'value' => 3];
         }
 
         return json_encode($data);

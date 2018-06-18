@@ -5,15 +5,15 @@
             "caption": "Authority",
             "options": [
                 {
-                    "label": "service",
+                    "caption": "service",
                     "value": "service"
                 },
                 {
-                    "label": "user",
+                    "caption": "user",
                     "value": "user"
                 },
                 {
-                    "label": "live",
+                    "caption": "live",
                     "value": "live"
                 }
             ]
@@ -28,7 +28,6 @@
         {
             "type": "Configurator",
             "name": "Discovery",
-            "rowCount": 15,
             "add": false,
             "delete": true,
             "sort": {
@@ -40,15 +39,15 @@
                     "name": "unitIPAddress",
                     "width": "160px"
                 }, {
-                    "caption": "TypeName",
+                    "caption": "Device Model",
                     "name": "friendlyName",
                     "width": "250px"
                 }, {
-                    "caption": "UnitName",
+                    "caption": "Device Name",
                     "name": "unitName",
                     "width": "200px"
                 }, {
-                    "caption": "DeviceType",
+                    "caption": "Device Type",
                     "name": "deviceType",
                     "width": "200px"
                 }, {

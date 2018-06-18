@@ -7,15 +7,15 @@
                     "caption": "Authority",
                     "options": [
                         {
-                            "label": "live",
+                            "caption": "live",
                             "value": "live"
                         },
                         {
-                            "label": "user",
+                            "caption": "user",
                             "value": "user"
                         },
                         {
-                            "label": "service",
+                            "caption": "service",
                             "value": "service"
                         }
                     ]

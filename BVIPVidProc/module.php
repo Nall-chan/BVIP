@@ -86,7 +86,7 @@ class BVIPVidProc extends BVIPBase
         $Lines = $this->ReadNbrOfVideoIn();
         $Options = [];
         for ($Line = 1; $Line <= $Lines; $Line++) {
-            $Options[] = ['label' => (string) $Line, 'value' => $Line];
+            $Options[] = ['caption' => (string) $Line, 'value' => $Line];
         }
         $data['elements'][0]['options'] = $Options;
 

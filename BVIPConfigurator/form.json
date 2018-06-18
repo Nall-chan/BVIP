@@ -6,21 +6,18 @@
             "add": false,
             "delete": true,
             "sort": {
-                "column": "Type",
+                "column": "type",
                 "direction": "ascending"
             },
-            "columns": [{
+            "columns": [
+                {
                     "caption": "Type",
-                    "name": "Type",
+                    "name": "type",
                     "width": "160px"
                 }, {
                     "caption": "Videoline",
-                    "name": "Videoline",
+                    "name": "line",
                     "width": "100px"
-                }, {
-                    "caption": "Name",
-                    "name": "Name",
-                    "width": "200px"
                 }, {
                     "caption": "Name",
                     "name": "name",
