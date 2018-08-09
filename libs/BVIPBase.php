@@ -4,7 +4,6 @@ require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
-
     use VariableProfile,
         VariableHelper,
         DebugHelper,
@@ -337,5 +336,4 @@ abstract class BVIPBase extends IPSModule
             return false;
         }
     }
-
 }
