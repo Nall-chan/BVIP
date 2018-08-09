@@ -161,7 +161,7 @@ class BVIPCamImages extends BVIPBase
                 if ($this->GetFirmware() < 6) {
                     $htmlData = '<div align="center"><img src="http://' . $Host . '/push.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegQuality=' . $jpegquali . '" /></div>';
                 } else {
-                    $htmlData = '<div align="center"><video id="video" autoplay="" autobuffer="" poster="http://' . $Host . '/logo.jpg"  src="http://' . $Host . '/video.mp4?line=' . $line . '&inst=1&rec=0"></video></div>';
+                    $htmlData = '<div align="center"><video id="video" autoplay="" autobuffer="" poster="http://' . $Host . '/logo.jpg" src="http://' . $Host . '/video.mp4?line=' . $line . '&inst=1&rec=0"></video></div>';
                 }
                 // FW 6
                 //video.mp4?line=1&inst=1&rec=0&rnd=40590
@@ -174,11 +174,11 @@ class BVIPCamImages extends BVIPBase
         if (!$this->ReadPropertyBoolean('MediaObject') or ($this->GetFirmware() < 5)) {
             // todo unregister Media
         } else {
-            if ($this->GetFirmware() < 6) {
+//            if ($this->GetFirmware() < 6) {
                 $Url = 'http://' . $Host . '/push.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegQuality=' . $jpegquali;
-            } else {
-                $Url = 'http://' . $Host . '/video.mp4?line=' . $line . '&inst=1&rec=0';
-            }
+//            } else {
+//                $Url = 'http://' . $Host . '/video.mp4?line=' . $line . '&inst=1&rec=0';
+//            }
             $mid = @$this->GetIDForIdent('STREAM');
             if ($mid == false) {
                 $mid = IPS_CreateMedia(3);
