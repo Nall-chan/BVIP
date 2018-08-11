@@ -31,6 +31,7 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  */
 class BVIPDiscovery extends ipsmodule
 {
+
     use DebugHelper,
         BufferHelper;
     /**
@@ -164,9 +165,10 @@ class BVIPDiscovery extends ipsmodule
         if (!$socket) {
             return $DeviceData;
         }
-        socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
-        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 100000));
         socket_bind($socket, '0.0.0.0', 0);
+        socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
+        socket_set_option($socket, SOL_SOCKET, SO_REUSEADDR, 1);
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 100000));
         $Host = "";
         $Port = 0;
         socket_getsockname($socket, $Host, $Port);
@@ -204,6 +206,7 @@ class BVIPDiscovery extends ipsmodule
         $this->Devices = $this->DiscoverDevices();
         // Alt neu vergleich fehlt, sowie die Events an IPS senden wenn neues Gerät im Netz gefunden wurde.
     }
+
 }
 
 /* @} */
