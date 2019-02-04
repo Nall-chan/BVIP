@@ -273,7 +273,6 @@ trait VariableProfile
         }
         IPS_DeleteVariableProfile($Name);
     }
-
 }
 
 /**
@@ -348,7 +347,6 @@ trait DebugHelper
             parent::SendDebug($Message, (string) $Data, $Format);
         }
     }
-
 }
 
 /**
@@ -434,7 +432,6 @@ trait InstanceStatus
         }
         return false;
     }
-
 }
 
 /**
@@ -492,7 +489,6 @@ trait BufferHelper
         }
         $this->SetBuffer($name, $Data);
     }
-
 }
 
 /**
@@ -529,7 +525,6 @@ trait Semaphore
     {
         IPS_SemaphoreLeave(__CLASS__ . '.' . (string) $this->InstanceID . (string) $ident);
     }
-
 }
 
 /**
@@ -612,7 +607,6 @@ trait VariableHelper
 
         return true;
     }
-
 }
 
 trait UTF8Coder
@@ -656,5 +650,4 @@ trait UTF8Coder
 
         return $item;
     }
-
 }

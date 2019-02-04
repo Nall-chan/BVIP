@@ -210,7 +210,7 @@ class BVIPCamImages extends BVIPBase
         } else {
             $mid = @$this->GetIDForIdent('STREAM');
             if ($mid > 0) {
-                IPS_DeleteMedia($mid, FALSE);
+                IPS_DeleteMedia($mid, false);
             }
         }
     }
@@ -285,9 +285,7 @@ class BVIPCamImages extends BVIPBase
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        
     }
-
 }
 
 /* @} */

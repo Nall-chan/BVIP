@@ -31,7 +31,6 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  */
 class BVIPDiscovery extends ipsmodule
 {
-
     use DebugHelper,
         BufferHelper;
     /**
@@ -206,7 +205,6 @@ class BVIPDiscovery extends ipsmodule
         $this->Devices = $this->DiscoverDevices();
         // Alt neu vergleich fehlt, sowie die Events an IPS senden wenn neues Gerät im Netz gefunden wurde.
     }
-
 }
 
 /* @} */
