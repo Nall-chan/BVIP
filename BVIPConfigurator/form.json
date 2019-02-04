@@ -17,10 +17,14 @@
                 }, {
                     "caption": "Videoline",
                     "name": "line",
-                    "width": "100px"
+                    "width": "120px"
                 }, {
                     "caption": "Name",
                     "name": "name",
+                    "width": "300px"
+                }, {
+                    "caption": "Location",
+                    "name": "location",
                     "width": "auto"
                 }
             ],

@@ -754,7 +754,7 @@ class RCPError
             case self::RCP_ERROR_NO_ERROR:
                 return '';
             case self::RCP_ERROR_CANNOT_SEND:
-                return 'Send blocked';
+                return 'No active parent';
             case self::RCP_ERROR_REPLY_TIMEOUT:
                 return 'Timeout';
             case self::RCP_ERROR_SEND_ERROR:

@@ -1,0 +1,11 @@
+{
+    "translations": {
+        "de": {
+            "Authority": "Berechtigung",
+            "Password": "Passwort",
+            "Device Model": "Ger\u00e4temodel",
+            "Device Name": "Ger\u00e4tename",
+            "Device Type": "Ger\u00e4tetyp"
+        }
+    }
+}

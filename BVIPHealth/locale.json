@@ -1,7 +1,8 @@
 {
     "translations": {
         "de": {
-            "seconds": "sekunden",
+            "seconds": "Sekunden",
+            "Interval":"Intervall",
             "Rename instance": "Instanz umbenenen",
             "Read Device": "Gerät auslesen"
         }

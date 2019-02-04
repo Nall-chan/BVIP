@@ -3,7 +3,8 @@
         "de": {
             "Videoline:": "Videokanal:",
             "Rename instance": "Instanz umbenenen",
-            "Cameraline not valid.": "Videokanal ungültig."
+            "Cameraline not valid.": "Videokanal ungültig.",
+            "Use authentification": "Benutze Authentifizierung"
         }
     }
 }

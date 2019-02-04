@@ -123,22 +123,22 @@ class BVIPConfigurator extends BVIPBase
         for ($index = 1; $index <= $MaxValueConfig; $index++) {
             $Device = [];
             $Device['type'] = $ModuleName;
-            if (!$NoLocation) {
-                $Device['location'] = [IPS_GetName($this->InstanceID)];
-            }
             if ($ConfigParamName != '') {
                 $InstanceID = array_search($index, $InstancesDevices);
                 $Device['line'] = $index;
             } else {
                 $InstanceID = array_search(0, $InstancesDevices);
+                $Device['line'] = '';
             }
             if ($InstanceID === false) {
                 $Device['instanceID'] = 0;
                 $Device['name'] = $ModuleName;
+                $Device['location'] = '';
             } else {
                 unset($InstancesDevices[$InstanceID]);
                 $Device['instanceID'] = $InstanceID;
-                $Device['name'] = IPS_GetLocation($InstanceID);
+                $Device['name'] = IPS_GetName($InstanceID);
+                $Device['location'] = stristr(IPS_GetLocation($InstanceID), IPS_GetName($InstanceID), true);
             }
             $Create = [
                 'moduleID'      => $GUID,
@@ -149,6 +149,10 @@ class BVIPConfigurator extends BVIPBase
                     $ConfigParamName => $index
                 ];
             }
+            if (!$NoLocation) {
+                $Create['location'] = [$this->Translate('BVIP Devices'), IPS_GetName($this->InstanceID)];
+            }
+
             $Device['create'] = array_merge([$Create], $ParentCreate);
             $Devices[] = $Device;
         }
@@ -158,7 +162,8 @@ class BVIPConfigurator extends BVIPBase
                     'instanceID' => $InstanceID,
                     'type'       => $ModuleName,
                     'line'       => $Line,
-                    'name'       => IPS_GetLocation($InstanceID)
+                    'name'       => IPS_GetName($InstanceID),
+                    'location'   => stristr(IPS_GetLocation($InstanceID), IPS_GetName($InstanceID), true)
                 ];
             }
         } else {
@@ -166,10 +171,12 @@ class BVIPConfigurator extends BVIPBase
                 $Devices[] = [
                     'instanceID' => $InstanceID,
                     'type'       => $ModuleName,
-                    'name'       => IPS_GetLocation($InstanceID)
+                    'name'       => IPS_GetName($InstanceID),
+                    'location'   => stristr(IPS_GetLocation($InstanceID), IPS_GetName($InstanceID), true)
                 ];
             }
         }
+      
         return $Devices;
     }
 
@@ -178,9 +185,23 @@ class BVIPConfigurator extends BVIPBase
      */
     public function GetConfigurationForm()
     {
+        $this->SendDebug('Parent', $this->ParentID, 0);
+
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $Capas = $this->GetCapability();
         if ($Capas === false) {
+            $Form['actions'][] = [
+                "type"  => "PopupAlert",
+                "popup" => [
+                    "items" => [[
+                    "type"    => "Label",
+                    "caption" => "Instance has no active parent."
+                        ]]
+                ]
+            ];
+            $this->SendDebug('FORM', json_encode($Form), 0);
+            $this->SendDebug('FORM', json_last_error_msg(), 0);
+
             return json_encode($Form);
         }
         $NbrOfVideoIn = count($Capas['Video']['Encoder']);
@@ -223,11 +244,14 @@ class BVIPConfigurator extends BVIPBase
 
     public function RequestState()
     {
+        
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
+        
     }
+
 }
 
 /* @} */

@@ -4,6 +4,7 @@ require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
+
     use VariableProfile,
         VariableHelper,
         DebugHelper,
@@ -39,7 +40,7 @@ abstract class BVIPBase extends IPSModule
             $this->SendDebug('FILTER', 'NOTHING', 0);
         }
 
-//        $this->RegisterMessage(0, IPS_KERNELSTARTED);
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
         if (IPS_GetKernelRunlevel() != KR_READY) {
@@ -52,12 +53,11 @@ abstract class BVIPBase extends IPSModule
     {
         $this->IOMessageSink($TimeStamp, $SenderID, $Message, $Data);
 
-//        switch ($Message)
-//        {
-//            case IPS_KERNELSTARTED:
-//                $this->KernelReady();
-//                break;
-//        }
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+                break;
+        }
     }
 
     protected function RegisterParent()
@@ -84,7 +84,6 @@ abstract class BVIPBase extends IPSModule
             $IOId = @IPS_GetInstance($SplitterId)['ConnectionID'];
             if ($IOId > 0) {
                 $this->SetSummary(IPS_GetProperty($IOId, 'Host'));
-
                 return;
             }
         }
@@ -92,16 +91,16 @@ abstract class BVIPBase extends IPSModule
     }
 
     abstract protected function RequestState();
-
     /**
      * Wird ausgeführt wenn der Kernel hochgefahren wurde.
      */
-//    protected function KernelReady()
-//    {
-//        $this->RegisterParent();
-//        if ($this->HasActiveParent())
-//            $this->IOChangeState(IS_ACTIVE);
-//    }
+    protected function KernelReady()
+    {
+        $this->RegisterParent();
+        if ($this->HasActiveParent()){
+            $this->IOChangeState(IS_ACTIVE);
+        }
+    }
 
     /*    public function ReceiveData($JSONString)
       {
@@ -336,4 +335,5 @@ abstract class BVIPBase extends IPSModule
             return false;
         }
     }
+
 }

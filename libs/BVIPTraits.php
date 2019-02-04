@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/BVIPRCPClass.php';  // diverse Klassen
+require_once __DIR__ . '/BVIPRCPClass.php';  // diverse Klassen
 
 /*
  * @addtogroup bvip
@@ -241,7 +241,7 @@ trait VariableProfile
         } else {
             $profile = IPS_GetVariableProfile($Name);
             if ($profile['ProfileType'] != 1) {
-                throw new Exception('Variable profile type does not match for profile '.$Name, E_USER_NOTICE);
+                throw new Exception('Variable profile type does not match for profile ' . $Name, E_USER_NOTICE);
             }
         }
 
@@ -273,6 +273,7 @@ trait VariableProfile
         }
         IPS_DeleteVariableProfile($Name);
     }
+
 }
 
 /**
@@ -293,17 +294,17 @@ trait DebugHelper
         if (is_a($Data, 'RCPData')) {
             /* @var $Data RCPData */
             $this->SendDebug($Message, '~~RCP DATA~~', 0);
-            $this->SendDebug($Message.':Tag', RCPTag::ToString($Data->Tag), 0);
-            $this->SendDebug($Message.':DataType', RCPDataType::ToString($Data->DataType), 0);
-            $this->SendDebug($Message.':RW', RCPReadWrite::ToString($Data->RW), 0);
-            $this->SendDebug($Message.':Number', $Data->Num, 0);
-            $this->SendDebug($Message.':Error', RCPError::ToString($Data->Error), 0);
+            $this->SendDebug($Message . ':Tag', RCPTag::ToString($Data->Tag), 0);
+            $this->SendDebug($Message . ':DataType', RCPDataType::ToString($Data->DataType), 0);
+            $this->SendDebug($Message . ':RW', RCPReadWrite::ToString($Data->RW), 0);
+            $this->SendDebug($Message . ':Number', $Data->Num, 0);
+            $this->SendDebug($Message . ':Error', RCPError::ToString($Data->Error), 0);
             switch ($Data->DataType) {
                 case RCPDataType::RCP_F_FLAG:
-                    $this->SendDebug($Message.':Payload', $Data->Payload, 0);
+                    $this->SendDebug($Message . ':Payload', $Data->Payload, 0);
                     break;
                 case RCPDataType::RCP_P_OCTET:
-                    $this->SendDebug($Message.':Payload', $Data->Payload, 1);
+                    $this->SendDebug($Message . ':Payload', $Data->Payload, 1);
                     break;
                 case RCPDataType::RCP_T_OCTET:
                 case RCPDataType::RCP_T_WORD:
@@ -311,35 +312,35 @@ trait DebugHelper
                 case RCPDataType::RCP_T_DWORD:
                 case RCPDataType::RCP_P_STRING:
                 case RCPDataType::RCP_P_UNICODE:
-                    $this->SendDebug($Message.':Payload', $Data->Payload, 0);
+                    $this->SendDebug($Message . ':Payload', $Data->Payload, 0);
                     break;
             }
         } elseif (is_a($Data, 'RCPFrame')) {
             /* @var $Data RCPFrame */
             $this->SendDebug($Message, '~~RCP-FRAME~~', 0);
-            $this->SendDebug($Message.':Action', RCPAction::ToString($Data->Action), 0);
-            $this->SendDebug($Message.':Tag', RCPTag::ToString($Data->Tag), 0);
-            $this->SendDebug($Message.':Continuation', $Data->Continuation, 0);
-            $this->SendDebug($Message.':SessionId', $Data->SessionID, 1);
-            $this->SendDebug($Message.':ClientId', $Data->ClientID, 1);
-            $this->SendDebug($Message.':Reserved', $Data->Reserved, 0);
-            $this->SendDebug($Message.':DataType', RCPDataType::ToString($Data->DataType), 0);
-            $this->SendDebug($Message.':RW', RCPReadWrite::ToString($Data->RW), 0);
-            $this->SendDebug($Message.':Number', $Data->Num, 0);
-            $this->SendDebug($Message.':Payload', $Data->Payload, 1);
+            $this->SendDebug($Message . ':Action', RCPAction::ToString($Data->Action), 0);
+            $this->SendDebug($Message . ':Tag', RCPTag::ToString($Data->Tag), 0);
+            $this->SendDebug($Message . ':Continuation', $Data->Continuation, 0);
+            $this->SendDebug($Message . ':SessionId', $Data->SessionID, 1);
+            $this->SendDebug($Message . ':ClientId', $Data->ClientID, 1);
+            $this->SendDebug($Message . ':Reserved', $Data->Reserved, 0);
+            $this->SendDebug($Message . ':DataType', RCPDataType::ToString($Data->DataType), 0);
+            $this->SendDebug($Message . ':RW', RCPReadWrite::ToString($Data->RW), 0);
+            $this->SendDebug($Message . ':Number', $Data->Num, 0);
+            $this->SendDebug($Message . ':Payload', $Data->Payload, 1);
         } elseif (is_array($Data)) {
             if (count($Data) > 25) {
                 $this->SendDebug($Message, array_slice($Data, 0, 20), 0);
-                $this->SendDebug($Message.':CUT', '-------------CUT-----------------', 0);
+                $this->SendDebug($Message . ':CUT', '-------------CUT-----------------', 0);
                 $this->SendDebug($Message, array_slice($Data, -5, null, true), 0);
             } else {
                 foreach ($Data as $Key => $DebugData) {
-                    $this->SendDebug($Message.':'.$Key, $DebugData, 0);
+                    $this->SendDebug($Message . ':' . $Key, $DebugData, 0);
                 }
             }
         } elseif (is_object($Data)) {
             foreach ($Data as $Key => $DebugData) {
-                $this->SendDebug($Message.'->'.$Key, $DebugData, 0);
+                $this->SendDebug($Message . '->' . $Key, $DebugData, 0);
             }
         } elseif (is_bool($Data)) {
             parent::SendDebug($Message, ($Data ? 'TRUE' : 'FALSE'), 0);
@@ -347,6 +348,7 @@ trait DebugHelper
             parent::SendDebug($Message, (string) $Data, $Format);
         }
     }
+
 }
 
 /**
@@ -410,6 +412,7 @@ trait InstanceStatus
     /**
      * Prüft den Parent auf vorhandensein und Status.
      *
+     * @access protected
      * @return bool True wenn Parent vorhanden und in Status 102, sonst false.
      */
     protected function HasActiveParent()
@@ -418,12 +421,20 @@ trait InstanceStatus
         if ($instance['ConnectionID'] > 0) {
             $parent = IPS_GetInstance($instance['ConnectionID']);
             if ($parent['InstanceStatus'] == 102) {
+                if ($parent['ModuleInfo']['ModuleType'] == 2) {
+                    if ($parent['ConnectionID'] > 0) {
+                        $parent = IPS_GetInstance($parent['ConnectionID']);
+                        return ($parent['InstanceStatus'] == 102);
+                    } else {
+                        return false;
+                    }
+                }
                 return true;
             }
         }
-
         return false;
     }
+
 }
 
 /**
@@ -442,8 +453,8 @@ trait BufferHelper
     {
         if (strpos($name, 'Multi_') === 0) {
             $Lines = '';
-            foreach ($this->{'BufferListe_'.$name} as $BufferIndex) {
-                $Lines .= $this->{'Part_'.$name.$BufferIndex};
+            foreach ($this->{'BufferListe_' . $name} as $BufferIndex) {
+                $Lines .= $this->{'Part_' . $name . $BufferIndex};
             }
 
             return unserialize($Lines);
@@ -462,25 +473,26 @@ trait BufferHelper
     {
         $Data = serialize($value);
         if (strpos($name, 'Multi_') === 0) {
-            $OldBuffers = $this->{'BufferListe_'.$name};
+            $OldBuffers = $this->{'BufferListe_' . $name};
             if ($OldBuffers == false) {
                 $OldBuffers = [];
             }
             $Lines = str_split($Data, 8000);
             foreach ($Lines as $BufferIndex => $BufferLine) {
-                $this->{'Part_'.$name.$BufferIndex} = $BufferLine;
+                $this->{'Part_' . $name . $BufferIndex} = $BufferLine;
             }
             $NewBuffers = array_keys($Lines);
-            $this->{'BufferListe_'.$name} = $NewBuffers;
+            $this->{'BufferListe_' . $name} = $NewBuffers;
             $DelBuffers = array_diff_key($OldBuffers, $NewBuffers);
             foreach ($DelBuffers as $DelBuffer) {
-                $this->{'Part_'.$name.$DelBuffer} = '';
+                $this->{'Part_' . $name . $DelBuffer} = '';
             }
 
             return;
         }
         $this->SetBuffer($name, $Data);
     }
+
 }
 
 /**
@@ -498,7 +510,7 @@ trait Semaphore
     private function lock($ident)
     {
         for ($i = 0; $i < 100; $i++) {
-            if (IPS_SemaphoreEnter(__CLASS__.'.'.(string) $this->InstanceID.(string) $ident, 1)) {
+            if (IPS_SemaphoreEnter(__CLASS__ . '.' . (string) $this->InstanceID . (string) $ident, 1)) {
                 return true;
             } else {
                 IPS_Sleep(mt_rand(1, 5));
@@ -515,8 +527,9 @@ trait Semaphore
      */
     private function unlock($ident)
     {
-        IPS_SemaphoreLeave(__CLASS__.'.'.(string) $this->InstanceID.(string) $ident);
+        IPS_SemaphoreLeave(__CLASS__ . '.' . (string) $this->InstanceID . (string) $ident);
     }
+
 }
 
 /**
@@ -599,6 +612,7 @@ trait VariableHelper
 
         return true;
     }
+
 }
 
 trait UTF8Coder
@@ -642,4 +656,5 @@ trait UTF8Coder
 
         return $item;
     }
+
 }

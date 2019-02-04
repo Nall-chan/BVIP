@@ -1,6 +1,10 @@
 {
     "elements":
             [{
+                    "name": "UseAuth",
+                    "type": "CheckBox",
+                    "caption": "Use authentification"
+                },{
                     "name": "Line",
                     "type": "Select",
                     "caption": "Videoline:",
@@ -8,6 +12,20 @@
                         {
                             "caption": "1",
                             "value": 1
+                        }
+                    ]
+                }, {
+                    "name": "Stream",
+                    "type": "Select",
+                    "caption": "Stream (MP4 / h.26x)",
+                    "options": [
+                        {
+                            "caption": "Stream 1",
+                            "value": 1
+                        },
+                        {
+                            "caption": "Stream 2",
+                            "value": 2
                         }
                     ]
                 },
@@ -20,6 +38,29 @@
                     "name": "MediaObject",
                     "type": "CheckBox",
                     "caption": "Media-Stream Object"
+                },
+                {
+                    "name": "MediaType",
+                    "type": "Select",
+                    "caption": "MediaObject",
+                    "options": [
+                        {
+                            "caption": "HTTP / MJPEG",
+                            "value": 0
+                        }, {
+                            "caption": "HTTP / h.26x",
+                            "value": 1
+                        },
+                        {
+                            "caption": "RTSP / h.26x",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "HTMLBoxObject",
+                    "type": "CheckBox",
+                    "caption": "HTMLBox Variable"
                 },
                 {
                     "name": "Type",
@@ -36,221 +77,221 @@
                         }
                     ]
                 },
-                {
-                    "type": "Label",
-                    "caption": "VLC Parameter:"
-                },
-                {
-                    "name": "Width",
-                    "type": "IntervalBox",
-                    "caption": "Width"
-                },
-                {
-                    "name": "Height",
-                    "type": "IntervalBox",
-                    "caption": "Height"
-                },
-                {
-                    "name": "Stream",
-                    "type": "Select",
-                    "caption": "Stream",
-                    "options": [
+
+                { 
+                    "type": "RowLayout",
+                    "items": [
                         {
-                            "caption": "Stream 1",
-                            "value": 1
-                        },
-                        {
-                            "caption": "Stream 2",
-                            "value": 2
-                        }
-                    ]
-                },
-                {
-                    "name": "Encoding",
-                    "type": "Select",
-                    "caption": "Encoding",
-                    "options": [
-                        {
-                            "caption": "JPEG",
-                            "value": 0
-                        },
-                        {
-                            "caption": "MPEG-4 SH++",
-                            "value": 3
-                        },
-                        {
-                            "caption": "H.264",
-                            "value": 4
-                        }
-                    ]
-                },
-                {
-                    "type": "Label",
-                    "caption": "JPEG Parameter:"
-                },
-                {
-                    "name": "JPEGSize",
-                    "type": "Select",
-                    "caption": "Size",
-                    "options": [
-                        {
-                            "caption": "small",
-                            "value": "S"
-                        },
-                        {
-                            "caption": "medium",
-                            "value": "M"
-                        },
-                        {
-                            "caption": "large",
-                            "value": "L"
-                        },
-                        {
-                            "caption": "extra large",
-                            "value": "XL"
-                        },
-                        {
-                            "caption": "720P",
-                            "value": "720P"
-                        }
-                    ]
-                },
-                {
-                    "name": "JPEGQuality",
-                    "type": "Select",
-                    "caption": "Quality",
-                    "options": [
-                        {
-                            "caption": "1 - best",
-                            "value": 1
-                        },
-                        {
-                            "caption": "2",
-                            "value": 2
-                        },
-                        {
-                            "caption": "3",
-                            "value": 3
-                        },
-                        {
-                            "caption": "4",
-                            "value": 4
-                        },
-                        {
-                            "caption": "5",
-                            "value": 5
-                        },
-                        {
-                            "caption": "6",
-                            "value": 6
-                        },
-                        {
-                            "caption": "7",
-                            "value": 7
-                        },
-                        {
-                            "caption": "8",
-                            "value": 8
-                        },
-                        {
-                            "caption": "9",
-                            "value": 9
-                        },
-                        {
-                            "caption": "10",
-                            "value": 10
-                        },
-                        {
-                            "caption": "11",
-                            "value": 11
-                        },
-                        {
-                            "caption": "12",
-                            "value": 12
-                        },
-                        {
-                            "caption": "13",
-                            "value": 13
-                        },
-                        {
-                            "caption": "14",
-                            "value": 14
-                        },
-                        {
-                            "caption": "15",
-                            "value": 15
-                        },
-                        {
-                            "caption": "16",
-                            "value": 16
-                        },
-                        {
-                            "caption": "17",
-                            "value": 17
-                        },
-                        {
-                            "caption": "18",
-                            "value": 18
-                        },
-                        {
-                            "caption": "19",
-                            "value": 19
-                        },
-                        {
-                            "caption": "20",
-                            "value": 20
-                        },
-                        {
-                            "caption": "21",
-                            "value": 21
-                        },
-                        {
-                            "caption": "22",
-                            "value": 22
-                        },
-                        {
-                            "caption": "23",
-                            "value": 23
-                        },
-                        {
-                            "caption": "24",
-                            "value": 24
-                        },
-                        {
-                            "caption": "25",
-                            "value": 25
-                        },
-                        {
-                            "caption": "26",
-                            "value": 26
-                        },
-                        {
-                            "caption": "27",
-                            "value": 27
-                        },
-                        {
-                            "caption": "28",
-                            "value": 28
-                        },
-                        {
-                            "caption": "29",
-                            "value": 29
-                        },
-                        {
-                            "caption": "30",
-                            "value": 30
-                        },
-                        {
-                            "caption": "31",
-                            "value": 31
-                        },
-                        {
-                            "caption": "32 - modest",
-                            "value": 32
+                            "type": "PopupButton",
+                            "caption": "VLC Parameter",
+                            "popup": {
+                                "caption": "VLC Parameter",
+                                "items": [
+                                    {
+                                        "name": "Width",
+                                        "type": "NumberSpinner",
+                                        "caption": "Width",
+                                        "suffix": "pixel"
+                                    },
+                                    {
+                                        "name": "Height",
+                                        "type": "NumberSpinner",
+                                        "caption": "Height",
+                                        "suffix": "pixel"
+                                    },
+                                    {
+                                        "name": "Encoding",
+                                        "type": "Select",
+                                        "caption": "Encoding",
+                                        "options": [
+                                            {
+                                                "caption": "JPEG",
+                                                "value": 0
+                                            },
+                                            {
+                                                "caption": "MPEG-4 SH++",
+                                                "value": 3
+                                            },
+                                            {
+                                                "caption": "H.264",
+                                                "value": 4
+                                            }
+                                        ]
+                                    }]
+                            }
+                        }, {
+                            "type": "PopupButton",
+                            "caption": "(M)JPEG Parameter",
+                            "popup": {
+                                "caption": "(M)JPEG Parameter",
+                                "items": [
+                                    {
+                                        "name": "JPEGSize",
+                                        "type": "Select",
+                                        "caption": "Size",
+                                        "options": [
+                                            {
+                                                "caption": "small",
+                                                "value": "S"
+                                            },
+                                            {
+                                                "caption": "medium",
+                                                "value": "M"
+                                            },
+                                            {
+                                                "caption": "large",
+                                                "value": "L"
+                                            },
+                                            {
+                                                "caption": "extra large",
+                                                "value": "XL"
+                                            },
+                                            {
+                                                "caption": "720P",
+                                                "value": "720P"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "JPEGQuality",
+                                        "type": "Select",
+                                        "caption": "Quality",
+                                        "options": [
+                                            {
+                                                "caption": "1 - best",
+                                                "value": 1
+                                            },
+                                            {
+                                                "caption": "2",
+                                                "value": 2
+                                            },
+                                            {
+                                                "caption": "3",
+                                                "value": 3
+                                            },
+                                            {
+                                                "caption": "4",
+                                                "value": 4
+                                            },
+                                            {
+                                                "caption": "5",
+                                                "value": 5
+                                            },
+                                            {
+                                                "caption": "6",
+                                                "value": 6
+                                            },
+                                            {
+                                                "caption": "7",
+                                                "value": 7
+                                            },
+                                            {
+                                                "caption": "8",
+                                                "value": 8
+                                            },
+                                            {
+                                                "caption": "9",
+                                                "value": 9
+                                            },
+                                            {
+                                                "caption": "10",
+                                                "value": 10
+                                            },
+                                            {
+                                                "caption": "11",
+                                                "value": 11
+                                            },
+                                            {
+                                                "caption": "12",
+                                                "value": 12
+                                            },
+                                            {
+                                                "caption": "13",
+                                                "value": 13
+                                            },
+                                            {
+                                                "caption": "14",
+                                                "value": 14
+                                            },
+                                            {
+                                                "caption": "15",
+                                                "value": 15
+                                            },
+                                            {
+                                                "caption": "16",
+                                                "value": 16
+                                            },
+                                            {
+                                                "caption": "17",
+                                                "value": 17
+                                            },
+                                            {
+                                                "caption": "18",
+                                                "value": 18
+                                            },
+                                            {
+                                                "caption": "19",
+                                                "value": 19
+                                            },
+                                            {
+                                                "caption": "20",
+                                                "value": 20
+                                            },
+                                            {
+                                                "caption": "21",
+                                                "value": 21
+                                            },
+                                            {
+                                                "caption": "22",
+                                                "value": 22
+                                            },
+                                            {
+                                                "caption": "23",
+                                                "value": 23
+                                            },
+                                            {
+                                                "caption": "24",
+                                                "value": 24
+                                            },
+                                            {
+                                                "caption": "25",
+                                                "value": 25
+                                            },
+                                            {
+                                                "caption": "26",
+                                                "value": 26
+                                            },
+                                            {
+                                                "caption": "27",
+                                                "value": 27
+                                            },
+                                            {
+                                                "caption": "28",
+                                                "value": 28
+                                            },
+                                            {
+                                                "caption": "29",
+                                                "value": 29
+                                            },
+                                            {
+                                                "caption": "30",
+                                                "value": 30
+                                            },
+                                            {
+                                                "caption": "31",
+                                                "value": 31
+                                            },
+                                            {
+                                                "caption": "32 - modest",
+                                                "value": 32
+                                            }
+                                        ]
+                                    }
+
+                                ]
+                            }
                         }
                     ]
                 }
-
-
             ]
 }

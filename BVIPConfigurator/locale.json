@@ -1,0 +1,10 @@
+{
+    "translations": {
+        "de": {
+            "Videoline": "Video Eingang",
+            "Location": "Lokation",
+            "Instance has no active parent.": "Instanz hat keinen aktiven Parent.",
+            "BVIP Devices": "BVIP Ger\u00e4te"
+        }
+    }
+}

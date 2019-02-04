@@ -38,11 +38,14 @@ class BVIPCamImages extends BVIPBase
     {
         parent::Create();
         $this->RegisterPropertyBoolean('Rename', true);
+        $this->RegisterPropertyBoolean('UseAuth', false);
         $this->RegisterPropertyInteger('Line', 1);
+        $this->RegisterPropertyBoolean('HTMLBoxObject', true);
         $this->RegisterPropertyInteger('Type', 0);
         $this->RegisterPropertyInteger('Stream', 1);
         $this->RegisterPropertyInteger('Encoding', 4);
-        $this->RegisterPropertyBoolean('MediaObject', false);
+        $this->RegisterPropertyBoolean('MediaObject', true);
+        $this->RegisterPropertyInteger('MediaType', 1);
         $this->RegisterPropertyInteger('Width', 640);
         $this->RegisterPropertyInteger('Height', 480);
         $this->RegisterPropertyString('JPEGSize', 'XL');
@@ -95,11 +98,12 @@ class BVIPCamImages extends BVIPBase
             $Options[] = ['caption' => (string) $Line, 'value' => $Line];
         }
         $data['elements'][0]['options'] = $Options;
-
-        if ($this->GetFirmware() < 5) {
-            array_splice($data['elements'], 2, 1);
-        } else {
-            $data['elements'][3]['options'][] = ['caption' => 'JPEG-Push', 'value' => 3];
+        $Firmware = $this->GetFirmware();
+        if ($Firmware >= 5) {
+            $data['elements'][7]['options'][] = ['caption' => 'JPEG-Push', 'value' => 3];
+        }
+        if ($Firmware >= 6) {
+            $data['elements'][7]['options'][] = ['caption' => 'HTTP / h.264x', 'value' => 4];
         }
 
         return json_encode($data);
@@ -108,11 +112,13 @@ class BVIPCamImages extends BVIPBase
     public function RequestState()
     {
         $Host = '';
-        $vid = $this->GetOrCreateVariable('IMAGE');
+        $vid = $this->RegisterVariableString('IMAGE', 'IMAGE', '~HTMLBox');
         $line = $this->ReadPropertyInteger('Line');
+        $UseMediaObject = $this->ReadPropertyBoolean('MediaObject');
+        $MediaType = $this->ReadPropertyInteger('MediaType');
+        $UseHTMLBoxObject = $this->ReadPropertyBoolean('HTMLBoxObject');
         $typ = $this->ReadPropertyInteger('Type');
         $stream = $this->ReadPropertyInteger('Stream');
-        $encoding = $this->ReadPropertyInteger('Encoding');
         $width = $this->ReadPropertyInteger('Width');
         $height = $this->ReadPropertyInteger('Height');       //width="640" height="480"
         $jpegsize = $this->ReadPropertyString('JPEGSize');
@@ -129,56 +135,70 @@ class BVIPCamImages extends BVIPBase
         }
         if ($Host == '') {
             $typ = 9;
+            $MediaType = 9;
         }
+        if ($this->ReadPropertyBoolean('UseAuth')) {
+            if ($Pass != '') {
+                $Host = $User . ':' . $Pass . '@' . $Host;
+            }
+        }
+        if ($UseHTMLBoxObject) {
+            $vid = $this->RegisterVariableString('IMAGE', 'IMAGE', '~HTMLBox');
 
-        if ($this->GetFirmware() > 4) {
-            $h264 = '&h26x=' . $encoding;
-        } else {
-            $h264 = '';
-        }
-        if ($Pass != '') {
-            $Host = $User . ':' . $Pass . '@' . $Host;
-        }
-        switch ($typ) {
-            case 0: // VLC
-
-                $htmlData = '<div align="center"><embed type="application/x-vlc-plugin" autoplay="yes" controls="no" branding="no" loop="no" width="'
-                        . $width . '" height="' . $height . '" target="rtsp://' . $Host . '/video?line=' . $line . '&inst=' . $stream . $h264 . '" align="center" /></div>';
-                //todo ?enableaudio=1&audio_line=1&audio_mode=0
-                // ?meta=1&metaline=1
-                //?vcd=1
-                break;
-            case 2: // JS-Pull
-                $htmlData = '<script language="JavaScript" type="text/javascript" src="http://' . $Host . '/pushimage.js"></script>'
-                        . '<script type="text/javascript">var pimg' . $vid . ';var debugarea;function init' . $vid . '() {'
-                        . 'pimg' . $vid . '=createPushImage("bvip_' . $vid . '", 0);pimg' . $vid . '.startPush();}'
-                        . '</script>'
-                        . '<div align="center"><img onLoad="init' . $vid . '()" id="bvip_' . $vid . '" name="bvip_' . $vid . '" src="http://'
-                        . $Host . '/snap.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegBurst=1&JpegDomain=' . $vid . '&JpegQuality=' . $jpegquali . '" /></div>';
-                break;
-            case 3: // JPEG-Push
-                // FW 5
-                if ($this->GetFirmware() < 6) {
+            switch ($typ) {
+                case 0: // VLC
+                    if ($this->GetFirmware() > 4) {
+                        $h264 = '&h26x=' . $this->ReadPropertyInteger('Encoding');
+                    } else {
+                        $h264 = '';
+                    }
+                    $htmlData = '<div align="center"><embed type="application/x-vlc-plugin" autoplay="yes" controls="no" branding="no" loop="no" width="'
+                            . $width . '" height="' . $height . '" target="rtsp://' . $Host . '/video?line=' . $line . '&inst=' . $stream . $h264 . '" align="center" /></div>';
+                    //todo ?enableaudio=1&audio_line=1&audio_mode=0
+                    // ?meta=1&metaline=1
+                    //?vcd=1
+                    break;
+                case 2: // JPEG-Pull
+                    $htmlData = '<script language="JavaScript" type="text/javascript" src="http://' . $Host . '/pushimage.js"></script>'
+                            . '<script type="text/javascript">var pimg' . $vid . ';var debugarea;function init' . $vid . '() {'
+                            . 'pimg' . $vid . '=createPushImage("bvip_' . $vid . '", 0);pimg' . $vid . '.startPush();}'
+                            . '</script>'
+                            . '<div align="center"><img onLoad="init' . $vid . '()" id="bvip_' . $vid . '" name="bvip_' . $vid . '" src="http://'
+                            . $Host . '/snap.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegBurst=1&JpegDomain=' . $vid . '&JpegQuality=' . $jpegquali . '" /></div>';
+                    break;
+                case 3: // JPEG-Push
+                    // FW 5
                     $htmlData = '<div align="center"><img src="http://' . $Host . '/push.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegQuality=' . $jpegquali . '" /></div>';
-                } else {
-                    $htmlData = '<div align="center"><video id="video" autoplay="" autobuffer="" poster="http://' . $Host . '/logo.jpg" src="http://' . $Host . '/video.mp4?line=' . $line . '&inst=1&rec=0"></video></div>';
-                }
-                // FW 6
-                //video.mp4?line=1&inst=1&rec=0&rnd=40590
-                break;
-            default:
-                $htmlData = '';
-                break;
-        }
-        $this->SetValueString('IMAGE', $htmlData);
-        if (!$this->ReadPropertyBoolean('MediaObject') or ($this->GetFirmware() < 5)) {
-            // todo unregister Media
+                    // FW 6
+                    //video.mp4?line=1&inst=1&rec=0&rnd=40590
+                    break;
+                case 4:
+                    $htmlData = '<div align="center"><video id="video" autoplay="" autobuffer="" poster="http://' . $Host . '/logo.jpg" src="http://' . $Host . '/video.mp4?line=' . $line . '&inst=' . $stream . '&rec=0"></video></div>';
+                    break;
+                default:
+                    $htmlData = '';
+                    break;
+            }
+            $this->SetValueString('IMAGE', $htmlData);
         } else {
-//            if ($this->GetFirmware() < 6) {
-                $Url = 'http://' . $Host . '/push.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegQuality=' . $jpegquali;
-//            } else {
-//                $Url = 'http://' . $Host . '/video.mp4?line=' . $line . '&inst=1&rec=0';
-//            }
+            $this->UnregisterVariable('IMAGE');
+        }
+
+        if ($UseMediaObject) {
+            switch ($MediaType) {
+                case 0:
+                    $Url = 'http://' . $Host . '/push.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegQuality=' . $jpegquali;
+                    break;
+                case 1:
+                    $Url = 'http://' . $Host . '/video.mp4?line=' . $line . '&inst=' . $stream;
+                    break;
+                case 2:
+                    $Url = 'rtsp://' . $Host . '?line=' . $line . '&inst=' . $stream;
+                    break;
+                default:
+                    $Url = '';
+                    break;
+            }
             $mid = @$this->GetIDForIdent('STREAM');
             if ($mid == false) {
                 $mid = IPS_CreateMedia(3);
@@ -187,6 +207,11 @@ class BVIPCamImages extends BVIPBase
                 IPS_SetIdent($mid, 'STREAM');
             }
             IPS_SetMediaFile($mid, $Url, false);
+        } else {
+            $mid = @$this->GetIDForIdent('STREAM');
+            if ($mid > 0) {
+                IPS_DeleteMedia($mid, FALSE);
+            }
         }
     }
 
@@ -258,19 +283,11 @@ class BVIPCamImages extends BVIPBase
         return false;
     }
 
-    protected function GetOrCreateVariable(string $Ident)
-    {
-        $vid = @$this->GetIDForIdent($Ident);
-        if ($vid == false) {
-            $vid = $this->RegisterVariableString($Ident, $Ident, '~HTMLBox');
-        }
-
-        return $vid;
-    }
-
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
+        
     }
+
 }
 
 /* @} */

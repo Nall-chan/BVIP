@@ -1,7 +1,7 @@
 [![Version](https://img.shields.io/badge/Symcon-PHPModul-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-[![Version](https://img.shields.io/badge/Modul%20Version-2.01-blue.svg)]()
+[![Version](https://img.shields.io/badge/Modul%20Version-2.5-blue.svg)]()
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
-[![Version](https://img.shields.io/badge/Symcon%20Version-4.3%20%3E-green.svg)](https://www.symcon.de/forum/threads/30857-IP-Symcon-4-3-%28Stable%29-Changelog)
+[![Version](https://img.shields.io/badge/Symcon%20Version-5.0%20%3E-green.svg)]()
 [![StyleCI](https://styleci.io/repos/108290698/shield?style=flat)](https://styleci.io/repos/108290698)  
 
 # IPSBVIP
@@ -65,9 +65,16 @@ Es wird empfohlen die Einrichtung mit dem BVIP Konfigurator zu starten (BVIPConf
 | BVIPSerialPort    | Splitter     | BVIP   | {CBEA6475-2EE1-4EC7-85F0-0B042FED87BB} |
 | BVIPVidProc       | Device       | BVIP   | {6A046B86-C098-4A96-9038-800AE0BBFA10} |
 | BVIPVirtualInputs | Device       | BVIP   | {3B02A316-33AE-4DCF-8AAF-A40453904DFF} |
-| BVIPConfigurator  | Configurator | BVIP   |  |
+| BVIPConfigurator  | Configurator | BVIP   | {F9C6AC71-533B-4F93-8C9C-B348FAA336D2} |
+| BVIPDiscovery     | Discovery    | BVIP   | {7013126D-4AAB-41C2-BAE0-FD7A5C59B89C} |
 
 ### 2. Changlog
+
+Version 2.5:  
+ - Configform überarbeitet  
+ - Discovery-Instanz hinzugefügt  
+ - RTSP-Stream ergänzt  
+ - JPEG-Push und h.26x für Media-Objekt ergänzt  
 
 Version 2.01:  
  - Fixes für IPS 5.0
