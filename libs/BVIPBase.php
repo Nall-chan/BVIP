@@ -4,7 +4,6 @@ require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
-
     use VariableProfile,
         VariableHelper,
         DebugHelper,
@@ -97,7 +96,7 @@ abstract class BVIPBase extends IPSModule
     protected function KernelReady()
     {
         $this->RegisterParent();
-        if ($this->HasActiveParent()){
+        if ($this->HasActiveParent()) {
             $this->IOChangeState(IS_ACTIVE);
         }
     }
@@ -335,5 +334,4 @@ abstract class BVIPBase extends IPSModule
             return false;
         }
     }
-
 }
