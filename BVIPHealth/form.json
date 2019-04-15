@@ -13,7 +13,7 @@
                 {
                     "type": "Button",
                     "caption": "Read Device",
-                    "onClick": "BVIP_Scan($id);"
+                    "onClick": "BVIP_Scan($id);BVIP_RequestState($id);"
                 }
             ]
 }

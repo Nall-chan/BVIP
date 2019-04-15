@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /*
@@ -9,9 +11,9 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2017 Michael Tröger
+ * @copyright     2019 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       1.0
+ * @version       3.0
  *
  */
 
@@ -20,10 +22,10 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * Erweitert BVIPBase.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2017 Michael Tröger
+ * @copyright     2019 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       1.0
+ * @version       3.0
  *
  * @example <b>Ohne</b>
  */
@@ -37,7 +39,6 @@ class BVIPVirtualInputs extends BVIPBase
     public function Create()
     {
         parent::Create();
-        $this->RegisterPropertyInteger('Number', 0);
     }
 
     /**
@@ -56,11 +57,6 @@ class BVIPVirtualInputs extends BVIPBase
         }
     }
 
-    protected function KernelReady()
-    {
-        parent::KernelReady();
-    }
-
     protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
@@ -69,32 +65,10 @@ class BVIPVirtualInputs extends BVIPBase
         }
     }
 
-    public function Scan()
-    {
-        $Nbr = $this->GetNbrOfVirtualAlarms();
-        if ($Nbr === false) {
-            return false;
-        }
-
-        if ($this->ReadPropertyInteger('Number') != $Nbr) {
-            IPS_SetProperty($this->InstanceID, 'Number', $Nbr);
-            IPS_ApplyChanges($this->InstanceID);
-        }
-
-        return true;
-    }
-
     public function WriteBoolean(string $Ident, bool $Value)
     {
-        $VarId = @$this->GetIDForIdent($Ident);
-        if ($VarId == 0) {
-            trigger_error($this->Translate('IDENT invalid.'), E_USER_NOTICE);
-
-            return false;
-        }
         if (!is_bool($Value)) {
             trigger_error(sprintf($this->Translate('Value must be %s.'), 'bool'), E_USER_NOTICE);
-
             return false;
         }
         $RCPData = new RCPData();
@@ -114,7 +88,7 @@ class BVIPVirtualInputs extends BVIPBase
 
                 return false;
             }
-            $this->SetValueBoolean($Ident, $Value);
+            //$this->SetValueBoolean($Ident, $Value);
 
             return true;
         }
@@ -127,12 +101,6 @@ class BVIPVirtualInputs extends BVIPBase
 
     public function WriteString(string $Ident, string $Value)
     {
-        $VarId = @$this->GetIDForIdent($Ident);
-        if ($VarId == 0) {
-            trigger_error($this->Translate('IDENT invalid.'), E_USER_NOTICE);
-
-            return false;
-        }
         if (!is_string($Value)) {
             trigger_error(sprintf($this->Translate('Value must be %s.'), 'string'), E_USER_NOTICE);
 
@@ -171,6 +139,10 @@ class BVIPVirtualInputs extends BVIPBase
 
     public function RequestAction($Ident, $Value)
     {
+        if (parent::RequestAction($Ident, $Value)) {
+            return;
+        }
+
         return $this->WriteBoolean($Ident, (bool) $Value);
     }
 
@@ -178,7 +150,8 @@ class BVIPVirtualInputs extends BVIPBase
     {
         $Result = true;
 
-        $Nbr = $this->ReadPropertyInteger('Number');
+        $Nbr = $this->GetNbrOfVirtualAlarms();
+
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_VIRTUAL_ALARM_STATE;
         $RCPData->DataType = RCPDataType::RCP_F_FLAG;
@@ -203,27 +176,13 @@ class BVIPVirtualInputs extends BVIPBase
         return $Result;
     }
 
-    protected function GetOrCreateVariable(string $Ident)
-    {
-        $vid = @$this->GetIDForIdent($Ident);
-        if ($vid == false) {
-            $vid = $this->RegisterVariableBoolean($Ident, $Ident, '~Alert');
-            $this->EnableAction($Ident);
-        }
-
-        return $vid;
-    }
-
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        $this->GetOrCreateVariable('VIRTUAL_' . $RCPData->Num);
-        $this->SetValueBoolean('VIRTUAL_' . $RCPData->Num, $RCPData->Payload);
-
-        if ($this->ReadPropertyInteger('Number') < $RCPData->Num) {
-            IPS_SetProperty($this->InstanceID, 'Number', $RCPData->Num);
-            IPS_ApplyChanges($this->InstanceID);
-        }
+        $Ident = 'VIRTUAL_' . $RCPData->Num;
+        $this->RegisterVariableBoolean($Ident, $Ident, '~Alert');
+        $this->SetValueBoolean($Ident, $RCPData->Payload);
     }
+
 }
 
 /* @} */

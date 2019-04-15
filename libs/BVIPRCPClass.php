@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class RCPTag
 {
     //----------------------------------------------------------------------------//
@@ -195,7 +197,7 @@ class RCPTag
       VIDEO_INPUT_FORMAT_EX
       INPUT_SOURCE_VAL
       } */
-    const TAG_NBR_OF_VIDEO_IN = 0x01d6; // only Read (T_DWORD)                                    **
+    const TAG_NBR_OF_VIDEO_IN = 0x01d6; // veraltet only Read (T_DWORD)                                    **
     /* {
       PRIV_MSK
       VIN_BASE_FRAMERATE
@@ -277,13 +279,13 @@ class RCPTag
     const TAG_INPUT_PIN_STATE = 0x01c0; // only Read (FLAG) 0=off, 1=Alarm num:Alarm Input  **
     const TAG_MOTION_ALARM_STATE = 0x01c3; // only Read (FLAG) 0=off, 1=Alarm (alles außer Video loss) num:Video Line
     const TAG_RELAY_OUTPUT_STATE = 0x01c1; // R/W (FLAG) num:Relay                             **
-    const TAG_NBR_OF_ALARM_IN = 0x01db; // only Read (T_DWORD)                              **
-    const TAG_NBR_OF_ALARM_OUT = 0x01dc; // only Read (T_DWORD)                              **
+    const TAG_NBR_OF_ALARM_IN = 0x01db; // veraltet only Read (T_DWORD)                              **
+    const TAG_NBR_OF_ALARM_OUT = 0x01dc; //veraltet only Read (T_DWORD)                              **
     const TAG_NBR_OF_MOTION_DETECTORS = 0x09af; // only Read (T_DWORD)
 // HD_MGR_SIGNAL_ALARM
     const TAG_VIRTUAL_ALARM_STATE = 0x0a8b; // R/W(FLAG) 0=off, 1=Alarm num:Virtual Alarm Input **
     const TAG_SET_VIRTUAL_ALARM_ID = 0x0b41; // R/W (P_UNICODE) 32char   num:Virtual Alarm Input
-    const TAG_NBR_OF_VIRTUAL_ALARMS = 0x0aed; // only Read (T_DWORD)
+    const TAG_NBR_OF_VIRTUAL_ALARMS = 0x0aed; // veraltet only Read (T_DWORD)
     const TAG_MANIPULATION_ALARM_STATE = 0x0af0; //only Read (FLAG) 0=off, 1=Alarm num: Manipul Alarm Input
     const TAG_NBR_OF_MANIPULATION_ALARMS = 0x0af1; // only Read (T_DWORD)
     const TAG_RELAIS_NAME = 0x0109; // R/W Input Name (P_UNICODE) num:Relay             **
@@ -518,7 +520,6 @@ class RCPTag
       HD_REPLAY_FORENSIC_SEARCH_RESULT
       BACKUP_STATUS
       } */
-
     public static function ToString($RCPTag)
     {
         switch ($RCPTag) {
@@ -642,6 +643,7 @@ class RCPTag
                 return '';
         }
     }
+
 }
 
 class RCPDataType
@@ -679,6 +681,7 @@ class RCPDataType
                 return '';
         }
     }
+
 }
 
 class RCPReadWrite
@@ -697,6 +700,7 @@ class RCPReadWrite
                 return '';
         }
     }
+
 }
 
 class RCPAction
@@ -721,6 +725,7 @@ class RCPAction
                 return '';
         }
     }
+
 }
 
 class RCPError
@@ -799,6 +804,7 @@ class RCPError
                 return '';
         }
     }
+
 }
 
 class RCPData
@@ -915,6 +921,7 @@ class RCPData
         }
         $this->DataID = self::IIPSReceiveBVIP;
     }
+
 }
 
 class RCPFrame
@@ -993,10 +1000,10 @@ class RCPFrame
                     $this->Payload = pack('N', $Data->Payload);
                     break;
                 case RCPDataType::RCP_P_STRING:
-                    $this->Payload = $Data->Payload.chr(0);
+                    $this->Payload = $Data->Payload . chr(0);
                     break;
                 case RCPDataType::RCP_P_UNICODE:
-                    $this->Payload = mb_convert_encoding($Data->Payload, 'UTF-16', 'UTF-8').chr(0).chr(0);
+                    $this->Payload = mb_convert_encoding($Data->Payload, 'UTF-16', 'UTF-8') . chr(0) . chr(0);
                     break;
 
                 case RCPDataType::RCP_P_OCTET:
@@ -1049,4 +1056,5 @@ class RCPFrame
 
         return $TCP_Frame;
     }
+
 }

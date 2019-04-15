@@ -1,6 +1,8 @@
 <?php
 
-require_once __DIR__.'/../libs/BVIPBase.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /*
  * @addtogroup bvip
@@ -55,11 +57,6 @@ class BVIPOutputs extends BVIPBase
         if ($this->HasActiveParent()) {
             $this->IOChangeState(IS_ACTIVE);
         }
-    }
-
-    protected function KernelReady()
-    {
-        parent::KernelReady();
     }
 
     protected function IOChangeState($State)
@@ -139,6 +136,10 @@ class BVIPOutputs extends BVIPBase
 
     public function RequestAction($Ident, $Value)
     {
+        if (parent::RequestAction($Ident, $Value)) {
+            return;
+        }
+
         return $this->WriteBoolean($Ident, (bool) $Value);
     }
 
@@ -163,7 +164,7 @@ class BVIPOutputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('RELAY_'.$index.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error('RELAY_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
             }
         }
 
@@ -185,7 +186,7 @@ class BVIPOutputs extends BVIPBase
             $RCPReplyData = $this->Send($RCPData);
             /* @var $RCPReplyData RCPData */
             if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-                $vid = $this->GetOrCreateVariable('RELAY_'.$index);
+                $vid = $this->GetOrCreateVariable('RELAY_' . $index);
                 if (IPS_GetName($vid) != $RCPReplyData->Payload) {
                     IPS_SetName($vid, $RCPReplyData->Payload);
                 }
@@ -195,7 +196,7 @@ class BVIPOutputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('Read Name RELAY_'.$index.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error('Read Name RELAY_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
             }
         }
 
@@ -222,7 +223,7 @@ class BVIPOutputs extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name '.$Ident.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error('Write Name ' . $Ident . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
         }
 
         return false;
@@ -241,14 +242,15 @@ class BVIPOutputs extends BVIPBase
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        $this->GetOrCreateVariable('RELAY_'.$RCPData->Num);
-        $this->SetValueBoolean('RELAY_'.$RCPData->Num, $RCPData->Payload);
+        $this->GetOrCreateVariable('RELAY_' . $RCPData->Num);
+        $this->SetValueBoolean('RELAY_' . $RCPData->Num, $RCPData->Payload);
 
         if ($this->ReadPropertyInteger('Number') < $RCPData->Num) {
             IPS_SetProperty($this->InstanceID, 'Number', $RCPData->Num);
             IPS_ApplyChanges($this->InstanceID);
         }
     }
+
 }
 
 /* @} */

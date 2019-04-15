@@ -1,18 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
+/**
+ */
 
 abstract class BVIPBase extends IPSModule
 {
-    use VariableProfile,
-        VariableHelper,
-        DebugHelper,
-        BufferHelper,
-        InstanceStatus,
-        Semaphore,
-        UTF8Coder {
-        InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
-        InstanceStatus::RegisterParent as IORegisterParent;
+
+    use bvip\VariableProfile,
+        bvip\VariableHelper,
+        bvip\DebugHelper,
+        bvip\BufferHelper,
+        bvip\InstanceStatus,
+        bvip\Semaphore,
+        bvip\UTF8Coder {
+        bvip\InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
+        bvip\InstanceStatus::RegisterParent as IORegisterParent;
+        bvip\InstanceStatus::RequestAction as IORequestAction;
     }
     protected static $RCPTags;
 
@@ -89,6 +95,14 @@ abstract class BVIPBase extends IPSModule
         $this->SetSummary(('none'));
     }
 
+    public function RequestAction($Ident, $Value)
+    {
+        if ($this->IORequestAction($Ident, $Value)) {
+            return true;
+        }
+        return false;
+    }
+
     abstract protected function RequestState();
     /**
      * Wird ausgeführt wenn der Kernel hochgefahren wurde.
@@ -96,9 +110,9 @@ abstract class BVIPBase extends IPSModule
     protected function KernelReady()
     {
         $this->RegisterParent();
-        if ($this->HasActiveParent()) {
-            $this->IOChangeState(IS_ACTIVE);
-        }
+        /* if ($this->HasActiveParent()) {
+          $this->IOChangeState(IS_ACTIVE);
+          } */
     }
 
     /*    public function ReceiveData($JSONString)
@@ -116,7 +130,7 @@ abstract class BVIPBase extends IPSModule
             }
             $this->SendDebug('Send', '~~~', 0);
             $this->SendDebug('Send', $RCPData, 0);
-            $RCPData = $this->EncodeUTF8($RCPData);
+            $this->EncodeUTF8($RCPData);
             $RCPData->DataID = RCPData::IIPSSendBVIPData;
             $anwser = $this->SendDataToParent(json_encode($RCPData));
             if ($anwser === false) {
@@ -141,8 +155,7 @@ abstract class BVIPBase extends IPSModule
         $this->SendDebug('Event', $JSONString, 0);
         $RCPData = new RCPData();
         $RCPData->FromJSONString($JSONString);
-        $RCPData = $this->DecodeUTF8($RCPData);
-
+        $this->DecodeUTF8($RCPData);
         $this->SendDebug('Event', $RCPData, 0);
         $this->DecodeRCPEvent($RCPData);
     }
@@ -157,181 +170,44 @@ abstract class BVIPBase extends IPSModule
             }
         }
 
-        return false;
+        return 0;
     }
 
     protected function GetCapability()
     {
-        if (!$this->HasActiveParent()) {
-            return false;
+        if ($this->ParentID > 0) {
+            return BVIP_ReadCapability($this->ParentID);
         }
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
-        $RCPData->DataType = RCPDataType::RCP_P_OCTET;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        /* @var $RCPReplyData RCPData */
-        $RCPReplyData = @$this->Send($RCPData);
-        $Capas = [];
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            $i = 0;
-            $pointer = 6;
-            $NbrOfSections = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
-            $Capas = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
-            for ($Section = 1; $Section <= $NbrOfSections; $Section++) {
-                $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
-                $SectionTyp = unpack('n', substr($RCPReplyData->Payload, $pointer, 2))[1];
-                $NbrOfSectionElements = unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
-                $FullSectionData = substr($RCPReplyData->Payload, $pointer + 6, $len - 6);
-                switch ($SectionTyp) {
-                    case 0x0001: // Video - 10
-                        $ElementsData = str_split($FullSectionData, 10);
-                        $Video = [];
-                        for ($i = 1; $i <= $NbrOfSectionElements; $i++) {
-                            /*
-                              Type        2 Bytes
-                              Identifier  2 Bytes
-                              Compression 2 Bytes
-                              InputNo     2 Bytes
-                              Resolution  2 Bytes
-                             */
-                            $ElementData = str_split($ElementsData[$i - 1], 2);
-                            $Video[unpack('n', $ElementData[3])[1]][] = [
-                                'Compression' => unpack('n', $ElementData[2])[1],
-                                'Resolution'  => unpack('n', $ElementData[4])[1]
-                            ];
-                            $Typ = unpack('n', $ElementData[0])[1];
-                            switch ($Typ) {
-                                case 0x0001:
-                                    $Capas['Video']['Encoder'] = $Video;
-                                    break;
-                                case 0x0002:
-                                    $Capas['Video']['Decoder'] = $Video;
-                                    break;
-                                case 0x0003:
-                                    $Capas['Video']['Transcoder'] = $Video;
-                                    break;
-                            }
-                        }
-
-                        break;
-                    case 0x0003: // Serial - 4
-                        $Capas['SerialPorts'] = $NbrOfSectionElements;
-                        break;
-                    case 0x0004: // IO - 4
-                        $ElementsData = str_split($FullSectionData, 4);
-                        $IOs = [1 => 0, 2 => 0, 3 => 0];
-                        for ($i = 1; $i <= $NbrOfSectionElements; $i++) {
-                            /*
-                              Type        2 Bytes
-                              Identifier  2 Bytes
-                             */
-                            $ElementData = str_split($ElementsData[$i - 1], 2);
-                            $IOs[unpack('n', $ElementData[0])[1]] ++;
-                        }
-                        $Capas['IO'] = ['Input' => $IOs[1], 'Output' => $IOs[2], 'Virtual' => $IOs[3]];
-                        break;
-                }
-                $pointer = $pointer + $len;
-            }
-
-            return $Capas;
-        }
+        return ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
     }
 
     protected function ReadNbrOfVideoIn()
     {
-        if (!$this->HasActiveParent()) {
+        $VideoIn = count($this->GetCapability()['Video']['Encoder']);
+        if ($VideoIn == 0) {
             return 16;
         }
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_NBR_OF_VIDEO_IN;
-        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        $RCPData->Num = 0;
-        $RCPReplyData = @$this->Send($RCPData);
-        /* @var $RCPReplyData RCPData */
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            return $RCPReplyData->Payload;
-        }
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            return 16;
-        }
+        return $VideoIn;
     }
 
     protected function GetNbrOfSerialPorts()
     {
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
-        $RCPData->DataType = RCPDataType::RCP_P_OCTET;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        /* @var $RCPReplyData RCPData */
-        $RCPReplyData = @$this->Send($RCPData);
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            $i = 0;
-            $pointer = 6;
-            $NbrSection = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
-            for ($Section = 1; $Section <= $NbrSection; $Section++) {
-                $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
-                if (ord($RCPReplyData->Payload[$pointer + 1]) == 0x03) {
-                    return unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
-                }
-                $pointer = $pointer + $len;
-            }
+        return $this->GetCapability()['SerialPorts'];
+    }
 
-            return 0;
-        }
+    protected function GetNbrOfInputs()
+    {
+        return $this->GetCapability()['IO']['Input'];
+    }
 
-        return 0;
+    protected function GetNbrOfOutputs()
+    {
+        return $this->GetCapability()['IO']['Output'];
     }
 
     protected function GetNbrOfVirtualAlarms()
     {
-        if ($this->GetFirmware() > 4) {
-            $RCPData = new RCPData();
-            $RCPData->Tag = RCPTag::TAG_NBR_OF_VIRTUAL_ALARMS;
-            $RCPData->DataType = RCPDataType::RCP_T_DWORD;
-            $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-            /* @var $RCPReplyData RCPData */
-            $RCPReplyData = $this->Send($RCPData);
-            if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-                return $RCPReplyData->Payload;
-            }
-            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
-            }
-            return false;
-        } else {
-            $RCPData = new RCPData();
-            $RCPData->Tag = RCPTag::TAG_CAPABILITY_LIST;
-            $RCPData->DataType = RCPDataType::RCP_P_OCTET;
-            $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-            /* @var $RCPReplyData RCPData */
-            $RCPReplyData = $this->Send($RCPData);
-            if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-                $i = 0;
-                $pointer = 6;
-                $NbrSection = unpack('n', substr($RCPReplyData->Payload, 4, 2))[1];
-                for ($Section = 1; $Section <= $NbrSection; $Section++) {
-                    $len = unpack('n', substr($RCPReplyData->Payload, $pointer + 2, 2))[1];
-                    if (ord($RCPReplyData->Payload[$pointer + 1]) == 0x04) {
-                        $NbrElement = unpack('n', substr($RCPReplyData->Payload, $pointer + 4, 2))[1];
-                        for ($Element = 1; $Element <= $$NbrElement; $Element++) {
-                            if (ord($RCPReplyData->Payload[$pointer + 3 + ($Element * 4)]) == 0x03) {
-                                if (ord($RCPReplyData->Payload[$pointer + 5 + ($Element * 4)]) > $i) {
-                                    $i = ord($ReplyData->Payload[$pointer + 5 + ($Element * 4)]);
-                                }
-                            }
-                        }
-                    }
-                    $pointer = $pointer + $len;
-                }
-                return $i;
-            }
-            if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
-            }
-
-            return false;
-        }
+        return $this->GetCapability()['IO']['Virtual'];
     }
+
 }

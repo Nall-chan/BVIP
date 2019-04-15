@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
-
 /*
  * @addtogroup bvip
  * @{
@@ -29,10 +28,11 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  * @example <b>Ohne</b>
  * @property array $Devices
  */
-class BVIPDiscovery extends ipsmodule
+class BVIPDiscovery extends IPSModule
 {
-    use DebugHelper,
-        BufferHelper;
+
+    use bvip\DebugHelper,
+        bvip\BufferHelper;
     /**
      * Interne Funktion des SDK.
      */
@@ -63,7 +63,6 @@ class BVIPDiscovery extends ipsmodule
     /**
      * Interne Funktion des SDK.
      * Verarbeitet alle Nachrichten auf die wir uns registriert haben.
-     *
      * @param int       $TimeStamp
      * @param int       $SenderID
      * @param int       $Message
@@ -205,6 +204,7 @@ class BVIPDiscovery extends ipsmodule
         $this->Devices = $this->DiscoverDevices();
         // Alt neu vergleich fehlt, sowie die Events an IPS senden wenn neues Gerät im Netz gefunden wurde.
     }
+
 }
 
 /* @} */

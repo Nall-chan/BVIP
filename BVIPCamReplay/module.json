@@ -1,0 +1,11 @@
+{
+    "id": "{95A5679D-1FBE-4ABC-9039-4D98802D337C}",
+    "name": "BVIP Cam Replay",
+    "type": 3,
+    "vendor": "BOSCH",
+    "aliases": ["BVIP Camera Replay"],
+    "parentRequirements": ["{0E1D027B-E420-4F8E-91E7-59FFA485F8FD}"],
+    "childRequirements": [],
+    "implemented": ["{B974BF3E-45B8-4648-BC7F-952AC79929B7}"],
+    "prefix": "BVIP"
+}

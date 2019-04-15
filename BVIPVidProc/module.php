@@ -1,6 +1,8 @@
 <?php
 
-require_once __DIR__.'/../libs/BVIPBase.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /*
  * @addtogroup bvip
@@ -58,11 +60,6 @@ class BVIPVidProc extends BVIPBase
         }
     }
 
-    protected function KernelReady()
-    {
-        parent::KernelReady();
-    }
-
     protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
@@ -108,7 +105,7 @@ class BVIPVidProc extends BVIPBase
             return true;
         } else {
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('VIPROC_ALARM - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error('VIPROC_ALARM - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
             }
         }
 
@@ -140,7 +137,7 @@ class BVIPVidProc extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name Line'.$Line.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error('Write Name Line' . $Line . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
         }
 
         return false;
@@ -174,7 +171,7 @@ class BVIPVidProc extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name Line'.$Line.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error('Write Name Line' . $Line . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
         }
 
         return false;
@@ -219,6 +216,7 @@ class BVIPVidProc extends BVIPBase
         $this->GetOrCreateVariable('INVALID_CONFIGURATION');
         $this->SetValueBoolean('INVALID_CONFIGURATION', ord($RCPData->Payload[1]) & 0b10000000);
     }
+
 }
 
 /* @} */

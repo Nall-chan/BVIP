@@ -1,6 +1,9 @@
 <?php
 
-//declare(strict_types=1);
+declare(strict_types=1);
+
+require_once __DIR__ . '/../libs/BVIPBase.php';
+
 /*
  * @addtogroup bvip
  * @{
@@ -13,7 +16,6 @@
  * @version       1.0
  *
  */
-require_once __DIR__ . '/../libs/BVIPBase.php';
 
 /**
  * BVIPConfigurator Klasse implementiert
@@ -45,16 +47,6 @@ class BVIPConfigurator extends BVIPBase
     public function ApplyChanges()
     {
         parent::ApplyChanges();
-    }
-
-    protected function KernelReady()
-    {
-        parent::KernelReady();
-    }
-
-    protected function IOChangeState($State)
-    {
-        parent::IOChangeState($State);
     }
 
     /**
@@ -176,7 +168,7 @@ class BVIPConfigurator extends BVIPBase
                 ];
             }
         }
-      
+
         return $Devices;
     }
 
@@ -244,11 +236,14 @@ class BVIPConfigurator extends BVIPBase
 
     public function RequestState()
     {
+        
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
+        
     }
+
 }
 
 /* @} */

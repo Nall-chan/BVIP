@@ -1,6 +1,9 @@
 <?php
 
-require_once __DIR__.'/../libs/BVIPBase.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/../libs/BVIPBase.php';
+
 
 /*
  * @addtogroup bvip
@@ -56,10 +59,6 @@ class BVIPInputs extends BVIPBase
         }
     }
 
-    protected function KernelReady()
-    {
-        parent::KernelReady();
-    }
 
     protected function IOChangeState($State)
     {
@@ -116,7 +115,7 @@ class BVIPInputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('INPUT_'.$index.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error('INPUT_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
             }
         }
 
@@ -137,7 +136,7 @@ class BVIPInputs extends BVIPBase
             $RCPReplyData = $this->Send($RCPData);
             /* @var $RCPReplyData RCPData */
             if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-                $vid = $this->GetOrCreateVariable('INPUT_'.$index);
+                $vid = $this->GetOrCreateVariable('INPUT_' . $index);
                 if (IPS_GetName($vid) != $RCPReplyData->Payload) {
                     IPS_SetName($vid, $RCPReplyData->Payload);
                 }
@@ -147,7 +146,7 @@ class BVIPInputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('Read Name INPUT_'.$index.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error('Read Name INPUT_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
             }
         }
 
@@ -174,7 +173,7 @@ class BVIPInputs extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name '.$Ident.' - '.RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error('Write Name ' . $Ident . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
         }
 
         return false;
@@ -192,14 +191,15 @@ class BVIPInputs extends BVIPBase
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        $this->GetOrCreateVariable('INPUT_'.$RCPData->Num);
-        $this->SetValueBoolean('INPUT_'.$RCPData->Num, $RCPData->Payload);
+        $this->GetOrCreateVariable('INPUT_' . $RCPData->Num);
+        $this->SetValueBoolean('INPUT_' . $RCPData->Num, $RCPData->Payload);
 
         if ($this->ReadPropertyInteger('Number') < $RCPData->Num) {
             IPS_SetProperty($this->InstanceID, 'Number', $RCPData->Num);
             IPS_ApplyChanges($this->InstanceID);
         }
     }
+
 }
 
 /* @} */

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/BVIPBase.php';
 
@@ -82,11 +82,6 @@ class BVIPHealth extends BVIPBase
         if ($this->HasActiveParent()) {
             $this->IOChangeState(IS_ACTIVE);
         }
-    }
-
-    protected function KernelReady()
-    {
-        parent::KernelReady();
     }
 
     protected function IOChangeState($State)
@@ -379,6 +374,7 @@ class BVIPHealth extends BVIPBase
     {
         // empty
     }
+
 }
 
 /* @} */

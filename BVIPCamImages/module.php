@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../libs/BVIPBase.php';
+
 
 /*
  * @addtogroup bvip
@@ -16,7 +19,7 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  */
 
 /**
- * BVIPCamImages Klasse implementiert eine Device für die Darstelleung des Videobildes.
+ * BVIPCamImages Klasse implementiert eine Device für die Darstellung des Videobildes.
  * Erweitert BVIPBase.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
@@ -67,12 +70,7 @@ class BVIPCamImages extends BVIPBase
         }
     }
 
-    protected function KernelReady()
-    {
-        parent::KernelReady();
-    }
-
-    protected function IOChangeState($State)
+   protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
         if ($State == IS_ACTIVE) {
@@ -201,7 +199,7 @@ class BVIPCamImages extends BVIPBase
             }
             $mid = @$this->GetIDForIdent('STREAM');
             if ($mid == false) {
-                $mid = IPS_CreateMedia(3);
+                $mid = IPS_CreateMedia(MEDIATYPE_STREAM);
                 IPS_SetParent($mid, $this->InstanceID);
                 IPS_SetName($mid, 'STREAM');
                 IPS_SetIdent($mid, 'STREAM');
@@ -285,7 +283,9 @@ class BVIPCamImages extends BVIPBase
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
+        
     }
+
 }
 
 /* @} */

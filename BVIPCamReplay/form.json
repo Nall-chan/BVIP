@@ -1,0 +1,43 @@
+{
+    "elements":
+            [{
+                    "name": "UseAuth",
+                    "type": "CheckBox",
+                    "caption": "Use authentification"
+                }, {
+                    "name": "Line",
+                    "type": "Select",
+                    "caption": "Videoline:",
+                    "options": [
+                        {
+                            "caption": "1",
+                            "value": 1
+                        }
+                    ]
+                }, {
+                    "name": "Recording",
+                    "type": "Select",
+                    "caption": "Recording",
+                    "options": [
+                        {
+                            "caption": "Recording 1",
+                            "value": 1
+                        },
+                        {
+                            "caption": "Recording 2",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "name": "Rename",
+                    "type": "CheckBox",
+                    "caption": "Rename instance"
+                },
+                {
+                    "name": "Autoplay",
+                    "type": "CheckBox",
+                    "caption": "Autoplay"
+                }
+            ]
+}
