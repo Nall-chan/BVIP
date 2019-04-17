@@ -84,15 +84,17 @@ abstract class BVIPBase extends IPSModule
      */
     protected function IOChangeState($State)
     {
+        $Config = json_decode(IPS_GetConfiguration($this->InstanceID), true);
+        $Line = (array_key_exists('Line', $Config)) ? '@' . $Config['Line'] : '';
         $SplitterId = $this->ParentID;
         if ($SplitterId > 0) {
             $IOId = @IPS_GetInstance($SplitterId)['ConnectionID'];
             if ($IOId > 0) {
-                $this->SetSummary(IPS_GetProperty($IOId, 'Host'));
+                $this->SetSummary(IPS_GetProperty($IOId, 'Host') . $Line);
                 return;
             }
         }
-        $this->SetSummary(('none'));
+        $this->SetSummary(('none' . $Line));
     }
 
     public function RequestAction($Ident, $Value)
@@ -142,7 +144,7 @@ abstract class BVIPBase extends IPSModule
             $this->SendDebug('RAW', $anwser, 0);
             $this->SendDebug('Response', $RCPData, 0);
         } catch (Exception $exc) {
-            trigger_error($exc->getMessage(), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate($exc->getMessage()), E_USER_NOTICE);
             $RCPData->Error = RCPError::RCP_ERROR_SEND_ERROR;
         }
 
@@ -163,20 +165,34 @@ abstract class BVIPBase extends IPSModule
     abstract protected function DecodeRCPEvent(RCPData $RCPData);
     protected function GetFirmware()
     {
-        if ($this->ParentID > 0) {
-            $vid = @IPS_GetObjectIDByIdent('Firmware', $this->ParentID);
-            if ($vid > 0) {
-                return (float) substr(GetValueString($vid), 0, 5);
+        if ($this->HasActiveParent()) {
+            $Data = json_encode(['DataID' => RCPData::IIPSSendBVIPData, 'Method' => 'ReadFirmware']);
+            $anwser = $this->SendDataToParent($Data);
+
+            if ($anwser === false) {
+                $this->SendDebug('ReadFirmware', 'No valid answer', 0);
+
+                throw new Exception($this->Translate('No valid answer.'), E_USER_NOTICE);
             }
+            return (float) substr(unserialize($anwser), 0, 5);
         }
+
 
         return 0;
     }
 
     protected function GetCapability()
     {
-        if ($this->ParentID > 0) {
-            return BVIP_ReadCapability($this->ParentID);
+        if ($this->HasActiveParent()) {
+            $Data = json_encode(['DataID' => RCPData::IIPSSendBVIPData, 'Method' => 'ReadCapability']);
+            $anwser = $this->SendDataToParent($Data);
+
+            if ($anwser === false) {
+                $this->SendDebug('GetCapability', 'No valid answer', 0);
+
+                throw new Exception($this->Translate('No valid answer.'), E_USER_NOTICE);
+            }
+            return unserialize($anwser);
         }
         return ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
     }

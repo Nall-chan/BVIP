@@ -26,7 +26,7 @@ trait DebugHelper
             $this->SendDebug($Message . ':DataType', \RCPDataType::ToString($Data->DataType), 0);
             $this->SendDebug($Message . ':RW', \RCPReadWrite::ToString($Data->RW), 0);
             $this->SendDebug($Message . ':Number', $Data->Num, 0);
-            $this->SendDebug($Message . ':Error', \RCPError::ToString($Data->Error), 0);
+            $this->SendDebug($Message . ':Error', $this->Translate(\RCPError::ToString($Data->Error)), 0);
             switch ($Data->DataType) {
                 case \RCPDataType::RCP_F_FLAG:
                     $this->SendDebug($Message . ':Payload', $Data->Payload, 0);

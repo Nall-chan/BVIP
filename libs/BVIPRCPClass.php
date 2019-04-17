@@ -775,9 +775,9 @@ class RCPError
             case self::RCP_ERROR_INVALID_CLIENT_ID:
                 return 'invalid ClientId';
             case self::RCP_ERROR_INVALID_METHOD:
-                return 'invalid Method';
+                return 'invalid method';
             case self::RCP_ERROR_INVALID_CMD:
-                return 'invalid Command';
+                return 'invalid command';
             case self::RCP_ERROR_INVALID_ACCESS_TYPE:
                 return 'invalid access type';
             case self::RCP_ERROR_INVALID_DATA_TYPE:
@@ -797,9 +797,9 @@ class RCPError
             case self::RCP_ERROR_TIMEOUT:
                 return 'Timeout';
             case self::RCP_ERROR_COMMAND_SPECIFIC:
-                return 'Specific Error';
+                return 'Command specific error';
             case self::RCP_ERROR_ADDRESS_FORMAT:
-                return 'Adress format Error';
+                return 'Adress format error';
             default:
                 return '';
         }
@@ -854,6 +854,9 @@ class RCPData
     public function FromJSONString($JSONString)
     {
         $Data = json_decode($JSONString);
+        if (property_exists($Data, 'Method')) {
+            return $Data->Method;
+        }
         /* @var $Data RCPData */
         $this->DataType = $Data->DataType;
         $this->Num = $Data->Num;
@@ -861,6 +864,7 @@ class RCPData
         $this->RW = $Data->RW;
         $this->Payload = $Data->Payload;
         unset($this->DataID);
+        return true;
     }
 
     public function FromRCPFrame(RCPFrame $RCPFrame)

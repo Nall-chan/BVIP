@@ -41,7 +41,7 @@ class BVIPInputs extends BVIPBase
     {
         parent::Create();
         $this->RegisterPropertyBoolean('Rename', true);
-        $this->RegisterPropertyInteger('Number', 0);
+        $this->RegisterAttributeInteger('Number', 0);
     }
 
     /**
@@ -59,15 +59,14 @@ class BVIPInputs extends BVIPBase
         }
     }
 
-
     protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
         if ($State == IS_ACTIVE) {
+            $this->Scan();
             if ($this->ReadPropertyBoolean('Rename') === true) {
                 $this->RequestName();
             }
-            $this->RequestState();
         }
     }
 
@@ -80,15 +79,13 @@ class BVIPInputs extends BVIPBase
         /* @var $RCPReplyData RCPData */
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            if ($this->ReadPropertyInteger('Number') != $RCPReplyData->Payload) {
-                IPS_SetProperty($this->InstanceID, 'Number', $RCPReplyData->Payload);
+            if ($this->ReadAttributeInteger('Number') != $RCPReplyData->Payload) {
+                $this->WriteAttributeInteger('Number', $RCPReplyData->Payload);
             }
-            @IPS_ApplyChanges($this->InstanceID);
-
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -97,7 +94,7 @@ class BVIPInputs extends BVIPBase
     public function RequestState()
     {
         $Result = true;
-        $Nbr = $this->ReadPropertyInteger('Number');
+        $Nbr = $this->ReadAttributeInteger('Number');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_INPUT_PIN_STATE;
         $RCPData->DataType = RCPDataType::RCP_F_FLAG;
@@ -115,7 +112,7 @@ class BVIPInputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('INPUT_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . 'INPUT_' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 
@@ -125,7 +122,7 @@ class BVIPInputs extends BVIPBase
     public function RequestName()
     {
         $Result = true;
-        $Nbr = $this->ReadPropertyInteger('Number');
+        $Nbr = $this->ReadAttributeInteger('Number');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_INPUT_PIN_NAME;
         $RCPData->DataType = RCPDataType::RCP_P_UNICODE;
@@ -146,7 +143,7 @@ class BVIPInputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('Read Name INPUT_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . 'Read Name INPUT_' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 
@@ -173,7 +170,7 @@ class BVIPInputs extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name ' . $Ident . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . 'Write Name ' . $Ident . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -194,9 +191,8 @@ class BVIPInputs extends BVIPBase
         $this->GetOrCreateVariable('INPUT_' . $RCPData->Num);
         $this->SetValueBoolean('INPUT_' . $RCPData->Num, $RCPData->Payload);
 
-        if ($this->ReadPropertyInteger('Number') < $RCPData->Num) {
-            IPS_SetProperty($this->InstanceID, 'Number', $RCPData->Num);
-            IPS_ApplyChanges($this->InstanceID);
+        if ($this->ReadAttributeInteger('Number') < $RCPData->Num) {
+            $this->WriteAttributeInteger('Number', $RCPData->Num);
         }
     }
 

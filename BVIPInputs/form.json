@@ -4,7 +4,7 @@
                 {
                     "name": "Rename",
                     "type": "CheckBox",
-                    "caption": "Rename variables:"
+                    "caption": "Rename variables"
                 }
             ],
     "actions":
@@ -12,7 +12,7 @@
                 {
                     "type": "Button",
                     "caption": "Read Device",
-                    "onClick": "BVIP_Scan($id);"
+                    "onClick": "BVIP_Scan($id);BVIP_RequestState($id);"
                 }
             ]
 }

@@ -60,15 +60,12 @@ class BVIPVirtualInputs extends BVIPBase
     protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
-        if ($State == IS_ACTIVE) {
-            $this->RequestState();
-        }
     }
 
     public function WriteBoolean(string $Ident, bool $Value)
     {
         if (!is_bool($Value)) {
-            trigger_error(sprintf($this->Translate('Value must be %s.'), 'bool'), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.sprintf($this->Translate('Value must be %s.'), 'bool'), E_USER_NOTICE);
             return false;
         }
         $RCPData = new RCPData();
@@ -84,7 +81,7 @@ class BVIPVirtualInputs extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
             if ($RCPReplyData->Payload != $Value) {
-                trigger_error($this->Translate('Error write VirtualAlarmState.'), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.$this->Translate('Error write VirtualAlarmState.'), E_USER_NOTICE);
 
                 return false;
             }
@@ -93,7 +90,7 @@ class BVIPVirtualInputs extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -102,17 +99,17 @@ class BVIPVirtualInputs extends BVIPBase
     public function WriteString(string $Ident, string $Value)
     {
         if (!is_string($Value)) {
-            trigger_error(sprintf($this->Translate('Value must be %s.'), 'string'), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.sprintf($this->Translate('Value must be %s.'), 'string'), E_USER_NOTICE);
 
             return false;
         }
         if (strlen($Value) > 32) {
-            trigger_error($this->Translate('VirtualAlarm-String max size is 32 char.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.$this->Translate('VirtualAlarm-String max size is 32 char.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->GetFirmware() < 5) {
-            trigger_error($this->Translate('Device-Firmware must be 5.0 or higher.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.$this->Translate('Device-Firmware must be 5.0 or higher.'), E_USER_NOTICE);
 
             return false;
         }
@@ -131,7 +128,7 @@ class BVIPVirtualInputs extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -169,7 +166,7 @@ class BVIPVirtualInputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('VIRTUAL_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'VIRTUAL_' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 

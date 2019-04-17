@@ -6,7 +6,27 @@
             "Read Device": "Gerät auslesen",
             "MOTION_SUMMARY": "Summe Bewegung",
             "VIDEOLOSS": "Signalverlust",
-            "Cameraline not valid.": "Videokanal ungültig."
+            "Cameraline not valid.": "Videokanal ungültig.",
+            "No active parent": "Keine aktive übergeordnete Instanz",
+            "Timeout": "Zeitüberschreitung",
+            "Send error": "Sendefehler",
+            "Unkown Error": "unbekannter Fehler",
+            "invalid Version": "ungültige Version",
+            "not registered": "nicht registriert",
+            "invalid ClientID2": "ungültige ClientID2",
+            "invalid ClientID": "ungültige ClientID",
+            "invalid method": "ungültige Methode",
+            "invalid command": "ungültiges Kommando",
+            "invalid access type": "ungültiger Zugriffstyp",
+            "invalid data type": "ungültiger Datentyp",
+            "write error": "Schreibfehler",
+            "invalid packet size": "ungültige Paketgröße",
+            "read not supported": "Lesen nicht unterstützt",
+            "invalid access level": "ungültige Zugriffsebene",
+            "invalid session id": "ungültige Session ID",
+            "try later": "später versuchen",
+            "Command specific error": "Kommando spezifischer Fehler",
+            "Adress format error": "Addressformat Fehler"
         }
     }
 }

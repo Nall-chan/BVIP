@@ -29,10 +29,6 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  *
  * @example <b>Ohne</b>
  *
- * @property int $Number_Fan
- * @property int $Number_CPU
- * @property int $Number_Temp
- * @property int $Number_ETH
  */
 class BVIPHealth extends BVIPBase
 {
@@ -44,16 +40,11 @@ class BVIPHealth extends BVIPBase
     public function Create()
     {
         parent::Create();
-        /*
-          $this->RegisterPropertyInteger('Number_Fan', 0);
-          $this->RegisterPropertyInteger('Number_CPU', 0);
-          $this->RegisterPropertyInteger('Number_Temp', 0);
-          $this->RegisterPropertyInteger('Number_ETH', 0);
-         */
-        $this->Number_Temp = 0;
-        $this->Number_Fan = 0;
-        $this->Number_CPU = 0;
-        $this->Number_ETH = 0;
+
+        $this->RegisterAttributeInteger('Number_Fan', 0);
+        $this->RegisterAttributeInteger('Number_CPU', 0);
+        $this->RegisterAttributeInteger('Number_Temp', 0);
+        $this->RegisterAttributeInteger('Number_ETH', 0);
         $this->RegisterPropertyInteger('Interval', 5);
         $this->RegisterTimer('RequestState', 0, 'BVIP_RequestState($_IPS[\'TARGET\']);');
     }
@@ -98,10 +89,10 @@ class BVIPHealth extends BVIPBase
 
     public function Scan()
     {
-        $this->Number_Temp = $this->ReadNBRofTempSens();
-        $this->Number_Fan = $this->ReadNBRofFans();
-        $this->Number_CPU = $this->ReadNBRofCPU();
-        $this->Number_ETH = $this->ReadNBRofETH();
+        $this->WriteAttributeInteger('Number_Temp', $this->ReadNBRofTempSens());
+        $this->WriteAttributeInteger('Number_Fan', $this->ReadNBRofFans());
+        $this->WriteAttributeInteger('Number_CPU', $this->ReadNBRofCPU());
+        $this->WriteAttributeInteger('Number_ETH', $this->ReadNBRofETH());
     }
 
     protected function ReadNBRofTempSens()
@@ -119,7 +110,7 @@ class BVIPHealth extends BVIPBase
         }
 
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('READ NBR_OF_TEMP_SENS - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.'READ NBR_OF_TEMP_SENS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return 0;
@@ -141,7 +132,7 @@ class BVIPHealth extends BVIPBase
 
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
-                trigger_error('READ NBR_OF_FANS - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'READ NBR_OF_FANS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 
@@ -163,7 +154,7 @@ class BVIPHealth extends BVIPBase
         }
 
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('READ NBR_OF_CPU - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.'READ NBR_OF_CPU - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return 0;
@@ -184,7 +175,7 @@ class BVIPHealth extends BVIPBase
         }
 
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('READ NBR_OF_EXT_ETH_PORTS - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.'READ NBR_OF_EXT_ETH_PORTS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return 0;
@@ -193,7 +184,7 @@ class BVIPHealth extends BVIPBase
     public function RequestState()
     {
         $Result = true;
-        $NbrTemp = $this->Number_Temp;
+        $NbrTemp = $this->ReadAttributeInteger('Number_Temp');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_TEMP_SENS;
         $RCPData->DataType = RCPDataType::RCP_T_DWORD;
@@ -213,15 +204,15 @@ class BVIPHealth extends BVIPBase
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
                 if ($RCPReplyData->Error == RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
-                    $this->Number_Temp = $index - 1;
+                    $this->WriteAttributeInteger('Number_Temp', $index - 1);
                     break;
                 } else {
-                    trigger_error('TEMP_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                    trigger_error($this->InstanceID.':'.'TEMP_' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
                 }
             }
         }
 
-        $NbrFans = $this->Number_Fan;
+        $NbrFans = $this->ReadAttributeInteger('Number_Fan');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_FAN_SPEED;
         $RCPData->DataType = RCPDataType::RCP_T_DWORD;
@@ -241,10 +232,10 @@ class BVIPHealth extends BVIPBase
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
                 if ($RCPReplyData->Error == RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
-                    $this->Number_Fan = $index - 1;
+                    $this->WriteAttributeInteger('Number_Fan', $index - 1);
                     break;
                 } else {
-                    trigger_error('FAN_SPEED_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                    trigger_error($this->InstanceID.':'.'FAN_SPEED_' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
                 }
             }
         }
@@ -262,12 +253,12 @@ class BVIPHealth extends BVIPBase
                 $this->SetValueInteger('FAN_MINSPEED', $RCPReplyData->Payload);
             } else {
                 if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                    trigger_error('FAN_MINSPEED - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                    trigger_error($this->InstanceID.':'.'FAN_MINSPEED - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
                 }
                 $Result = false;
             }
         }
-        $NbrCPUs = $this->Number_CPU;
+        $NbrCPUs = $this->ReadAttributeInteger('Number_CPU');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_CPU_LOAD;
         $RCPData->DataType = RCPDataType::RCP_P_OCTET;
@@ -300,11 +291,11 @@ class BVIPHealth extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('CPU_LOAD ' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'CPU_LOAD ' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 
-        $NbrETH = $this->Number_ETH;
+        $NbrETH = $this->ReadAttributeInteger('Number_ETH');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_ETH_LINK_STATUS;
         $RCPData->DataType = RCPDataType::RCP_T_OCTET;
@@ -323,7 +314,7 @@ class BVIPHealth extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('ETH_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'ETH_' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 

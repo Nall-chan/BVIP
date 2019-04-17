@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
+eval('namespace bvip {?>' . file_get_contents(__DIR__ . '/../libs/helper/AttributeArrayHelper.php') . '}');
 
 /*
  * @addtogroup bvip
@@ -36,7 +37,6 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  * @property int $FrameID
  * @property string $ClientID
  * @property string $SessionID
- * @property array $Capas
  */
 class BVIPSplitter extends IPSModule
 {
@@ -46,7 +46,8 @@ class BVIPSplitter extends IPSModule
         bvip\BufferHelper,
         bvip\InstanceStatus,
         bvip\Semaphore,
-        bvip\UTF8Coder {
+        bvip\UTF8Coder,
+        bvip\AttributeArrayHelper {
         bvip\InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
         bvip\InstanceStatus::RegisterParent as IORegisterParent;
         bvip\InstanceStatus::RequestAction as IORequestAction;
@@ -81,7 +82,9 @@ class BVIPSplitter extends IPSModule
         $this->Host = '';
         $this->ParentID = 0;
         $this->FrameID = 0;
-        $this->Capas = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
+        $Capas = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
+        $this->RegisterAttributeArray('Capas', $Capas);
+        $this->RegisterAttributeString('Firmware', '');
         $this->ClientID = random_bytes(2);
         $this->SessionID = random_bytes(4);
     }
@@ -91,8 +94,6 @@ class BVIPSplitter extends IPSModule
      */
     public function ApplyChanges()
     {
-
-        //$this->RegisterMessage(0, IPS_KERNELSTARTED);
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
@@ -107,13 +108,12 @@ class BVIPSplitter extends IPSModule
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-        $this->LogMessage('ApplyChanges', KL_DEBUG);
+
         // Config prüfen
         $this->RegisterParent();
 
         // Wenn Parent aktiv, dann Anmeldung an der Hardware bzw. Datenabgleich starten
         if ($this->ParentID > 0) {
-            $this->LogMessage('ApplyChanges PARENT', KL_DEBUG);
             IPS_ApplyChanges($this->ParentID);
         }
     }
@@ -123,7 +123,6 @@ class BVIPSplitter extends IPSModule
      */
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-        $this->LogMessage(__METHOD__, KL_DEBUG);
         $this->IOMessageSink($TimeStamp, $SenderID, $Message, $Data);
 
         switch ($Message) {
@@ -140,16 +139,11 @@ class BVIPSplitter extends IPSModule
      */
     protected function KernelReady()
     {
-        $this->LogMessage(__METHOD__, KL_DEBUG);
         $this->RegisterParent();
-        /* if ($this->HasActiveParent()) {
-          $this->IOChangeState(IS_ACTIVE);
-          } */
     }
 
     protected function RegisterParent()
     {
-        $this->LogMessage(__METHOD__, KL_DEBUG);
         $IOId = $this->IORegisterParent();
         if ($IOId > 0) {
             $this->Host = IPS_GetProperty($this->ParentID, 'Host');
@@ -165,7 +159,6 @@ class BVIPSplitter extends IPSModule
      */
     protected function IOChangeState($State)
     {
-        $this->LogMessage(__METHOD__, KL_DEBUG);
         if ($State == IS_ACTIVE) {
             if ($this->HasActiveParent()) {
                 $this->SetStatus(IS_INACTIVE);
@@ -175,7 +168,7 @@ class BVIPSplitter extends IPSModule
                 if ($this->StartConnect() !== true) {
                     $this->SetStatus(IS_EBASE + 2);
                     echo $this->Translate('Could not login.');
-                    $this->LogMessage($this->Translate('Could not login.'), KL_DEBUG);
+                    $this->LogMessage($this->Translate('Could not login.'), KL_ERROR);
                     return;
                 }
                 $this->RefreshCapability();
@@ -283,13 +276,17 @@ class BVIPSplitter extends IPSModule
                 }
                 $pointer = $pointer + $len;
             }
-            $this->Capas = $Capas;
+
+            $this->LogMessage($this->Translate('Device capability read succesfully'), KL_NOTIFY);
+            $this->WriteAttributeArray('Capas', $Capas);
+        } else {
+            $this->LogMessage($this->Translate('Device capability are unknown'), KL_ERROR);
         }
     }
 
-    public function ReadCapability()
+    protected function ReadCapability()
     {
-        return $this->Capas;
+        return $this->ReadAttributeArray('Capas');
     }
 
     protected function GetFirmware()
@@ -302,10 +299,18 @@ class BVIPSplitter extends IPSModule
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
             $this->RegisterVariableString('Firmware', 'Firmware');
-            $this->SetValueString('Firmware', substr($RCPReplyData->Payload, 4, 2) . '.' . substr($RCPReplyData->Payload, 6, 2) . '.' . substr($RCPReplyData->Payload, 0, 4));
+            $Firmware = substr($RCPReplyData->Payload, 4, 2) . '.' . substr($RCPReplyData->Payload, 6, 2) . '.' . substr($RCPReplyData->Payload, 0, 4);
+            $this->SetValueString('Firmware', $Firmware);
+            $this->WriteAttributeString('Firmware', $Firmware);
+            $this->LogMessage('Device Firmware ' . $Firmware, KL_NOTIFY);
         } else {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
+    }
+
+    protected function ReadFirmware()
+    {
+        return $this->ReadAttributeString('Firmware');
     }
 
     protected function GetModulSlot()
@@ -320,9 +325,10 @@ class BVIPSplitter extends IPSModule
             if ($RCPReplyData->Payload > 0) {
                 $this->RegisterVariableInteger('Modul', 'Modul');
                 $this->SetValueInteger('Modul', $RCPReplyData->Payload);
+                $this->LogMessage('Device Modul ' . $RCPReplyData->Payload, KL_NOTIFY);
             }
         } else {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
     }
 
@@ -336,7 +342,7 @@ class BVIPSplitter extends IPSModule
         $RCPData->Num = 0;
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
     }
 
@@ -350,13 +356,18 @@ class BVIPSplitter extends IPSModule
     public function ForwardData($JSONString)
     {
         $RCPData = new RCPData();
-        $RCPData->FromJSONString($JSONString);
-        $this->DecodeUTF8($RCPData);
-        $ret = $this->Send($RCPData);
-        if (!is_null($ret)) {
-            return serialize($ret);
-        }
+        $isRCPData = $RCPData->FromJSONString($JSONString);
+        if ($isRCPData === true) {
+            $this->DecodeUTF8($RCPData);
+            $ret = $this->Send($RCPData);
+            if (!is_null($ret)) {
+                return serialize($ret);
+            }
 
+            return false;
+        } else {
+            return serialize($this->{$isRCPData}());
+        }
         return false;
     }
 
@@ -470,16 +481,13 @@ class BVIPSplitter extends IPSModule
             $this->SendDebug('Response', $ReplyRCPData, 0);
         }
         if ($ReplyRCPData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            $this->SendDebug('Error', RCPError::ToString($ReplyRCPData->Error), 0);
-            //trigger_error(RCPError::ToString($ReplyRCPData->Error), E_USER_NOTICE);
+            $this->SendDebug('Error', $this->Translate(RCPError::ToString($ReplyRCPData->Error)), 0);
         }
-
         return $ReplyRCPData;
     }
 
     private function StartConnect()
     {
-        $this->LogMessage(__METHOD__, KL_DEBUG);
         if ($this->Host === '') {
             return false;
         }
@@ -528,7 +536,6 @@ class BVIPSplitter extends IPSModule
 
         $this->ClientID = substr($ReplyRCPData->Payload, 2, 2);
         $this->SendDebug('NEW CLIENTID', $this->ClientID, 1);
-        $this->LogMessage('NEW CLIENTID', KL_DEBUG);
         return true;
     }
 
@@ -540,7 +547,7 @@ class BVIPSplitter extends IPSModule
      */
     private function WaitForResponse(int $FrameID)
     {
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $Buffer = $this->ReplyRCPData;
             if (!array_key_exists($FrameID, $Buffer)) {
                 return false;
@@ -550,7 +557,7 @@ class BVIPSplitter extends IPSModule
 
                 return $Buffer[$FrameID];
             }
-            IPS_Sleep(5);
+            usleep(10000);
         }
         $this->SendQueueRemove($FrameID);
 

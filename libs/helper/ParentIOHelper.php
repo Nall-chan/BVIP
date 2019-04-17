@@ -13,31 +13,22 @@ trait InstanceStatus
      */
     protected function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-        $this->LogMessage(__METHOD__, KL_DEBUG);
-        $this->LogMessage($Message . ' ' . $SenderID, KL_DEBUG);
-        $this->LogMessage(print_r($Data, true), KL_DEBUG);
         switch ($Message) {
             case FM_CONNECT:
             case IM_CHANGESETTINGS:
                 $this->RegisterParent();
                 if ($this->HasActiveParent()) {
-                    //$this->IOChangeState(IS_ACTIVE);
                     $State = IS_ACTIVE;
                 } else {
-                    //    $this->IOChangeState(IS_INACTIVE);
                     $State = IS_INACTIVE;
                 }
 
                 break;
             case FM_DISCONNECT:
                 $this->RegisterParent();
-                //$this->IOChangeState(IS_INACTIVE);
                 $State = IS_INACTIVE;
                 break;
             case IM_CHANGESTATUS:
-                /* if ($SenderID == $this->ParentID) {
-                  $this->IOChangeState($Data[0]);
-                  } */
                 $State = $Data[0];
                 break;
             default:
@@ -47,7 +38,7 @@ trait InstanceStatus
         IPS_RunScriptText('IPS_RequestAction(' . $this->InstanceID . ',"IOChangeState",' . $State . ');');
     }
 
-    public function RequestAction($Ident, $Value)
+    protected function RequestAction($Ident, $Value)
     {
         if ($Ident != 'IOChangeState') {
             return false;
@@ -65,7 +56,6 @@ trait InstanceStatus
      */
     protected function RegisterParent()
     {
-        $this->LogMessage(__METHOD__, KL_DEBUG);
         $OldParentId = $this->ParentID;
         $ParentId = @IPS_GetInstance($this->InstanceID)['ConnectionID'];
         if ($ParentId <> $OldParentId) {

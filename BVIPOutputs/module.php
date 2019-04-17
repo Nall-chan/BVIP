@@ -40,7 +40,7 @@ class BVIPOutputs extends BVIPBase
     {
         parent::Create();
         $this->RegisterPropertyBoolean('Rename', true);
-        $this->RegisterPropertyInteger('Number', 0);
+        $this->RegisterAttributeInteger('Number', 0);
     }
 
     /**
@@ -63,10 +63,10 @@ class BVIPOutputs extends BVIPBase
     {
         parent::IOChangeState($State);
         if ($State == IS_ACTIVE) {
+            $this->Scan();
             if ($this->ReadPropertyBoolean('Rename') === true) {
                 $this->RequestName();
             }
-            $this->RequestState();
         }
     }
 
@@ -79,15 +79,13 @@ class BVIPOutputs extends BVIPBase
         /* @var $RCPReplyData RCPData */
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            if ($this->ReadPropertyInteger('Number') != $RCPReplyData->Payload) {
-                IPS_SetProperty($this->InstanceID, 'Number', $RCPReplyData->Payload);
+            if ($this->ReadAttributeInteger('Number') != $RCPReplyData->Payload) {
+                $this->WriteAttributeInteger('Number', $RCPReplyData->Payload);
             }
-            @IPS_ApplyChanges($this->InstanceID);
-
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -97,12 +95,12 @@ class BVIPOutputs extends BVIPBase
     {
         $VarId = @$this->GetIDForIdent($Ident);
         if ($VarId == 0) {
-            trigger_error($this->Translate('IDENT invalid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('IDENT invalid.'), E_USER_NOTICE);
 
             return false;
         }
         if (!is_bool($Value)) {
-            trigger_error(sprintf($this->Translate('%s must be bool.'), 'Value'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . sprintf($this->Translate('%s must be bool.'), 'Value'), E_USER_NOTICE);
 
             return false;
         }
@@ -119,7 +117,7 @@ class BVIPOutputs extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
             if ($RCPReplyData->Payload != $Value) {
-                trigger_error($this->Translate('Error write RelayState.'), E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . $this->Translate('Error write RelayState.'), E_USER_NOTICE);
 
                 return false;
             }
@@ -128,7 +126,7 @@ class BVIPOutputs extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error(RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -146,7 +144,7 @@ class BVIPOutputs extends BVIPBase
     public function RequestState()
     {
         $Result = true;
-        $Nbr = $this->ReadPropertyInteger('Number');
+        $Nbr = $this->ReadAttributeInteger('Number');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_RELAY_OUTPUT_STATE;
         $RCPData->DataType = RCPDataType::RCP_F_FLAG;
@@ -164,7 +162,7 @@ class BVIPOutputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('RELAY_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . 'RELAY_' . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 
@@ -175,7 +173,7 @@ class BVIPOutputs extends BVIPBase
     {
         $Result = true;
 
-        $Nbr = $this->ReadPropertyInteger('Number');
+        $Nbr = $this->ReadAttributeInteger('Number');
         $RCPData = new RCPData();
         $RCPData->Tag = RCPTag::TAG_RELAIS_NAME;
         $RCPData->DataType = RCPDataType::RCP_P_UNICODE;
@@ -196,7 +194,7 @@ class BVIPOutputs extends BVIPBase
             }
 
             if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-                trigger_error('Read Name RELAY_' . $index . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . $this->Translate('Read name of RELAY_') . $index . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
         }
 
@@ -223,7 +221,7 @@ class BVIPOutputs extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name ' . $Ident . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Write name of ') . $Ident . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -245,9 +243,8 @@ class BVIPOutputs extends BVIPBase
         $this->GetOrCreateVariable('RELAY_' . $RCPData->Num);
         $this->SetValueBoolean('RELAY_' . $RCPData->Num, $RCPData->Payload);
 
-        if ($this->ReadPropertyInteger('Number') < $RCPData->Num) {
-            IPS_SetProperty($this->InstanceID, 'Number', $RCPData->Num);
-            IPS_ApplyChanges($this->InstanceID);
+        if ($this->ReadAttributeInteger('Number') < $RCPData->Num) {
+            $this->WriteAttributeInteger('Number', $RCPData->Num);
         }
     }
 

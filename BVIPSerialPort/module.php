@@ -63,7 +63,7 @@ class BVIPSerialPort extends BVIPBase
         }
     }
 
-     protected function IOChangeState($State)
+    protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
         if ($State == IS_ACTIVE) {
@@ -72,7 +72,7 @@ class BVIPSerialPort extends BVIPBase
                 $this->ConfigAndOpenPort();
             } else {
                 $this->SetStatus(IS_EBASE + 2);
-                trigger_error($this->Translate('Port not valid.'), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.$this->Translate('Port not valid.'), E_USER_NOTICE);
             }
         }
     }
@@ -107,7 +107,7 @@ class BVIPSerialPort extends BVIPBase
         /* @var $RCPReplyData RCPData */
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
             if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
-                trigger_error('Error Set Serial Port to transparent - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Error Set Serial Port to transparent - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
         }
@@ -118,7 +118,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
             if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
-                trigger_error('Error Set Serial Port Baudrate - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Error Set Serial Port Baudrate - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
         }
@@ -128,7 +128,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
             if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
-                trigger_error('Error Set Serial Port Databits - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Error Set Serial Port Databits - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
         }
@@ -137,7 +137,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
             if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
-                trigger_error('Error Set Serial Port Stopbits - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Error Set Serial Port Stopbits - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
         }
@@ -146,7 +146,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
             if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
-                trigger_error('Error Set Serial Port Parity - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Error Set Serial Port Parity - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
         }
@@ -155,7 +155,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
             if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
-                trigger_error('Error Set Serial Port RS232/485 mode - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Error Set Serial Port RS232/485 mode - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
         }
@@ -164,7 +164,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
             if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
-                trigger_error('Error Set Serial Port Duplex mode - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Error Set Serial Port Duplex mode - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
         }
@@ -186,7 +186,7 @@ class BVIPSerialPort extends BVIPBase
         /* @var $RCPReplyData RCPData */
         if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
             if ($RCPReplyData->Payload[0] != chr(0x01)) {
-                trigger_error('Access denied to SerialPort', E_USER_NOTICE);
+                trigger_error($this->InstanceID.':'.'Access denied to SerialPort', E_USER_NOTICE);
 
                 return false;
             }
@@ -194,7 +194,7 @@ class BVIPSerialPort extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Error Write Data to SerialPort - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID.':'.'Error Write Data to SerialPort - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;

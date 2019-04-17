@@ -70,7 +70,7 @@ class BVIPCamImages extends BVIPBase
         }
     }
 
-   protected function IOChangeState($State)
+    protected function IOChangeState($State)
     {
         parent::IOChangeState($State);
         if ($State == IS_ACTIVE) {
@@ -82,7 +82,7 @@ class BVIPCamImages extends BVIPBase
                 $this->RequestState();
             } else {
                 $this->SetStatus(IS_EBASE + 2);
-                trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
             }
         }
     }
@@ -95,7 +95,7 @@ class BVIPCamImages extends BVIPBase
         for ($Line = 1; $Line <= $Lines; $Line++) {
             $Options[] = ['caption' => (string) $Line, 'value' => $Line];
         }
-        $data['elements'][0]['options'] = $Options;
+        $data['elements'][1]['options'] = $Options;
         $Firmware = $this->GetFirmware();
         if ($Firmware >= 5) {
             $data['elements'][7]['options'][] = ['caption' => 'JPEG-Push', 'value' => 3];
@@ -103,7 +103,6 @@ class BVIPCamImages extends BVIPBase
         if ($Firmware >= 6) {
             $data['elements'][7]['options'][] = ['caption' => 'HTTP / h.264x', 'value' => 4];
         }
-
         return json_encode($data);
     }
 
@@ -217,12 +216,12 @@ class BVIPCamImages extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
 
             return false;
         }
@@ -241,7 +240,7 @@ class BVIPCamImages extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name Line' . $Line . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Read name of cameraline ') . $Line . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -251,12 +250,12 @@ class BVIPCamImages extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
 
             return false;
         }
@@ -275,7 +274,7 @@ class BVIPCamImages extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error('Write Name Line' . $Line . ' - ' . RCPError::ToString($RCPReplyData->Error), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Write name of Cameraline ') . $Line . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
