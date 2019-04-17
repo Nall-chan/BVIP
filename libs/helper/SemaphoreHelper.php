@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * @addtogroup generic
+ * @{
+ *
+ * @package       generic
+ * @file          SemaphoreHelper.php
+ * @author        Michael Tröger <micha@nall-chan.net>
+ * @copyright     2018 Michael Tröger
+ * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
+ * @version       5.0
+ */
+
+/**
  * Biete Funktionen um Thread-Safe auf Objekte zuzugrifen.
  */
 trait Semaphore
@@ -32,3 +44,5 @@ trait Semaphore
     }
 
 }
+
+/* @} */

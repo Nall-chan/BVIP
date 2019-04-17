@@ -7,11 +7,12 @@
 trait AttributeArrayHelper
 {
     /**
-     * Wert einer Eigenschaft aus den InstanceBuffer lesen.
+     * Registriert ein Array Attribute.
      * 
-     * @access public
-     * @param string $name Propertyname
-     * @return mixed Value of Name
+     * @access protected
+     * @param string $name Attributname
+     * @param array $Value Standardwert des Attribut
+     * @param int $Size Anzahl der zu verwendenen String Attribute
      */
     protected function RegisterAttributeArray($name, $Value, $Size = 0)
     {
@@ -29,6 +30,11 @@ trait AttributeArrayHelper
         }
     }
 
+    /**
+     * Liest den Inhalt eines Attribut aus.
+     * @param string $name Name des Attribut
+     * @return array Inhalt des Attribut
+     */
     protected function ReadAttributeArray($name)
     {
         if (strpos($name, 'Multi_') === 0) {
@@ -42,6 +48,12 @@ trait AttributeArrayHelper
         return json_decode($this->ReadAttributeString($name), true);
     }
 
+    /**
+     * Schreibt ein Array in das Attribut
+     * @param string $Name des Attribut
+     * @param array $value Array welches in das Attribut geschrieben wird
+     * @return bool False im Fehlerfall
+     */
     protected function WriteAttributeArray($name, $value)
     {
         $Data = json_encode($value);
@@ -49,7 +61,7 @@ trait AttributeArrayHelper
             $Size = $this->ReadAttributeInteger("MultiListe_" . $name);
             $Lines = str_split($Data, 8000);
             if (count($Lines) > $Size) {
-                trigger_error($this->InstanceID.':'.'Data for AttributeArray is too big.', E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . 'Data for AttributeArray is too big.', E_USER_NOTICE);
                 return false;
             }
             for ($i = 0; $i < $Size; $i++) {

@@ -9,16 +9,16 @@ require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 abstract class BVIPBase extends IPSModule
 {
 
-    use bvip\VariableProfile,
-        bvip\VariableHelper,
-        bvip\DebugHelper,
-        bvip\BufferHelper,
-        bvip\InstanceStatus,
-        bvip\Semaphore,
-        bvip\UTF8Coder {
-        bvip\InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
-        bvip\InstanceStatus::RegisterParent as IORegisterParent;
-        bvip\InstanceStatus::RequestAction as IORequestAction;
+    use \bvip\VariableProfileHelper,
+        \bvip\VariableHelper,
+        \bvip\DebugHelper,
+        \bvip\BufferHelper,
+        \bvip\InstanceStatus,
+        \bvip\Semaphore,
+        \bvip\UTF8Coder {
+        \bvip\InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
+        \bvip\InstanceStatus::RegisterParent as IORegisterParent;
+        \bvip\InstanceStatus::RequestAction as IORequestAction;
     }
     protected static $RCPTags;
 

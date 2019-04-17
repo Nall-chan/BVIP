@@ -1,7 +1,20 @@
 <?php
 
+/*
+ * @addtogroup generic
+ * @{
+ *
+ * @package       generic
+ * @file          VariableHelper.php
+ * @author        Michael Tröger <micha@nall-chan.net>
+ * @copyright     2019 Michael Tröger
+ * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
+ * @version       5.0
+ *
+ */
+
 /**
- * Ein Trait welcher es ermöglicht über einen Ident Variablen zu beschreiben.
+ * Ein Trait welcher es ermöglicht Typensicher IPS-Variablen zu beschreiben.
  */
 trait VariableHelper
 {
@@ -58,3 +71,5 @@ trait VariableHelper
     }
 
 }
+
+/* @} */

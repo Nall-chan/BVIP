@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * @addtogroup generic
+ * @{
+ *
+ * @package       generic
+ * @file          ParentIOHelper.php
+ * @author        Michael Tröger <micha@nall-chan.net>
+ * @copyright     2018 Michael Tröger
+ * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
+ * @version       5.0
+ */
+
+/**
  * Trait mit Hilfsfunktionen für den Datenaustausch.
  * @property integer $ParentID
  */
@@ -8,7 +20,7 @@ trait InstanceStatus
 {
     /**
      * Interne Funktion des SDK.
-     *
+     * Alle Events des Parent werden hier verarbeitet und entkoppelt über RequestAction an IOChangeState übergeben.  
      * @access public
      */
     protected function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -38,6 +50,13 @@ trait InstanceStatus
         IPS_RunScriptText('IPS_RequestAction(' . $this->InstanceID . ',"IOChangeState",' . $State . ');');
     }
 
+    /**
+     * Interne Funktion des SDK.
+     * Empfängt über RequestAction die Events vom Parent und führt IOChangeState aus.
+     * 
+     * @access public
+     * @return bool True wenn $Ident verarbeitet wurde.
+     */
     protected function RequestAction($Ident, $Value)
     {
         if ($Ident != 'IOChangeState') {
@@ -72,6 +91,11 @@ trait InstanceStatus
         return $ParentId;
     }
 
+    /**
+     * Interne Funktion des SDK.
+     * Erweitert die SDK funktion um die Prüfung ob überhaupt ein Parent verbunden ist.
+     * @return bool True wenn Parent-Kette vorhanden und aktiv ist. 
+     */
     protected function HasActiveParent()
     {
         if ($this->ParentID > 0) {
@@ -81,3 +105,5 @@ trait InstanceStatus
     }
 
 }
+
+/* @} */

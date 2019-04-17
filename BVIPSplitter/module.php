@@ -41,16 +41,16 @@ eval('namespace bvip {?>' . file_get_contents(__DIR__ . '/../libs/helper/Attribu
 class BVIPSplitter extends IPSModule
 {
 
-    use bvip\VariableHelper,
-        bvip\DebugHelper,
-        bvip\BufferHelper,
-        bvip\InstanceStatus,
-        bvip\Semaphore,
-        bvip\UTF8Coder,
-        bvip\AttributeArrayHelper {
-        bvip\InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
-        bvip\InstanceStatus::RegisterParent as IORegisterParent;
-        bvip\InstanceStatus::RequestAction as IORequestAction;
+    use \bvip\VariableHelper,
+        \bvip\DebugHelper,
+        \bvip\BufferHelper,
+        \bvip\InstanceStatus,
+        \bvip\Semaphore,
+        \bvip\UTF8Coder,
+        \bvip\AttributeArrayHelper {
+        \bvip\InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
+        \bvip\InstanceStatus::RegisterParent as IORegisterParent;
+        \bvip\InstanceStatus::RequestAction as IORequestAction;
     }
     const RCPTags = [
         RCPTag::TAG_CLIENT_TIMEOUT_WARNING,
@@ -304,7 +304,7 @@ class BVIPSplitter extends IPSModule
             $this->WriteAttributeString('Firmware', $Firmware);
             $this->LogMessage('Device Firmware ' . $Firmware, KL_NOTIFY);
         } else {
-            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
     }
 
@@ -328,7 +328,7 @@ class BVIPSplitter extends IPSModule
                 $this->LogMessage('Device Modul ' . $RCPReplyData->Payload, KL_NOTIFY);
             }
         } else {
-            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
     }
 
@@ -342,7 +342,7 @@ class BVIPSplitter extends IPSModule
         $RCPData->Num = 0;
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            trigger_error($this->InstanceID.':'.$this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
     }
 

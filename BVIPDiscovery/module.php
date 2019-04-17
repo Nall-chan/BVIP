@@ -31,8 +31,8 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
 class BVIPDiscovery extends IPSModule
 {
 
-    use bvip\DebugHelper,
-        bvip\BufferHelper;
+    use \bvip\DebugHelper,
+        \bvip\BufferHelper;
     /**
      * Interne Funktion des SDK.
      */

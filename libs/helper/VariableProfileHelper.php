@@ -1,9 +1,21 @@
 <?php
 
 /**
+ * @addtogroup generic
+ * @{
+ *
+ * @package       generic
+ * @file          VariableProfileHelper.php
+ * @author        Michael Tröger <micha@nall-chan.net>
+ * @copyright     2018 Michael Tröger
+ * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
+ * @version       5.0
+ */
+
+/**
  * Trait mit Hilfsfunktionen für Variablenprofile.
  */
-trait VariableProfile
+trait VariableProfileHelper
 {
     /**
      * Erstell und konfiguriert ein VariablenProfil für den Typ bool mit Assoziationen.
@@ -156,4 +168,7 @@ trait VariableProfile
         }
         IPS_DeleteVariableProfile($Name);
     }
+
 }
+
+/* @} */

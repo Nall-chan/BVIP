@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Biete Funktionen um UTF8 de/kodierungen auf Objekte oder Arrays durchzuführen.
+ */
 trait UTF8Coder
 {
     /**
