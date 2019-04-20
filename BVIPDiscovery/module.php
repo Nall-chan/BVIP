@@ -166,8 +166,8 @@ class BVIPDiscovery extends IPSModule
         socket_bind($socket, '0.0.0.0', 0);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
         socket_set_option($socket, SOL_SOCKET, SO_REUSEADDR, 1);
-        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec" => 0, "usec" => 100000));
-        $Host = "";
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ['sec' => 0, 'usec' => 100000]);
+        $Host = '';
         $Port = 0;
         socket_getsockname($socket, $Host, $Port);
         $message = "\x99\x39\xA4\x27" . openssl_random_pseudo_bytes(4) . "\xFF\x00" . pack('n', $Port);
@@ -176,8 +176,8 @@ class BVIPDiscovery extends IPSModule
         }
         usleep(100000);
         $i = 50;
-        $buf = "";
-        $Name = "";
+        $buf = '';
+        $Name = '';
         while ($i) {
             $ret = @socket_recvfrom($socket, $buf, 2048, 0, $Name, $Port);
             if ($ret == 0) {

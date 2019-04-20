@@ -24,7 +24,7 @@ trait AttributeArrayHelper
                 $Line = (array_key_exists($i, $Lines)) ? $Lines[$i] : '';
                 $this->RegisterAttributeString('Part_' . $name . $i, $Line);
             }
-            $this->RegisterAttributeInteger("MultiListe_" . $name, $Size);
+            $this->RegisterAttributeInteger('MultiListe_' . $name, $Size);
         } else {
             $this->RegisterAttributeString($name, $Data);
         }
@@ -38,8 +38,8 @@ trait AttributeArrayHelper
     protected function ReadAttributeArray($name)
     {
         if (strpos($name, 'Multi_') === 0) {
-            $Lines = "";
-            $Size = $this->ReadAttributeInteger("MultiListe_" . $name);
+            $Lines = '';
+            $Size = $this->ReadAttributeInteger('MultiListe_' . $name);
             for ($i = 0; $i < $Size; $i++) {
                 $Lines .= $this->ReadAttributeString('Part_' . $name . $i);
             }
@@ -58,7 +58,7 @@ trait AttributeArrayHelper
     {
         $Data = json_encode($value);
         if (strpos($name, 'Multi_') === 0) {
-            $Size = $this->ReadAttributeInteger("MultiListe_" . $name);
+            $Size = $this->ReadAttributeInteger('MultiListe_' . $name);
             $Lines = str_split($Data, 8000);
             if (count($Lines) > $Size) {
                 trigger_error($this->InstanceID . ':' . 'Data for AttributeArray is too big.', E_USER_NOTICE);
