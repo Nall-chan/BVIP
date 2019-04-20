@@ -215,7 +215,6 @@ class BVIPVidProc extends BVIPBase
         $this->GetOrCreateVariable('INVALID_CONFIGURATION');
         $this->SetValueBoolean('INVALID_CONFIGURATION', ord($RCPData->Payload[1]) & 0b10000000);
     }
-
 }
 
 /* @} */

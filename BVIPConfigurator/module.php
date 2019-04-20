@@ -236,14 +236,11 @@ class BVIPConfigurator extends BVIPBase
 
     public function RequestState()
     {
-        
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        
     }
-
 }
 
 /* @} */

@@ -106,7 +106,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPReplyData = $this->Send($RCPData);
         /* @var $RCPReplyData RCPData */
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
+            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
                 trigger_error($this->InstanceID.':'.'Error Set Serial Port to transparent - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
@@ -117,7 +117,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPData->Payload = $this->ReadPropertyInteger('Speed');
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
+            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
                 trigger_error($this->InstanceID.':'.'Error Set Serial Port Baudrate - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
@@ -127,7 +127,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPData->Payload = $this->ReadPropertyInteger('Bits');
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
+            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
                 trigger_error($this->InstanceID.':'.'Error Set Serial Port Databits - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
@@ -136,7 +136,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPData->Payload = $this->ReadPropertyInteger('StopBits');
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
+            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
                 trigger_error($this->InstanceID.':'.'Error Set Serial Port Stopbits - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
@@ -145,7 +145,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPData->Payload = $this->ReadPropertyInteger('Par');
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
+            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
                 trigger_error($this->InstanceID.':'.'Error Set Serial Port Parity - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
@@ -154,7 +154,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPData->Payload = $this->ReadPropertyInteger('Mode');
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
+            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
                 trigger_error($this->InstanceID.':'.'Error Set Serial Port RS232/485 mode - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
@@ -163,7 +163,7 @@ class BVIPSerialPort extends BVIPBase
         $RCPData->Payload = $this->ReadPropertyInteger('HalfDuplex');
         $RCPReplyData = $this->Send($RCPData);
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ( $RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
+            if (($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) and ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR)) {
                 trigger_error($this->InstanceID.':'.'Error Set Serial Port Duplex mode - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
             }
             $Result = false;
@@ -214,9 +214,7 @@ class BVIPSerialPort extends BVIPBase
 
     protected function RequestState()
     {
-        
     }
-
 }
 
 /* @} */

@@ -247,9 +247,7 @@ class BVIPCamReplay extends BVIPBase
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
-        
     }
-
 }
 
 /* @} */
