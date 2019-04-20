@@ -195,7 +195,6 @@ class BVIPInputs extends BVIPBase
             $this->WriteAttributeInteger('Number', $RCPData->Num);
         }
     }
-
 }
 
 /* @} */

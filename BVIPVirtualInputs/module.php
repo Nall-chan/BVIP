@@ -179,7 +179,6 @@ class BVIPVirtualInputs extends BVIPBase
         $this->RegisterVariableBoolean($Ident, $Ident, '~Alert');
         $this->SetValueBoolean($Ident, $RCPData->Payload);
     }
-
 }
 
 /* @} */

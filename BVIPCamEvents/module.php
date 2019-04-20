@@ -217,7 +217,6 @@ class BVIPCamEvents extends BVIPBase
             $this->SetValueBoolean('MOTION_SUMMARY', $RCPData->Payload);
         }
     }
-
 }
 
 /* @} */

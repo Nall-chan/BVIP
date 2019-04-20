@@ -11,4 +11,3 @@ eval('declare(strict_types=1);namespace bvip {?>' . file_get_contents(__DIR__ . 
 eval('declare(strict_types=1);namespace bvip {?>' . file_get_contents(__DIR__ . '/helper/VariableHelper.php') . '}');
 eval('declare(strict_types=1);namespace bvip {?>' . file_get_contents(__DIR__ . '/helper/VariableProfileHelper.php') . '}');
 eval('declare(strict_types=1);namespace bvip {?>' . file_get_contents(__DIR__ . '/helper/UTF8Helper.php') . '}');
-

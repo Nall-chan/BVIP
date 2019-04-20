@@ -643,7 +643,6 @@ class RCPTag
                 return '';
         }
     }
-
 }
 
 class RCPDataType
@@ -681,7 +680,6 @@ class RCPDataType
                 return '';
         }
     }
-
 }
 
 class RCPReadWrite
@@ -700,7 +698,6 @@ class RCPReadWrite
                 return '';
         }
     }
-
 }
 
 class RCPAction
@@ -725,7 +722,6 @@ class RCPAction
                 return '';
         }
     }
-
 }
 
 class RCPError
@@ -804,7 +800,6 @@ class RCPError
                 return '';
         }
     }
-
 }
 
 class RCPData
@@ -925,7 +920,6 @@ class RCPData
         }
         $this->DataID = self::IIPSReceiveBVIP;
     }
-
 }
 
 class RCPFrame
@@ -1060,5 +1054,4 @@ class RCPFrame
 
         return $TCP_Frame;
     }
-
 }
