@@ -67,6 +67,7 @@ class BVIPOutputs extends BVIPBase
             if ($this->ReadPropertyBoolean('Rename') === true) {
                 $this->RequestName();
             }
+            $this->RequestState();
         }
     }
 
@@ -247,6 +248,7 @@ class BVIPOutputs extends BVIPBase
             $this->WriteAttributeInteger('Number', $RCPData->Num);
         }
     }
+
 }
 
 /* @} */

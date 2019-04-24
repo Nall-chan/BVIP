@@ -40,6 +40,7 @@ eval('namespace bvip {?>' . file_get_contents(__DIR__ . '/../libs/helper/Attribu
  */
 class BVIPSplitter extends IPSModule
 {
+
     use \bvip\VariableHelper,
         \bvip\DebugHelper,
         \bvip\BufferHelper,
@@ -93,7 +94,7 @@ class BVIPSplitter extends IPSModule
      */
     public function ApplyChanges()
     {
-        $this->RegisterMessage(0, IPS_KERNELMESSAGE);
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
         $this->ReplyRCPData = [];
@@ -125,10 +126,8 @@ class BVIPSplitter extends IPSModule
         $this->IOMessageSink($TimeStamp, $SenderID, $Message, $Data);
 
         switch ($Message) {
-            case IPS_KERNELMESSAGE:
-                if ($Data[0] == KR_READY) {
-                    $this->KernelReady();
-                }
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
                 break;
         }
     }
@@ -397,7 +396,7 @@ class BVIPSplitter extends IPSModule
         // Datenstream zusammenfügen
         $Head = $this->Buffer;
         $Data = utf8_decode($data->Buffer);
-        if (($Head == '') and ($Data[0] != chr(0x03))) { // Müll
+        if (($Head == '') and ( $Data[0] != chr(0x03))) { // Müll
             return;
         }
         $Data = $Head . $Data;
@@ -627,6 +626,7 @@ class BVIPSplitter extends IPSModule
         $this->ReplyRCPData = $data;
         $this->unlock('ReplyRCPData');
     }
+
 }
 
 /* @} */
