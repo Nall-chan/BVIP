@@ -1,10 +1,10 @@
 [![Version](https://img.shields.io/badge/Symcon-PHPModul-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-[![Version](https://img.shields.io/badge/Modul%20Version-2.5-blue.svg)]()
+[![Version](https://img.shields.io/badge/Modul%20Version-3.00-blue.svg)]()
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
-[![Version](https://img.shields.io/badge/Symcon%20Version-5.0%20%3E-green.svg)]()
+[![Version](https://img.shields.io/badge/Symcon%20Version-5.1%20%3E-green.svg)](https://www.symcon.de/forum/threads/30857-IP-Symcon-5-1-%28Stable%29-Changelog)
 [![StyleCI](https://styleci.io/repos/108290698/shield?style=flat)](https://styleci.io/repos/108290698)  
 
-# IPSBVIP
+# Symcon-Modul: BVIP
 Ermöglich die Einbindung von RCP+ Geräten in IP-Symcon.  
 
 ## Dokumentation
@@ -27,6 +27,7 @@ Ermöglich die Einbindung von RCP+ Geräten in IP-Symcon.
 ### [BVIPSplitter:](BVIPSplitter/)  
 ### [BVIPCamEvents:](BVIPCamEvents/)  
 ### [BVIPCamImages:](BVIPCamImages/)  
+### [BVIPCamReplay:](BVIPCamReplay/)  
 ### [BVIPHealth:](BVIPHealth/)  
 ### [BVIPInputs:](BVIPInputs/)  
 ### [BVIPOutputs:](BVIPOutputs/)  
@@ -37,12 +38,14 @@ Ermöglich die Einbindung von RCP+ Geräten in IP-Symcon.
  
 ## 2. Voraussetzungen
 
- - IPS 4.3 oder höher
+ - IPS 5.1 oder höher
  
 ## 3. Software-Installation
 
-   Über das 'Modul Control' folgende URL hinzufügen:  
-    `git://github.com/Nall-chan/IPSBVIP.git`  
+**IPS 5.1:**  
+   Bei privater Nutzung:
+     Über den 'Module-Store' in IPS.  
+   **Bei kommerzieller Nutzung (z.B. als Errichter oder Integrator) wenden Sie sich bitte an den Autor.**  
 
 ## 4. Einrichten der Instanzen in IP-Symcon
 
@@ -58,6 +61,7 @@ Es wird empfohlen die Einrichtung mit dem BVIP Konfigurator zu starten (BVIPConf
 | :---------------: | :----------: | :----: | :------------------------------------: |
 | BVIPSplitter      | Splitter     | BVIP   | {58E3A4FB-61F2-4C30-8563-859722F6522D} |
 | BVIPCamEvents     | Device       | BVIP   | {5E82180C-E0AD-489B-BFFB-BA2F9653CD4A} |
+| BVIPCamReplay     | Device       | BVIP   | {95A5679D-1FBE-4ABC-9039-4D98802D337C} |
 | BVIPCamImages     | Device       | BVIP   | {9CD9975F-D6DF-4287-956D-53C65B8675F3} |
 | BVIPHealth        | Device       | BVIP   | {C42D8967-BF82-4D37-8309-2581F484B3BD} |
 | BVIPInputs        | Device       | BVIP   | {1DC90109-FBDD-4F5B-8E29-5E95B8029F20} |
@@ -69,6 +73,10 @@ Es wird empfohlen die Einrichtung mit dem BVIP Konfigurator zu starten (BVIPConf
 | BVIPDiscovery     | Discovery    | BVIP   | {7013126D-4AAB-41C2-BAE0-FD7A5C59B89C} |
 
 ### 2. Changlog
+
+Version 3.0:  
+ - Release für IPS 5.1 und den Modul-Store  
+ - Replay-Instanz hinzugefügt (beta)  
 
 Version 2.5:  
  - Configform überarbeitet  
