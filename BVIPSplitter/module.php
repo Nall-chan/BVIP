@@ -40,7 +40,6 @@ eval('namespace BVIPSplitter {?>' . file_get_contents(__DIR__ . '/../libs/helper
  */
 class BVIPSplitter extends IPSModule
 {
-
     use \bvip\VariableHelper,
         \bvip\DebugHelper,
         \bvip\BufferHelper,
@@ -396,7 +395,7 @@ class BVIPSplitter extends IPSModule
         // Datenstream zusammenfügen
         $Head = $this->Buffer;
         $Data = utf8_decode($data->Buffer);
-        if (($Head == '') and ( $Data[0] != chr(0x03))) { // Müll
+        if (($Head == '') and ($Data[0] != chr(0x03))) { // Müll
             return;
         }
         $Data = $Head . $Data;
@@ -626,7 +625,6 @@ class BVIPSplitter extends IPSModule
         $this->ReplyRCPData = $data;
         $this->unlock('ReplyRCPData');
     }
-
 }
 
 /* @} */
