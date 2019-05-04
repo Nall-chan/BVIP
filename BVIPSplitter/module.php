@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
-eval('namespace bvip {?>' . file_get_contents(__DIR__ . '/../libs/helper/AttributeArrayHelper.php') . '}');
+eval('namespace BVIPSplitter {?>' . file_get_contents(__DIR__ . '/../libs/helper/AttributeArrayHelper.php') . '}');
 
 /*
  * @addtogroup bvip
@@ -40,13 +40,14 @@ eval('namespace bvip {?>' . file_get_contents(__DIR__ . '/../libs/helper/Attribu
  */
 class BVIPSplitter extends IPSModule
 {
+
     use \bvip\VariableHelper,
         \bvip\DebugHelper,
         \bvip\BufferHelper,
         \bvip\InstanceStatus,
         \bvip\Semaphore,
         \bvip\UTF8Coder,
-        \bvip\AttributeArrayHelper {
+        \BVIPSplitter\AttributeArrayHelper {
         \bvip\InstanceStatus::MessageSink as IOMessageSink; // MessageSink gibt es sowohl hier in der Klasse, als auch im Trait InstanceStatus. Hier wird für die Methode im Trait ein Alias benannt.
         \bvip\InstanceStatus::RegisterParent as IORegisterParent;
         \bvip\InstanceStatus::RequestAction as IORequestAction;
@@ -395,7 +396,7 @@ class BVIPSplitter extends IPSModule
         // Datenstream zusammenfügen
         $Head = $this->Buffer;
         $Data = utf8_decode($data->Buffer);
-        if (($Head == '') and ($Data[0] != chr(0x03))) { // Müll
+        if (($Head == '') and ( $Data[0] != chr(0x03))) { // Müll
             return;
         }
         $Data = $Head . $Data;
@@ -625,6 +626,7 @@ class BVIPSplitter extends IPSModule
         $this->ReplyRCPData = $data;
         $this->unlock('ReplyRCPData');
     }
+
 }
 
 /* @} */

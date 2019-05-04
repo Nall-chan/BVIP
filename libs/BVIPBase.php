@@ -8,6 +8,7 @@ require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
+
     use \bvip\VariableProfileHelper,
         \bvip\VariableHelper,
         \bvip\DebugHelper,
@@ -129,7 +130,6 @@ abstract class BVIPBase extends IPSModule
             if (!$this->HasActiveParent()) {
                 throw new Exception($this->Translate('Instance has no active parent.'), E_USER_NOTICE);
             }
-            $this->SendDebug('Send', '~~~', 0);
             $this->SendDebug('Send', $RCPData, 0);
             $this->EncodeUTF8($RCPData);
             $RCPData->DataID = RCPData::IIPSSendBVIPData;
@@ -140,7 +140,6 @@ abstract class BVIPBase extends IPSModule
                 throw new Exception($this->Translate('No valid answer.'), E_USER_NOTICE);
             }
             $RCPData = unserialize($anwser);
-            $this->SendDebug('RAW', $anwser, 0);
             $this->SendDebug('Response', $RCPData, 0);
         } catch (Exception $exc) {
             trigger_error($this->InstanceID . ':' . $this->Translate($exc->getMessage()), E_USER_NOTICE);
@@ -152,8 +151,6 @@ abstract class BVIPBase extends IPSModule
 
     public function ReceiveData($JSONString)
     {
-        $this->SendDebug('Event', '~~~~', 0);
-        $this->SendDebug('Event', $JSONString, 0);
         $RCPData = new RCPData();
         $RCPData->FromJSONString($JSONString);
         $this->DecodeUTF8($RCPData);
@@ -224,4 +221,5 @@ abstract class BVIPBase extends IPSModule
     {
         return $this->GetCapability()['IO']['Virtual'];
     }
+
 }
