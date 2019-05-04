@@ -75,7 +75,7 @@ Es wird empfohlen die Einrichtung mit dem BVIP Konfigurator zu starten (BVIPConf
 ### 2. Changlog
 
 Version 3.0:  
- - Release für IPS 5.1 und den Modul-Store  
+ - Release für IPS 5.1 und den Module-Store  
  - Replay-Instanz hinzugefügt (beta)  
 
 Version 2.5:  

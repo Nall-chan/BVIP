@@ -86,7 +86,7 @@ string BVIP_RequestState(int $InstanzID, string $Ident)
 **Changlog:**  
 
 Version 3.0:  
- - Release für IPS 5.1 und den Modul-Store  
+ - Release für IPS 5.1 und den Module-Store  
  
 Version 2.0:  
  - Komplett überarbeitete Version für IPS 4.3 und höher  
