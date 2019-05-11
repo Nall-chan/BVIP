@@ -3,8 +3,6 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
-/**
- */
 
 abstract class BVIPBase extends IPSModule
 {
@@ -105,6 +103,7 @@ abstract class BVIPBase extends IPSModule
     }
 
     abstract protected function RequestState();
+
     /**
      * Wird ausgeführt wenn der Kernel hochgefahren wurde.
      */
@@ -120,6 +119,7 @@ abstract class BVIPBase extends IPSModule
       {
       //We dont need any Data...here
       } */
+
     /**
      * @param RCPData $RCPData
      */
@@ -158,6 +158,7 @@ abstract class BVIPBase extends IPSModule
     }
 
     abstract protected function DecodeRCPEvent(RCPData $RCPData);
+
     protected function GetFirmware()
     {
         if ($this->HasActiveParent()) {
@@ -171,7 +172,6 @@ abstract class BVIPBase extends IPSModule
             }
             return (float) substr(unserialize($anwser), 0, 5);
         }
-
 
         return 0;
     }

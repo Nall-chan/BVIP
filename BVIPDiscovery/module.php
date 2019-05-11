@@ -17,7 +17,7 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  */
 
 /**
- * BVIPDiscovery Klasse implementiert
+ * BVIPDiscovery Klasse implementiert.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
  * @copyright     2019 Michael Tröger
@@ -26,12 +26,14 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  * @version       3.0
  *
  * @example <b>Ohne</b>
+ *
  * @property array $Devices
  */
 class BVIPDiscovery extends IPSModule
 {
     use \bvip\DebugHelper,
         \bvip\BufferHelper;
+
     /**
      * Interne Funktion des SDK.
      */
@@ -62,6 +64,7 @@ class BVIPDiscovery extends IPSModule
     /**
      * Interne Funktion des SDK.
      * Verarbeitet alle Nachrichten auf die wir uns registriert haben.
+     *
      * @param int       $TimeStamp
      * @param int       $SenderID
      * @param int       $Message
@@ -139,7 +142,6 @@ class BVIPDiscovery extends IPSModule
                 'name'          => IPS_GetLocation($InstanceIDConfigurator)
             ];
         }
-
 
         $Values = array_merge($Devices, $MissingConfigurators); // $Sensors, $MissingSensors);
         /* if (count($Values) > 0) {
