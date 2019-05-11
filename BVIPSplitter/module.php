@@ -266,7 +266,7 @@ class BVIPSplitter extends IPSModule
                               Identifier  2 Bytes
                              */
                             $ElementData = str_split($ElementsData[$i - 1], 2);
-                            $IOs[unpack('n', $ElementData[0])[1]] ++;
+                            $IOs[unpack('n', $ElementData[0])[1]]++;
                         }
                         $Capas['IO'] = ['Input' => $IOs[1], 'Output' => $IOs[2], 'Virtual' => $IOs[3]];
                         break;
@@ -344,6 +344,7 @@ class BVIPSplitter extends IPSModule
     }
 
     //################# DATAPOINTS DEVICE
+
     /**
      * Interne Funktion des SDK. Nimmt Daten von Childs entgegen und sendet Diese weiter.
      *
@@ -382,6 +383,7 @@ class BVIPSplitter extends IPSModule
     }
 
     //################# DATAPOINTS PARENT
+
     /**
      * Empfängt Daten vom Parent.
      *
@@ -562,6 +564,7 @@ class BVIPSplitter extends IPSModule
     }
 
     //################# SENDQUEUE
+
     /**
      * Fügt eine Anfrage in die SendQueue ein.
      *
