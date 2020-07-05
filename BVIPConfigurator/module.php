@@ -91,6 +91,7 @@ class BVIPConfigurator extends BVIPBase
     {
         $Splitter = IPS_GetInstance($this->InstanceID)['ConnectionID'];
         $IO = IPS_GetInstance($Splitter)['ConnectionID'];
+        
         $ParentCreate = [
             [
                 'moduleID'      => '{58E3A4FB-61F2-4C30-8563-859722F6522D}',
@@ -140,7 +141,7 @@ class BVIPConfigurator extends BVIPBase
                 $Create['configuration'] = [
                     $ConfigParamName => $index
                 ];
-            }
+        }
             if (!$NoLocation) {
                 $Create['location'] = [$this->Translate('BVIP Devices'), IPS_GetName($this->InstanceID)];
             }
@@ -187,7 +188,7 @@ class BVIPConfigurator extends BVIPBase
                 'popup' => [
                     'items' => [[
                     'type'    => 'Label',
-                    'caption' => 'Instance has no active parent.'
+                    'caption' => 'Error on read capabilities.'
                         ]]
                 ]
             ];
@@ -196,6 +197,18 @@ class BVIPConfigurator extends BVIPBase
 
             return json_encode($Form);
         }
+        if (!$this->HasActiveParent()) {
+            $Form['actions'][] = [
+                'type'  => 'PopupAlert',
+                'popup' => [
+                    'items' => [[
+                    'type'    => 'Label',
+                    'caption' => 'Instance has no active parent.'
+                        ]]
+                ]
+            ];
+        }
+
         $NbrOfVideoIn = count($Capas['Video']['Encoder']);
         $HasInput = $Capas['IO']['Input'] > 0;
         $HasOutput = $Capas['IO']['Output'] > 0;
@@ -212,13 +225,15 @@ class BVIPConfigurator extends BVIPBase
         $CamImagesInstance = $this->GetConfiguratorArray('{9CD9975F-D6DF-4287-956D-53C65B8675F3}', 'Line', $NbrOfVideoIn);
         $CamVidProcInstance = $this->GetConfiguratorArray('{6A046B86-C098-4A96-9038-800AE0BBFA10}', 'Line', $NbrOfVideoIn);
         $SerialPortInstance = $this->GetConfiguratorArray('{CBEA6475-2EE1-4EC7-85F0-0B042FED87BB}', 'Number', $NbrOfSerialPorts);
-
+        $InputInstance = [];
         if ($HasInput) {
             $InputInstance = $this->GetConfiguratorArray('{1DC90109-FBDD-4F5B-8E29-5E95B8029F20}', '', 1);
         }
+        $OutputInstance = [];
         if ($HasOutput) {
             $OutputInstance = $this->GetConfiguratorArray('{C900EEDF-60C3-4BDC-BC7D-39109CA05042}', '', 1);
         }
+        $VirtualInstance = [];
         if ($HasVirtual) {
             $VirtualInstance = $this->GetConfiguratorArray('{3B02A316-33AE-4DCF-8AAF-A40453904DFF}', '', 1);
         }
@@ -236,11 +251,14 @@ class BVIPConfigurator extends BVIPBase
 
     public function RequestState()
     {
+        
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
     {
+        
     }
+
 }
 
 /* @} */

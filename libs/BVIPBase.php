@@ -6,6 +6,7 @@ require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
+
     use \bvip\VariableProfileHelper,
         \bvip\VariableHelper,
         \bvip\DebugHelper,
@@ -64,12 +65,13 @@ abstract class BVIPBase extends IPSModule
 
     protected function RegisterParent()
     {
+        $Config = json_decode(IPS_GetConfiguration($this->InstanceID), true);
+        $Line = (array_key_exists('Line', $Config)) ? '@' . $Config['Line'] : '';
         $SplitterId = $this->IORegisterParent();
         if ($SplitterId > 0) {
             $IOId = @IPS_GetInstance($SplitterId)['ConnectionID'];
             if ($IOId > 0) {
-                $this->SetSummary(IPS_GetProperty($IOId, 'Host'));
-
+                $this->SetSummary(IPS_GetProperty($IOId, 'Host') . $Line);
                 return;
             }
         }
@@ -103,7 +105,6 @@ abstract class BVIPBase extends IPSModule
     }
 
     abstract protected function RequestState();
-
     /**
      * Wird ausgeführt wenn der Kernel hochgefahren wurde.
      */
@@ -119,7 +120,6 @@ abstract class BVIPBase extends IPSModule
       {
       //We dont need any Data...here
       } */
-
     /**
      * @param RCPData $RCPData
      */
@@ -158,7 +158,6 @@ abstract class BVIPBase extends IPSModule
     }
 
     abstract protected function DecodeRCPEvent(RCPData $RCPData);
-
     protected function GetFirmware()
     {
         if ($this->HasActiveParent()) {
@@ -220,4 +219,5 @@ abstract class BVIPBase extends IPSModule
     {
         return $this->GetCapability()['IO']['Virtual'];
     }
+
 }
