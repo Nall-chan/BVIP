@@ -2,24 +2,34 @@
 [![Version](https://img.shields.io/badge/Modul%20Version-3.00-blue.svg)]()
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
 [![Version](https://img.shields.io/badge/Symcon%20Version-5.1%20%3E-green.svg)](https://www.symcon.de/forum/threads/30857-IP-Symcon-5-1-%28Stable%29-Changelog)
-[![StyleCI](https://styleci.io/repos/108290698/shield?style=flat)](https://styleci.io/repos/108290698)  
+[![Check Style](https://github.com/Nall-chan/BVIP/workflows/Check%20Style/badge.svg)](https://github.com/Nall-chan/BVIP/actions) [![Run Tests](https://github.com/Nall-chan/BVIP/workflows/Run%20Tests/badge.svg)](https://github.com/Nall-chan/BVIP/actions)  
 
-# Symcon-Modul: BVIP
-Ermöglich die Einbindung von RCP+ Geräten in IP-Symcon.  
+# Symcon-Modul: BVIP <!-- omit in toc -->
+Ermöglicht die Einbindung von RCP+ Geräten in IP-Symcon.  
 
-## Dokumentation
+## Dokumentation <!-- omit in toc -->
 
 **Inhaltsverzeichnis**
-
-1. [Funktionsumfang](#1-funktionsumfang)  
-2. [Voraussetzungen](#2-voraussetzungen)  
-3. [Software-Installation](#3-software-installation) 
-4. [Einrichten der Instanzen in IP-Symcon](#4-einrichten-der-instanzen-in-ip-symcon)
-5. [Anhang](#5-anhang)  
-    1. [GUID der Module](#1-guid-der-module)
-    2. [Changlog](#2-changlog)
-    3. [Spenden](#3-spenden)
-6. [Lizenz](#6-lizenz)
+- [1. Funktionsumfang](#1-funktionsumfang)
+  - [BVIPConfigurator:](#bvipconfigurator)
+  - [BVIPSplitter:](#bvipsplitter)
+  - [BVIPCamEvents:](#bvipcamevents)
+  - [BVIPCamImages:](#bvipcamimages)
+  - [BVIPCamReplay:](#bvipcamreplay)
+  - [BVIPHealth:](#bviphealth)
+  - [BVIPInputs:](#bvipinputs)
+  - [BVIPOutputs:](#bvipoutputs)
+  - [BVIPSerialPort:](#bvipserialport)
+  - [BVIPVidProc:](#bvipvidproc)
+  - [BVIPVirtualInputs:](#bvipvirtualinputs)
+- [2. Voraussetzungen](#2-voraussetzungen)
+- [3. Software-Installation](#3-software-installation)
+- [4. Einrichten der Instanzen in IP-Symcon](#4-einrichten-der-instanzen-in-ip-symcon)
+- [5. Anhang](#5-anhang)
+  - [1. GUID der Module](#1-guid-der-module)
+  - [2. Changelog](#2-changelog)
+  - [3. Spenden](#3-spenden)
+- [6. Lizenz](#6-lizenz)
 
 ## 1. Funktionsumfang
 
@@ -72,14 +82,14 @@ Es wird empfohlen die Einrichtung mit dem BVIP Konfigurator zu starten (BVIPConf
 | BVIPConfigurator  | Configurator | BVIP   | {F9C6AC71-533B-4F93-8C9C-B348FAA336D2} |
 | BVIPDiscovery     | Discovery    | BVIP   | {7013126D-4AAB-41C2-BAE0-FD7A5C59B89C} |
 
-### 2. Changlog
+### 2. Changelog
 
 Version 3.0:  
  - Release für IPS 5.1 und den Module-Store  
  - Replay-Instanz hinzugefügt (beta)  
 
 Version 2.5:  
- - Configform überarbeitet  
+ - Konfigurationform überarbeitet  
  - Discovery-Instanz hinzugefügt  
  - RTSP-Stream ergänzt  
  - JPEG-Push und h.26x für Media-Objekt ergänzt  
@@ -95,7 +105,7 @@ Version 1.0:
 
 ### 3. Spenden  
   
-  Die Library ist für die nicht kommzerielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:  
+  Die Library ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:  
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G2SLW2MEMQZH2" target="_blank"><img src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_LG.gif" border="0" /></a>
 
