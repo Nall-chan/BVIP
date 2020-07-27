@@ -68,6 +68,90 @@ class BVIPConfigurator extends BVIPBase
         return parent::GetCapability();
     }
 
+    /**
+     * Interne Funktion des SDK.
+     */
+    public function GetConfigurationForm()
+    {
+        $this->SendDebug('Parent', $this->ParentID, 0);
+
+        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $Capabilities = $this->GetCapability();
+        if ($Capabilities === false) {
+            $Form['actions'][] = [
+                'type'  => 'PopupAlert',
+                'popup' => [
+                    'items' => [[
+                        'type'    => 'Label',
+                        'caption' => 'Error on read capabilities.'
+                    ]]
+                ]
+            ];
+            $this->SendDebug('FORM', json_encode($Form), 0);
+            $this->SendDebug('FORM', json_last_error_msg(), 0);
+
+            return json_encode($Form);
+        }
+        if (!$this->HasActiveParent()) {
+            $Form['actions'][] = [
+                'type'  => 'PopupAlert',
+                'popup' => [
+                    'items' => [[
+                        'type'    => 'Label',
+                        'caption' => 'Instance has no active parent.'
+                    ]]
+                ]
+            ];
+        }
+
+        $NbrOfVideoIn = count($Capabilities['Video']['Encoder']);
+        $HasInput = $Capabilities['IO']['Input'] > 0;
+        $HasOutput = $Capabilities['IO']['Output'] > 0;
+        $HasVirtual = $Capabilities['IO']['Virtual'] > 0;
+        $NbrOfSerialPorts = $Capabilities['SerialPorts'];
+
+        $this->SendDebug('NbrOfVideoIn', $NbrOfVideoIn, 0);
+        $this->SendDebug('HasInput', $HasInput, 0);
+        $this->SendDebug('HasOutput', $HasOutput, 0);
+        $this->SendDebug('HasVirtual', $HasVirtual, 0);
+        $this->SendDebug('NbrOfSerialPorts', $NbrOfSerialPorts, 0);
+        //CamEventsInstance
+        $CamEventsInstance = $this->GetConfiguratorArray('{5E82180C-E0AD-489B-BFFB-BA2F9653CD4A}', 'Line', $NbrOfVideoIn);
+        $CamImagesInstance = $this->GetConfiguratorArray('{9CD9975F-D6DF-4287-956D-53C65B8675F3}', 'Line', $NbrOfVideoIn);
+        $CamVidProcInstance = $this->GetConfiguratorArray('{6A046B86-C098-4A96-9038-800AE0BBFA10}', 'Line', $NbrOfVideoIn);
+        $SerialPortInstance = $this->GetConfiguratorArray('{CBEA6475-2EE1-4EC7-85F0-0B042FED87BB}', 'Number', $NbrOfSerialPorts);
+        $InputInstance = [];
+        if ($HasInput) {
+            $InputInstance = $this->GetConfiguratorArray('{1DC90109-FBDD-4F5B-8E29-5E95B8029F20}', '', 1);
+        }
+        $OutputInstance = [];
+        if ($HasOutput) {
+            $OutputInstance = $this->GetConfiguratorArray('{C900EEDF-60C3-4BDC-BC7D-39109CA05042}', '', 1);
+        }
+        $VirtualInstance = [];
+        if ($HasVirtual) {
+            $VirtualInstance = $this->GetConfiguratorArray('{3B02A316-33AE-4DCF-8AAF-A40453904DFF}', '', 1);
+        }
+
+        $HealthInstance = $this->GetConfiguratorArray('{C42D8967-BF82-4D37-8309-2581F484B3BD}', '', 1);
+
+        $Values = array_merge($CamEventsInstance, $CamImagesInstance, $CamVidProcInstance, $SerialPortInstance, $InputInstance, $OutputInstance, $VirtualInstance, $HealthInstance);
+
+        $Form['actions'][0]['values'] = $Values;
+        $this->SendDebug('FORM', json_encode($Form), 0);
+        $this->SendDebug('FORM', json_last_error_msg(), 0);
+
+        return json_encode($Form);
+    }
+
+    public function RequestState()
+    {
+    }
+
+    protected function DecodeRCPEvent(RCPData $RCPData)
+    {
+    }
+
     private function GetInstanceList(string $GUID, string $ConfigParam)
     {
         $InstanceIDList = array_flip(array_values(array_filter(IPS_GetInstanceListByModuleID($GUID), [$this, 'FilterInstances'])));
@@ -91,7 +175,7 @@ class BVIPConfigurator extends BVIPBase
     {
         $Splitter = IPS_GetInstance($this->InstanceID)['ConnectionID'];
         $IO = IPS_GetInstance($Splitter)['ConnectionID'];
-        
+
         $ParentCreate = [
             [
                 'moduleID'      => '{58E3A4FB-61F2-4C30-8563-859722F6522D}',
@@ -141,7 +225,7 @@ class BVIPConfigurator extends BVIPBase
                 $Create['configuration'] = [
                     $ConfigParamName => $index
                 ];
-        }
+            }
             if (!$NoLocation) {
                 $Create['location'] = [$this->Translate('BVIP Devices'), IPS_GetName($this->InstanceID)];
             }
@@ -172,93 +256,6 @@ class BVIPConfigurator extends BVIPBase
 
         return $Devices;
     }
-
-    /**
-     * Interne Funktion des SDK.
-     */
-    public function GetConfigurationForm()
-    {
-        $this->SendDebug('Parent', $this->ParentID, 0);
-
-        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $Capabilities = $this->GetCapability();
-        if ($Capabilities === false) {
-            $Form['actions'][] = [
-                'type'  => 'PopupAlert',
-                'popup' => [
-                    'items' => [[
-                    'type'    => 'Label',
-                    'caption' => 'Error on read capabilities.'
-                        ]]
-                ]
-            ];
-            $this->SendDebug('FORM', json_encode($Form), 0);
-            $this->SendDebug('FORM', json_last_error_msg(), 0);
-
-            return json_encode($Form);
-        }
-        if (!$this->HasActiveParent()) {
-            $Form['actions'][] = [
-                'type'  => 'PopupAlert',
-                'popup' => [
-                    'items' => [[
-                    'type'    => 'Label',
-                    'caption' => 'Instance has no active parent.'
-                        ]]
-                ]
-            ];
-        }
-
-        $NbrOfVideoIn = count($Capabilities['Video']['Encoder']);
-        $HasInput = $Capabilities['IO']['Input'] > 0;
-        $HasOutput = $Capabilities['IO']['Output'] > 0;
-        $HasVirtual = $Capabilities['IO']['Virtual'] > 0;
-        $NbrOfSerialPorts = $Capabilities['SerialPorts'];
-
-        $this->SendDebug('NbrOfVideoIn', $NbrOfVideoIn, 0);
-        $this->SendDebug('HasInput', $HasInput, 0);
-        $this->SendDebug('HasOutput', $HasOutput, 0);
-        $this->SendDebug('HasVirtual', $HasVirtual, 0);
-        $this->SendDebug('NbrOfSerialPorts', $NbrOfSerialPorts, 0);
-        //CamEventsInstance
-        $CamEventsInstance = $this->GetConfiguratorArray('{5E82180C-E0AD-489B-BFFB-BA2F9653CD4A}', 'Line', $NbrOfVideoIn);
-        $CamImagesInstance = $this->GetConfiguratorArray('{9CD9975F-D6DF-4287-956D-53C65B8675F3}', 'Line', $NbrOfVideoIn);
-        $CamVidProcInstance = $this->GetConfiguratorArray('{6A046B86-C098-4A96-9038-800AE0BBFA10}', 'Line', $NbrOfVideoIn);
-        $SerialPortInstance = $this->GetConfiguratorArray('{CBEA6475-2EE1-4EC7-85F0-0B042FED87BB}', 'Number', $NbrOfSerialPorts);
-        $InputInstance = [];
-        if ($HasInput) {
-            $InputInstance = $this->GetConfiguratorArray('{1DC90109-FBDD-4F5B-8E29-5E95B8029F20}', '', 1);
-        }
-        $OutputInstance = [];
-        if ($HasOutput) {
-            $OutputInstance = $this->GetConfiguratorArray('{C900EEDF-60C3-4BDC-BC7D-39109CA05042}', '', 1);
-        }
-        $VirtualInstance = [];
-        if ($HasVirtual) {
-            $VirtualInstance = $this->GetConfiguratorArray('{3B02A316-33AE-4DCF-8AAF-A40453904DFF}', '', 1);
-        }
-
-        $HealthInstance = $this->GetConfiguratorArray('{C42D8967-BF82-4D37-8309-2581F484B3BD}', '', 1);
-
-        $Values = array_merge($CamEventsInstance, $CamImagesInstance, $CamVidProcInstance, $SerialPortInstance, $InputInstance, $OutputInstance, $VirtualInstance, $HealthInstance);
-
-        $Form['actions'][0]['values'] = $Values;
-        $this->SendDebug('FORM', json_encode($Form), 0);
-        $this->SendDebug('FORM', json_last_error_msg(), 0);
-
-        return json_encode($Form);
-    }
-
-    public function RequestState()
-    {
-        
-    }
-
-    protected function DecodeRCPEvent(RCPData $RCPData)
-    {
-        
-    }
-
 }
 
 /* @} */

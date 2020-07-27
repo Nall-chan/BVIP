@@ -77,23 +77,6 @@ class BVIPCamReplay extends BVIPBase
         }
     }
 
-    protected function IOChangeState($State)
-    {
-        parent::IOChangeState($State);
-        if ($State == IS_ACTIVE) {
-            if ($this->ReadPropertyBoolean('Rename') === true) {
-                $this->RequestName();
-            }
-            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line')) {
-                $this->SetStatus(IS_ACTIVE);
-                $this->RequestState();
-            } else {
-                $this->SetStatus(IS_EBASE + 2);
-                trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
-            }
-        }
-    }
-
     public function GetConfigurationForm()
     {
         $Firmware = $this->GetFirmware();
@@ -102,9 +85,9 @@ class BVIPCamReplay extends BVIPBase
                 'type'  => 'PopupAlert',
                 'popup' => [
                     'items' => [[
-                    'type'    => 'Label',
-                    'caption' => 'Firmware is not supported.'
-                        ]]
+                        'type'    => 'Label',
+                        'caption' => 'Firmware is not supported.'
+                    ]]
                 ]
             ];
             return json_encode($Form);
@@ -242,6 +225,23 @@ class BVIPCamReplay extends BVIPBase
         }
 
         return false;
+    }
+
+    protected function IOChangeState($State)
+    {
+        parent::IOChangeState($State);
+        if ($State == IS_ACTIVE) {
+            if ($this->ReadPropertyBoolean('Rename') === true) {
+                $this->RequestName();
+            }
+            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line')) {
+                $this->SetStatus(IS_ACTIVE);
+                $this->RequestState();
+            } else {
+                $this->SetStatus(IS_EBASE + 2);
+                trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
+            }
+        }
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)
