@@ -1,126 +1,124 @@
 {
-    "elements":
-            [
+    "elements": [
+        {
+            "name": "Number",
+            "type": "Select",
+            "caption": "Port",
+            "options": []
+        },
+        {
+            "name": "Speed",
+            "type": "Select",
+            "caption": "Baudrate",
+            "options": [
                 {
-                    "name": "Number",
-                    "type": "Select",
-                    "caption": "Port",
-                    "options": [
-                    ]
+                    "caption": "300",
+                    "value": 300
                 },
                 {
-                    "name": "Speed",
-                    "type": "Select",
-                    "caption": "Baudrate",
-                    "options": [
-                        {
-                            "caption": "300",
-                            "value": 300
-                        },
-                        {
-                            "caption": "600",
-                            "value": 600
-                        },
-                        {
-                            "caption": "1200",
-                            "value": 1200
-                        },
-                        {
-                            "caption": "2400",
-                            "value": 2400
-                        },
-                        {
-                            "caption": "4800",
-                            "value": 4800
-                        },
-                        {
-                            "caption": "9600",
-                            "value": 9600
-                        },
-                        {
-                            "caption": "19200",
-                            "value": 19200
-                        }
-                    ]
+                    "caption": "600",
+                    "value": 600
                 },
                 {
-                    "name": "Bits",
-                    "type": "Select",
-                    "caption": "Data Bits",
-                    "options": [
-                        {
-                            "caption": "7",
-                            "value": 7
-                        },
-                        {
-                            "caption": "8",
-                            "value": 8
-                        }
-                    ]
+                    "caption": "1200",
+                    "value": 1200
                 },
                 {
-                    "name": "StopBits",
-                    "type": "Select",
-                    "caption": "Stop Bits",
-                    "options": [
-                        {
-                            "caption": "1",
-                            "value": 1
-                        },
-                        {
-                            "caption": "2",
-                            "value": 2
-                        }
-                    ]
+                    "caption": "2400",
+                    "value": 2400
                 },
                 {
-                    "name": "Par",
-                    "type": "Select",
-                    "caption": "Parity",
-                    "options": [
-                        {
-                            "caption": "no Parity",
-                            "value": 0
-                        },
-                        {
-                            "caption": "even",
-                            "value": 1
-                        },
-                        {
-                            "caption": "odd",
-                            "value": 2
-                        }
-                    ]
+                    "caption": "4800",
+                    "value": 4800
                 },
                 {
-                    "name": "Mode",
-                    "type": "Select",
-                    "caption": "Modus",
-                    "options": [
-                        {
-                            "caption": "RS232",
-                            "value": 1
-                        },
-                        {
-                            "caption": "RS422/RS485",
-                            "value": 2
-                        }
-                    ]
+                    "caption": "9600",
+                    "value": 9600
                 },
                 {
-                    "name": "HalfDuplex",
-                    "type": "Select",
-                    "caption": "Duplex",
-                    "options": [
-                        {
-                            "caption": "full",
-                            "value": 0
-                        },
-                        {
-                            "caption": "half",
-                            "value": 2
-                        }
-                    ]
+                    "caption": "19200",
+                    "value": 19200
                 }
             ]
+        },
+        {
+            "name": "Bits",
+            "type": "Select",
+            "caption": "Data Bits",
+            "options": [
+                {
+                    "caption": "7",
+                    "value": 7
+                },
+                {
+                    "caption": "8",
+                    "value": 8
+                }
+            ]
+        },
+        {
+            "name": "StopBits",
+            "type": "Select",
+            "caption": "Stop Bits",
+            "options": [
+                {
+                    "caption": "1",
+                    "value": 1
+                },
+                {
+                    "caption": "2",
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "name": "Par",
+            "type": "Select",
+            "caption": "Parity",
+            "options": [
+                {
+                    "caption": "no Parity",
+                    "value": 0
+                },
+                {
+                    "caption": "even",
+                    "value": 1
+                },
+                {
+                    "caption": "odd",
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "name": "Mode",
+            "type": "Select",
+            "caption": "Modus",
+            "options": [
+                {
+                    "caption": "RS232",
+                    "value": 1
+                },
+                {
+                    "caption": "RS422/RS485",
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "name": "HalfDuplex",
+            "type": "Select",
+            "caption": "Duplex",
+            "options": [
+                {
+                    "caption": "full",
+                    "value": 0
+                },
+                {
+                    "caption": "half",
+                    "value": 2
+                }
+            ]
+        }
+    ]
 }

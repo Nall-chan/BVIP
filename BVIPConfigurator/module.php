@@ -11,9 +11,9 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
@@ -21,10 +21,10 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * BVIPConfigurator Klasse implementiert.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  */
@@ -181,8 +181,8 @@ class BVIPConfigurator extends BVIPBase
         $this->SendDebug('Parent', $this->ParentID, 0);
 
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $Capas = $this->GetCapability();
-        if ($Capas === false) {
+        $Capabilities = $this->GetCapability();
+        if ($Capabilities === false) {
             $Form['actions'][] = [
                 'type'  => 'PopupAlert',
                 'popup' => [
@@ -209,11 +209,11 @@ class BVIPConfigurator extends BVIPBase
             ];
         }
 
-        $NbrOfVideoIn = count($Capas['Video']['Encoder']);
-        $HasInput = $Capas['IO']['Input'] > 0;
-        $HasOutput = $Capas['IO']['Output'] > 0;
-        $HasVirtual = $Capas['IO']['Virtual'] > 0;
-        $NbrOfSerialPorts = $Capas['SerialPorts'];
+        $NbrOfVideoIn = count($Capabilities['Video']['Encoder']);
+        $HasInput = $Capabilities['IO']['Input'] > 0;
+        $HasOutput = $Capabilities['IO']['Output'] > 0;
+        $HasVirtual = $Capabilities['IO']['Virtual'] > 0;
+        $NbrOfSerialPorts = $Capabilities['SerialPorts'];
 
         $this->SendDebug('NbrOfVideoIn', $NbrOfVideoIn, 0);
         $this->SendDebug('HasInput', $HasInput, 0);

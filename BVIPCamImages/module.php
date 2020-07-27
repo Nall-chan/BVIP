@@ -11,9 +11,9 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
@@ -22,10 +22,10 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * Erweitert BVIPBase.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  */
@@ -69,23 +69,6 @@ class BVIPCamImages extends BVIPBase
         }
     }
 
-    protected function IOChangeState($State)
-    {
-        parent::IOChangeState($State);
-        if ($State == IS_ACTIVE) {
-            if ($this->ReadPropertyBoolean('Rename') === true) {
-                $this->RequestName();
-            }
-            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line')) {
-                $this->SetStatus(IS_ACTIVE);
-                $this->RequestState();
-            } else {
-                $this->SetStatus(IS_EBASE + 2);
-                trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
-            }
-        }
-    }
-
     public function GetConfigurationForm()
     {
         $data = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
@@ -117,8 +100,8 @@ class BVIPCamImages extends BVIPBase
         $stream = $this->ReadPropertyInteger('Stream');
         $width = $this->ReadPropertyInteger('Width');
         $height = $this->ReadPropertyInteger('Height');       //width="640" height="480"
-        $jpegsize = $this->ReadPropertyString('JPEGSize');
-        $jpegquali = $this->ReadPropertyInteger('JPEGQuality');
+        $JPEGSize = $this->ReadPropertyString('JPEGSize');
+        $JPEGQuality = $this->ReadPropertyInteger('JPEGQuality');
 
         $ParentId = $this->ParentID;
         if ($ParentId > 0) {
@@ -160,11 +143,11 @@ class BVIPCamImages extends BVIPBase
                             . 'pimg' . $vid . '=createPushImage("bvip_' . $vid . '", 0);pimg' . $vid . '.startPush();}'
                             . '</script>'
                             . '<div align="center"><img onLoad="init' . $vid . '()" id="bvip_' . $vid . '" name="bvip_' . $vid . '" src="http://'
-                            . $Host . '/snap.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegBurst=1&JpegDomain=' . $vid . '&JpegQuality=' . $jpegquali . '" /></div>';
+                            . $Host . '/snap.jpg?JpegSize=' . $JPEGSize . '&JpegCam=' . $line . '&JpegBurst=1&JpegDomain=' . $vid . '&JpegQuality=' . $JPEGQuality . '" /></div>';
                     break;
                 case 3: // JPEG-Push
                     // FW 5
-                    $htmlData = '<div align="center"><img src="http://' . $Host . '/push.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegQuality=' . $jpegquali . '" /></div>';
+                    $htmlData = '<div align="center"><img src="http://' . $Host . '/push.jpg?JpegSize=' . $JPEGSize . '&JpegCam=' . $line . '&JpegQuality=' . $JPEGQuality . '" /></div>';
                     // FW 6
                     //video.mp4?line=1&inst=1&rec=0&rnd=40590
                     break;
@@ -183,7 +166,7 @@ class BVIPCamImages extends BVIPBase
         if ($UseMediaObject) {
             switch ($MediaType) {
                 case 0:
-                    $Url = 'http://' . $Host . '/push.jpg?JpegSize=' . $jpegsize . '&JpegCam=' . $line . '&JpegQuality=' . $jpegquali;
+                    $Url = 'http://' . $Host . '/push.jpg?JpegSize=' . $JPEGSize . '&JpegCam=' . $line . '&JpegQuality=' . $JPEGQuality;
                     break;
                 case 1:
                     $Url = 'http://' . $Host . '/video.mp4?line=' . $line . '&inst=' . $stream;
@@ -215,12 +198,12 @@ class BVIPCamImages extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
@@ -239,7 +222,7 @@ class BVIPCamImages extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Read name of cameraline ') . $Line . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Read name of videoline ') . $Line . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
@@ -249,12 +232,12 @@ class BVIPCamImages extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
@@ -273,10 +256,27 @@ class BVIPCamImages extends BVIPBase
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Write name of Cameraline ') . $Line . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Write name of videoline ') . $Line . ' - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
         }
 
         return false;
+    }
+
+    protected function IOChangeState($State)
+    {
+        parent::IOChangeState($State);
+        if ($State == IS_ACTIVE) {
+            if ($this->ReadPropertyBoolean('Rename') === true) {
+                $this->RequestName();
+            }
+            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line')) {
+                $this->SetStatus(IS_ACTIVE);
+                $this->RequestState();
+            } else {
+                $this->SetStatus(IS_EBASE + 2);
+                trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
+            }
+        }
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)

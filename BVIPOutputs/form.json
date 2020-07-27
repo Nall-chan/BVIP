@@ -1,21 +1,19 @@
 {
-    "elements":
-            [
-                {
-                    "name": "Rename",
-                    "type": "CheckBox",
-                    "caption": "Rename variables"
-                }
-            ],
-    "actions":
-            [
-                {
-                    "type": "TestCenter"
-                },
-                {
-                    "type": "Button",
-                    "caption": "Read Device",
-                    "onClick": "BVIP_Scan($id);BVIP_RequestState($id);"
-                }
-            ]
+    "elements": [
+        {
+            "name": "Rename",
+            "type": "CheckBox",
+            "caption": "Rename variables"
+        }
+    ],
+    "actions": [
+        {
+            "type": "TestCenter"
+        },
+        {
+            "type": "Button",
+            "caption": "Read Device",
+            "onClick": "BVIP_Scan($id);BVIP_RequestState($id);"
+        }
+    ]
 }

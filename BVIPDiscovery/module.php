@@ -10,9 +10,9 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
@@ -20,10 +20,10 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  * BVIPDiscovery Klasse implementiert.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  *
@@ -31,7 +31,8 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  */
 class BVIPDiscovery extends IPSModule
 {
-    use \bvip\DebugHelper,
+    use \bvip\DebugHelper;
+    use
         \bvip\BufferHelper;
 
     /**
@@ -86,9 +87,9 @@ class BVIPDiscovery extends IPSModule
     {
         $Devices = $this->DiscoverDevices();
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $InstanceIDListConfigurators = IPS_GetInstanceListByModuleID('{F9C6AC71-533B-4F93-8C9C-B348FAA336D2}');
+        $InstanceIDListConfigurator = IPS_GetInstanceListByModuleID('{F9C6AC71-533B-4F93-8C9C-B348FAA336D2}');
         $DevicesIPAddress = [];
-        foreach ($InstanceIDListConfigurators as $InstanceIDConfigurator) {
+        foreach ($InstanceIDListConfigurator as $InstanceIDConfigurator) {
             $Splitter = IPS_GetInstance($InstanceIDConfigurator)['ConnectionID'];
             if ($Splitter > 0) {
                 $IO = IPS_GetInstance($Splitter)['ConnectionID'];
@@ -131,9 +132,9 @@ class BVIPDiscovery extends IPSModule
                 ]
             ];
         }
-        $MissingConfigurators = [];
+        $MissingConfigurator = [];
         foreach ($DevicesIPAddress as $InstanceIDConfigurator => $unitIPAddress) {
-            $MissingConfigurators[] = [
+            $MissingConfigurator[] = [
                 'unitIPAddress' => $unitIPAddress,
                 'friendlyName'  => '',
                 'unitName'      => '',
@@ -143,7 +144,7 @@ class BVIPDiscovery extends IPSModule
             ];
         }
 
-        $Values = array_merge($Devices, $MissingConfigurators); // $Sensors, $MissingSensors);
+        $Values = array_merge($Devices, $MissingConfigurator); // $Sensors, $MissingSensors);
         /* if (count($Values) > 0) {
           foreach ($Values as $key => $row) {
           $SortDevice[$key] = $row['device'];
@@ -155,6 +156,14 @@ class BVIPDiscovery extends IPSModule
         $this->SendDebug('FORM', json_encode($Form), 0);
         $this->SendDebug('FORM', json_last_error_msg(), 0);
         return json_encode($Form);
+    }
+
+    public function Discover()
+    {
+        $this->LogMessage($this->Translate('Background Discovery of BVIP Devices'), KL_NOTIFY);
+
+        $this->Devices = $this->DiscoverDevices();
+        // Alt neu vergleich fehlt, sowie die Events an IPS senden wenn neues Gerät im Netz gefunden wurde.
     }
 
     private function DiscoverDevices(): array
@@ -196,14 +205,6 @@ class BVIPDiscovery extends IPSModule
         }
         socket_close($socket);
         return $DeviceData;
-    }
-
-    public function Discover()
-    {
-        $this->LogMessage($this->Translate('Background Discovery of BVIP Devices'), KL_NOTIFY);
-
-        $this->Devices = $this->DiscoverDevices();
-        // Alt neu vergleich fehlt, sowie die Events an IPS senden wenn neues Gerät im Netz gefunden wurde.
     }
 }
 

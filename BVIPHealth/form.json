@@ -1,19 +1,17 @@
 {
-    "elements":
-            [
-                {
-                    "name": "Interval",
-                    "type": "NumberSpinner",
-                    "caption": "Interval",
-                    "suffix": "seconds"
-                }
-            ],
-    "actions":
-            [
-                {
-                    "type": "Button",
-                    "caption": "Read Device",
-                    "onClick": "BVIP_Scan($id);BVIP_RequestState($id);"
-                }
-            ]
+    "elements": [
+        {
+            "name": "Interval",
+            "type": "NumberSpinner",
+            "caption": "Interval",
+            "suffix": "seconds"
+        }
+    ],
+    "actions": [
+        {
+            "type": "Button",
+            "caption": "Read Device",
+            "onClick": "BVIP_Scan($id);BVIP_RequestState($id);"
+        }
+    ]
 }

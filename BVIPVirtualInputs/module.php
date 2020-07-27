@@ -11,9 +11,9 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
@@ -22,10 +22,10 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * Erweitert BVIPBase.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  */
@@ -55,11 +55,6 @@ class BVIPVirtualInputs extends BVIPBase
         if ($this->HasActiveParent()) {
             $this->IOChangeState(IS_ACTIVE);
         }
-    }
-
-    protected function IOChangeState($State)
-    {
-        parent::IOChangeState($State);
     }
 
     public function WriteBoolean(string $Ident, bool $Value)
@@ -171,6 +166,11 @@ class BVIPVirtualInputs extends BVIPBase
         }
 
         return $Result;
+    }
+
+    protected function IOChangeState($State)
+    {
+        parent::IOChangeState($State);
     }
 
     protected function DecodeRCPEvent(RCPData $RCPData)

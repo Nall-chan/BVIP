@@ -6,7 +6,6 @@ require_once __DIR__ . '/BVIPTraits.php';  // diverse Klassen
 
 abstract class BVIPBase extends IPSModule
 {
-
     use \bvip\VariableProfileHelper,
         \bvip\VariableHelper,
         \bvip\DebugHelper,
@@ -63,6 +62,23 @@ abstract class BVIPBase extends IPSModule
         }
     }
 
+    public function RequestAction($Ident, $Value)
+    {
+        if ($this->IORequestAction($Ident, $Value)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function ReceiveData($JSONString)
+    {
+        $RCPData = new RCPData();
+        $RCPData->FromJSONString($JSONString);
+        $this->DecodeUTF8($RCPData);
+        $this->SendDebug('Event', $RCPData, 0);
+        $this->DecodeRCPEvent($RCPData);
+    }
+
     protected function RegisterParent()
     {
         $Config = json_decode(IPS_GetConfiguration($this->InstanceID), true);
@@ -96,14 +112,6 @@ abstract class BVIPBase extends IPSModule
         $this->SetSummary(('none' . $Line));
     }
 
-    public function RequestAction($Ident, $Value)
-    {
-        if ($this->IORequestAction($Ident, $Value)) {
-            return true;
-        }
-        return false;
-    }
-
     abstract protected function RequestState();
     /**
      * Wird ausgeführt wenn der Kernel hochgefahren wurde.
@@ -118,7 +126,7 @@ abstract class BVIPBase extends IPSModule
 
     /*    public function ReceiveData($JSONString)
       {
-      //We dont need any Data...here
+      //We don't need any Data...here
       } */
     /**
      * @param RCPData $RCPData
@@ -132,13 +140,13 @@ abstract class BVIPBase extends IPSModule
             $this->SendDebug('Send', $RCPData, 0);
             $this->EncodeUTF8($RCPData);
             $RCPData->DataID = RCPData::IIPSSendBVIPData;
-            $anwser = $this->SendDataToParent(json_encode($RCPData));
-            if ($anwser === false) {
+            $answer = $this->SendDataToParent(json_encode($RCPData));
+            if ($answer === false) {
                 $this->SendDebug('Response', 'No valid answer', 0);
 
                 throw new Exception($this->Translate('No valid answer.'), E_USER_NOTICE);
             }
-            $RCPData = unserialize($anwser);
+            $RCPData = unserialize($answer);
             $this->SendDebug('Response', $RCPData, 0);
         } catch (Exception $exc) {
             trigger_error($this->InstanceID . ':' . $this->Translate($exc->getMessage()), E_USER_NOTICE);
@@ -148,28 +156,19 @@ abstract class BVIPBase extends IPSModule
         return $RCPData;
     }
 
-    public function ReceiveData($JSONString)
-    {
-        $RCPData = new RCPData();
-        $RCPData->FromJSONString($JSONString);
-        $this->DecodeUTF8($RCPData);
-        $this->SendDebug('Event', $RCPData, 0);
-        $this->DecodeRCPEvent($RCPData);
-    }
-
     abstract protected function DecodeRCPEvent(RCPData $RCPData);
     protected function GetFirmware()
     {
         if ($this->HasActiveParent()) {
             $Data = json_encode(['DataID' => RCPData::IIPSSendBVIPData, 'Method' => 'ReadFirmware']);
-            $anwser = $this->SendDataToParent($Data);
+            $answer = $this->SendDataToParent($Data);
 
-            if ($anwser === false) {
+            if ($answer === false) {
                 $this->SendDebug('ReadFirmware', 'No valid answer', 0);
 
                 throw new Exception($this->Translate('No valid answer.'), E_USER_NOTICE);
             }
-            return (float) substr(unserialize($anwser), 0, 5);
+            return (float) substr(unserialize($answer), 0, 5);
         }
 
         return 0;
@@ -179,14 +178,14 @@ abstract class BVIPBase extends IPSModule
     {
         if ($this->HasActiveParent()) {
             $Data = json_encode(['DataID' => RCPData::IIPSSendBVIPData, 'Method' => 'ReadCapability']);
-            $anwser = $this->SendDataToParent($Data);
+            $answer = $this->SendDataToParent($Data);
 
-            if ($anwser === false) {
+            if ($answer === false) {
                 $this->SendDebug('GetCapability', 'No valid answer', 0);
 
                 throw new Exception($this->Translate('No valid answer.'), E_USER_NOTICE);
             }
-            return unserialize($anwser);
+            return unserialize($answer);
         }
         return ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
     }
@@ -219,5 +218,4 @@ abstract class BVIPBase extends IPSModule
     {
         return $this->GetCapability()['IO']['Virtual'];
     }
-
 }

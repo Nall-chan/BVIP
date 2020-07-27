@@ -1,5 +1,6 @@
 {
-    "elements": [{
+    "elements": [
+        {
             "name": "User",
             "type": "Select",
             "caption": "Authority",
@@ -34,28 +35,34 @@
                 "column": "unitIPAddress",
                 "direction": "ascending"
             },
-            "columns": [{
+            "columns": [
+                {
                     "caption": "Host",
                     "name": "unitIPAddress",
                     "width": "160px"
-                }, {
+                },
+                {
                     "caption": "Device Model",
                     "name": "friendlyName",
                     "width": "250px"
-                }, {
+                },
+                {
                     "caption": "Device Name",
                     "name": "unitName",
                     "width": "200px"
-                }, {
+                },
+                {
                     "caption": "Device Type",
                     "name": "deviceType",
                     "width": "200px"
-                }, {
+                },
+                {
                     "caption": "Name",
                     "name": "name",
                     "width": "auto"
                 }
             ],
             "values": []
-        }]
+        }
+    ]
 }

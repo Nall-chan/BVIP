@@ -11,21 +11,21 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
 /**
- * BVIPCamReplay Klasse implementiert eine Device für die Einbindung eines Wiedergabestreams.
+ * BVIPCamReplay Klasse implementiert eine Device für die Einbindung eines Wiedergabestream.
  * Erweitert BVIPBase.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  */
@@ -89,7 +89,7 @@ class BVIPCamReplay extends BVIPBase
                 $this->RequestState();
             } else {
                 $this->SetStatus(IS_EBASE + 2);
-                trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+                trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
             }
         }
     }
@@ -180,12 +180,12 @@ class BVIPCamReplay extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
@@ -214,12 +214,12 @@ class BVIPCamReplay extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }

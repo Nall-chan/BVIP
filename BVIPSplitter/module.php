@@ -12,9 +12,9 @@ eval('namespace BVIPSplitter {?>' . file_get_contents(__DIR__ . '/../libs/helper
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
@@ -23,15 +23,15 @@ eval('namespace BVIPSplitter {?>' . file_get_contents(__DIR__ . '/../libs/helper
  * Erweitert IPSModule.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  *
- * @property array $ReplyRCPData Enthält die versendeten Befehle und buffert die Antworten.
- * @property string $Buffer Empfangsbuffer
+ * @property array $ReplyRCPData Enthält die versendeten Befehle und speichert die Antworten.
+ * @property string $Buffer EmpfangsBuffer
  * @property string $Host Adresse des BVIP (aus IO-Parent ausgelesen)
  * @property int $ParentID Die InstanzeID des IO-Parent
  * @property int $FrameID
@@ -81,8 +81,8 @@ class BVIPSplitter extends IPSModule
         $this->Host = '';
         $this->ParentID = 0;
         $this->FrameID = 0;
-        $Capas = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
-        $this->RegisterAttributeArray('Capas', $Capas);
+        $Capabilities = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
+        $this->RegisterAttributeArray('Capas', $Capabilities);
         $this->RegisterAttributeString('Firmware', '');
         $this->ClientID = random_bytes(2);
         $this->SessionID = random_bytes(4);
@@ -131,6 +131,142 @@ class BVIPSplitter extends IPSModule
         }
     }
 
+    public function RequestAction($Ident, $Value)
+    {
+        if ($this->IORequestAction($Ident, $Value)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Interne Funktion des SDK.
+     */
+    public function GetConfigurationForParent()
+    {
+        $Config['Port'] = 1756;
+
+        return json_encode($Config);
+    }
+
+    public function RefreshCapability()
+    {
+        if (!$this->HasActiveParent()) {
+            return false;
+        }
+        $this->GetFirmware();
+        $this->GetModulSlot();
+        $this->GetCapability();
+    }
+
+    public function KeepAlive()
+    {
+        $this->SetTimerInterval('KeepAlive', 0);
+        $RCPData = new RCPData();
+        $RCPData->Tag = RCPTag::TAG_CLIENT_REGISTRATION;
+        $RCPData->DataType = RCPDataType::RCP_P_OCTET;
+        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+        $RCPData->Num = 0;
+        $RCPReplyData = $this->Send($RCPData);
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
+            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+        }
+    }
+
+    //################# DATAPOINTS DEVICE
+
+    /**
+     * Interne Funktion des SDK. Nimmt Daten von Children entgegen und sendet Diese weiter.
+     *
+     * @param string $JSONString Ein RCPData-Objekt welches als JSONString kodiert ist.
+     * @result RCPData|bool
+     */
+    public function ForwardData($JSONString)
+    {
+        $RCPData = new RCPData();
+        $isRCPData = $RCPData->FromJSONString($JSONString);
+        if ($isRCPData === true) {
+            $this->DecodeUTF8($RCPData);
+            $ret = $this->Send($RCPData);
+            if (!is_null($ret)) {
+                return serialize($ret);
+            }
+
+            return false;
+        } else {
+            return serialize($this->{$isRCPData}());
+        }
+        return false;
+    }
+
+    //################# DATAPOINTS PARENT
+
+    /**
+     * Empfängt Daten vom Parent.
+     *
+     * @param string $JSONString Das empfangene JSON-kodierte Objekt vom Parent.
+     * @result bool True wenn Daten verarbeitet wurden, sonst false.
+     */
+    public function ReceiveData($JSONString)
+    {
+        $data = json_decode($JSONString);
+
+        // Datenstrom zusammenfügen
+        $Head = $this->Buffer;
+        $Data = utf8_decode($data->Buffer);
+        if (($Head == '') && ($Data[0] != chr(0x03))) { // Müll
+            return;
+        }
+        $Data = $Head . $Data;
+        while (true) {
+            if ($Data[0] != chr(0x03)) { // Müll
+                $this->Buffer = '';
+
+                return;
+            }
+
+            $len = (ord($Data[2]) << 8) | (ord($Data[3]));
+            if (strlen($Data) < $len) {
+                $this->Buffer = $Data;
+
+                return;
+            }
+
+            // Stream in einzelne Pakete schneiden
+            $Packet = substr($Data, 4, $len - 4);
+            // Rest vom Stream wieder in den EmpfangsBuffer schieben
+            $Data = substr($Data, $len);
+
+            // Paket verarbeiten
+            $RCPFrame = new RCPFrame($Packet);
+            $this->SendDebug('Receive', $RCPFrame, 0);
+            $RCPData = new RCPData();
+            $RCPData->FromRCPFrame($RCPFrame);
+            $this->SendDebug(RCPAction::ToString($RCPFrame->Action), $RCPData, 0);
+
+            switch ($RCPFrame->Action) {
+                case RCPAction::RCP_Message:
+                    if ($RCPFrame->Tag == RCPTag::TAG_CLIENT_TIMEOUT_WARNING) {
+                        $this->SetTimerInterval('KeepAlive', 2);
+                        break;
+                    }
+                    $this->SendDataToDevice($RCPData);
+                    break;
+                case RCPAction::RCP_Error:
+                case RCPAction::RCP_Reply:
+                    $this->SendQueueUpdate($RCPFrame->Reserved, $RCPData);
+                    break;
+                case RCPAction::RCP_Request:
+                    // FEHLER ?!
+                    break;
+            }
+            if (strlen($Data) == 0) {
+                $this->Buffer = '';
+                break;
+            }
+        }
+    }
+
     /**
      * Wird ausgeführt wenn der Kernel hochgefahren wurde.
      */
@@ -176,34 +312,6 @@ class BVIPSplitter extends IPSModule
         $this->SetStatus(IS_INACTIVE); // Setzen wir uns auf inactive, weil wir vorher eventuell im Fehlerzustand waren.
     }
 
-    public function RequestAction($Ident, $Value)
-    {
-        if ($this->IORequestAction($Ident, $Value)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Interne Funktion des SDK.
-     */
-    public function GetConfigurationForParent()
-    {
-        $Config['Port'] = 1756;
-
-        return json_encode($Config);
-    }
-
-    public function RefreshCapability()
-    {
-        if (!$this->HasActiveParent()) {
-            return false;
-        }
-        $this->GetFirmware();
-        $this->GetModulSlot();
-        $this->GetCapability();
-    }
-
     protected function GetCapability()
     {
         $RCPData = new RCPData();
@@ -212,7 +320,7 @@ class BVIPSplitter extends IPSModule
         $RCPData->RW = RCPReadWrite::RCP_DO_READ;
         /* @var $RCPReplyData RCPData */
         $RCPReplyData = @$this->Send($RCPData);
-        $Capas = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
+        $Capabilities = ['Video' => ['Encoder' => [], 'Decoder' => [], 'Transcoder' => []], 'SerialPorts' => 0, 'IO' => ['Input' => 0, 'Output' => 0, 'Virtual' => 0]];
         if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
             $i = 0;
             $pointer = 6;
@@ -242,20 +350,20 @@ class BVIPSplitter extends IPSModule
                             $Typ = unpack('n', $ElementData[0])[1];
                             switch ($Typ) {
                                 case 0x0001:
-                                    $Capas['Video']['Encoder'] = $Video;
+                                    $Capabilities['Video']['Encoder'] = $Video;
                                     break;
                                 case 0x0002:
-                                    $Capas['Video']['Decoder'] = $Video;
+                                    $Capabilities['Video']['Decoder'] = $Video;
                                     break;
                                 case 0x0003:
-                                    $Capas['Video']['Transcoder'] = $Video;
+                                    $Capabilities['Video']['Transcoder'] = $Video;
                                     break;
                             }
                         }
 
                         break;
                     case 0x0003: // Serial - 4
-                        $Capas['SerialPorts'] = $NbrOfSectionElements;
+                        $Capabilities['SerialPorts'] = $NbrOfSectionElements;
                         break;
                     case 0x0004: // IO - 4
                         $ElementsData = str_split($FullSectionData, 4);
@@ -268,14 +376,14 @@ class BVIPSplitter extends IPSModule
                             $ElementData = str_split($ElementsData[$i - 1], 2);
                             $IOs[unpack('n', $ElementData[0])[1]]++;
                         }
-                        $Capas['IO'] = ['Input' => $IOs[1], 'Output' => $IOs[2], 'Virtual' => $IOs[3]];
+                        $Capabilities['IO'] = ['Input' => $IOs[1], 'Output' => $IOs[2], 'Virtual' => $IOs[3]];
                         break;
                 }
                 $pointer = $pointer + $len;
             }
 
-            $this->LogMessage($this->Translate('Device capability read succesfully'), KL_NOTIFY);
-            $this->WriteAttributeArray('Capas', $Capas);
+            $this->LogMessage($this->Translate('Device capability read successfully'), KL_NOTIFY);
+            $this->WriteAttributeArray('Capas', $Capabilities);
         } else {
             $this->LogMessage($this->Translate('Device capability are unknown'), KL_ERROR);
         }
@@ -329,127 +437,6 @@ class BVIPSplitter extends IPSModule
         }
     }
 
-    public function KeepAlive()
-    {
-        $this->SetTimerInterval('KeepAlive', 0);
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_CLIENT_REGISTRATION;
-        $RCPData->DataType = RCPDataType::RCP_P_OCTET;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        $RCPData->Num = 0;
-        $RCPReplyData = $this->Send($RCPData);
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_NO_ERROR) {
-            trigger_error($this->InstanceID . ':' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
-        }
-    }
-
-    //################# DATAPOINTS DEVICE
-
-    /**
-     * Interne Funktion des SDK. Nimmt Daten von Childs entgegen und sendet Diese weiter.
-     *
-     * @param string $JSONString Ein RCPData-Objekt welches als JSONString kodiert ist.
-     * @result RCPData|bool
-     */
-    public function ForwardData($JSONString)
-    {
-        $RCPData = new RCPData();
-        $isRCPData = $RCPData->FromJSONString($JSONString);
-        if ($isRCPData === true) {
-            $this->DecodeUTF8($RCPData);
-            $ret = $this->Send($RCPData);
-            if (!is_null($ret)) {
-                return serialize($ret);
-            }
-
-            return false;
-        } else {
-            return serialize($this->{$isRCPData}());
-        }
-        return false;
-    }
-
-    /**
-     * Sendet RCPData an die Childs.
-     *
-     * @param RCPData $RCPData Ein RCPData-Objekt.
-     */
-    private function SendDataToDevice(RCPData $RCPData)
-    {
-        $this->EncodeUTF8($RCPData);
-        $Data = json_encode($RCPData);
-        //$this->SendDebug('IPS_SendDataToChildren', $Data, 0);
-        $this->SendDataToChildren($Data);
-    }
-
-    //################# DATAPOINTS PARENT
-
-    /**
-     * Empfängt Daten vom Parent.
-     *
-     * @param string $JSONString Das empfangene JSON-kodierte Objekt vom Parent.
-     * @result bool True wenn Daten verarbeitet wurden, sonst false.
-     */
-    public function ReceiveData($JSONString)
-    {
-        $data = json_decode($JSONString);
-
-        // Datenstream zusammenfügen
-        $Head = $this->Buffer;
-        $Data = utf8_decode($data->Buffer);
-        if (($Head == '') and ($Data[0] != chr(0x03))) { // Müll
-            return;
-        }
-        $Data = $Head . $Data;
-        while (true) {
-            if ($Data[0] != chr(0x03)) { // Müll
-                $this->Buffer = '';
-
-                return;
-            }
-
-            $len = (ord($Data[2]) << 8) | (ord($Data[3]));
-            if (strlen($Data) < $len) {
-                $this->Buffer = $Data;
-
-                return;
-            }
-
-            // Stream in einzelne Pakete schneiden
-            $Packet = substr($Data, 4, $len - 4);
-            // Rest vom Stream wieder in den Empfangsbuffer schieben
-            $Data = substr($Data, $len);
-
-            // Paket verarbeiten
-            $RCPFrame = new RCPFrame($Packet);
-            $this->SendDebug('Receive', $RCPFrame, 0);
-            $RCPData = new RCPData();
-            $RCPData->FromRCPFrame($RCPFrame);
-            $this->SendDebug(RCPAction::ToString($RCPFrame->Action), $RCPData, 0);
-
-            switch ($RCPFrame->Action) {
-                case RCPAction::RCP_Message:
-                    if ($RCPFrame->Tag == RCPTag::TAG_CLIENT_TIMEOUT_WARNING) {
-                        $this->SetTimerInterval('KeepAlive', 2);
-                        break;
-                    }
-                    $this->SendDataToDevice($RCPData);
-                    break;
-                case RCPAction::RCP_Error:
-                case RCPAction::RCP_Reply:
-                    $this->SendQueueUpdate($RCPFrame->Reserved, $RCPData);
-                    break;
-                case RCPAction::RCP_Request:
-                    // FEHLER ?!
-                    break;
-            }
-            if (strlen($Data) == 0) {
-                $this->Buffer = '';
-                break;
-            }
-        }
-    }
-
     /**
      * Versendet ein RCPData-Objekt und empfängt die Antwort.
      *
@@ -483,6 +470,19 @@ class BVIPSplitter extends IPSModule
             $this->SendDebug('Error', $this->Translate(RCPError::ToString($ReplyRCPData->Error)), 0);
         }
         return $ReplyRCPData;
+    }
+
+    /**
+     * Sendet RCPData an die Children.
+     *
+     * @param RCPData $RCPData Ein RCPData-Objekt.
+     */
+    private function SendDataToDevice(RCPData $RCPData)
+    {
+        $this->EncodeUTF8($RCPData);
+        $Data = json_encode($RCPData);
+        //$this->SendDebug('IPS_SendDataToChildren', $Data, 0);
+        $this->SendDataToChildren($Data);
     }
 
     private function StartConnect()

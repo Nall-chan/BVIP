@@ -11,9 +11,9 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
@@ -22,10 +22,10 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * Erweitert BVIPBase.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  */
@@ -55,7 +55,7 @@ class BVIPHealth extends BVIPBase
     {
         parent::ApplyChanges();
         $this->RegisterProfileIntegerEx('BVIP.LinkState', '', '', '', [
-//      0=No link, 1=10MbitHD, 2=10MbitFD, 3=100MbitHD, 4=100MbitFD, 5=1000FD, 7=Wlan;
+            //      0=No link, 1=10MbitHD, 2=10MbitFD, 3=100MbitHD, 4=100MbitFD, 5=1000FD, 7=Wlan;
             [0, 'No Link', '', 0],
             [1, '10MbitHD', '', 0],
             [2, '10MbitFD', '', 0],
@@ -74,110 +74,12 @@ class BVIPHealth extends BVIPBase
         }
     }
 
-    protected function IOChangeState($State)
-    {
-        parent::IOChangeState($State);
-        if ($State == IS_ACTIVE) {
-            $this->Scan();
-            $this->RequestState();
-            $this->SetTimerInterval('RequestState', $this->ReadPropertyInteger('Interval') * 1000);
-        } else {
-            $this->SetTimerInterval('RequestState', 0);
-        }
-    }
-
     public function Scan()
     {
         $this->WriteAttributeInteger('Number_Temp', $this->ReadNBRofTempSens());
         $this->WriteAttributeInteger('Number_Fan', $this->ReadNBRofFans());
         $this->WriteAttributeInteger('Number_CPU', $this->ReadNBRofCPU());
         $this->WriteAttributeInteger('Number_ETH', $this->ReadNBRofETH());
-    }
-
-    protected function ReadNBRofTempSens()
-    {
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_NBR_OF_TEMP_SENS;
-        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        $RCPData->Num = 0;
-        /* @var $RCPReplyData RCPData */
-
-        $RCPReplyData = $this->Send($RCPData);
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            return $RCPReplyData->Payload;
-        }
-
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error($this->InstanceID . ':' . 'READ NBR_OF_TEMP_SENS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
-        }
-
-        return 0;
-    }
-
-    protected function ReadNBRofFans()
-    {
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_NBR_OF_FANS;
-        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        $RCPData->Num = 0;
-        /* @var $RCPReplyData RCPData */
-
-        $RCPReplyData = $this->Send($RCPData);
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            return $RCPReplyData->Payload;
-        }
-
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            if ($RCPReplyData->Error != RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
-                trigger_error($this->InstanceID . ':' . 'READ NBR_OF_FANS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
-            }
-        }
-
-        return 0;
-    }
-
-    protected function ReadNBRofCPU()
-    {
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_CPU_COUNT;
-        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        $RCPData->Num = 0;
-        /* @var $RCPReplyData RCPData */
-
-        $RCPReplyData = $this->Send($RCPData);
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            return $RCPReplyData->Payload;
-        }
-
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error($this->InstanceID . ':' . 'READ NBR_OF_CPU - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
-        }
-
-        return 0;
-    }
-
-    protected function ReadNBRofETH()
-    {
-        $RCPData = new RCPData();
-        $RCPData->Tag = RCPTag::TAG_NBR_OF_EXT_ETH_PORTS;
-        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
-        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
-        $RCPData->Num = 0;
-        /* @var $RCPReplyData RCPData */
-
-        $RCPReplyData = $this->Send($RCPData);
-        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
-            return $RCPReplyData->Payload;
-        }
-
-        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
-            trigger_error($this->InstanceID . ':' . 'READ NBR_OF_EXT_ETH_PORTS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
-        }
-
-        return 0;
     }
 
     public function RequestState()
@@ -318,6 +220,104 @@ class BVIPHealth extends BVIPBase
         }
 
         return $Result;
+    }
+
+    protected function IOChangeState($State)
+    {
+        parent::IOChangeState($State);
+        if ($State == IS_ACTIVE) {
+            $this->Scan();
+            $this->RequestState();
+            $this->SetTimerInterval('RequestState', $this->ReadPropertyInteger('Interval') * 1000);
+        } else {
+            $this->SetTimerInterval('RequestState', 0);
+        }
+    }
+
+    protected function ReadNBRofTempSens()
+    {
+        $RCPData = new RCPData();
+        $RCPData->Tag = RCPTag::TAG_NBR_OF_TEMP_SENS;
+        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
+        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+        $RCPData->Num = 0;
+        /* @var $RCPReplyData RCPData */
+
+        $RCPReplyData = $this->Send($RCPData);
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            return $RCPReplyData->Payload;
+        }
+
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+            trigger_error($this->InstanceID . ':' . 'READ NBR_OF_TEMP_SENS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+        }
+
+        return 0;
+    }
+
+    protected function ReadNBRofFans()
+    {
+        $RCPData = new RCPData();
+        $RCPData->Tag = RCPTag::TAG_NBR_OF_FANS;
+        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
+        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+        $RCPData->Num = 0;
+        /* @var $RCPReplyData RCPData */
+
+        $RCPReplyData = $this->Send($RCPData);
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            return $RCPReplyData->Payload;
+        }
+
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+            if ($RCPReplyData->Error != RCPError::RCP_ERROR_READ_NOT_SUPPORTED) {
+                trigger_error($this->InstanceID . ':' . 'READ NBR_OF_FANS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+            }
+        }
+
+        return 0;
+    }
+
+    protected function ReadNBRofCPU()
+    {
+        $RCPData = new RCPData();
+        $RCPData->Tag = RCPTag::TAG_CPU_COUNT;
+        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
+        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+        $RCPData->Num = 0;
+        /* @var $RCPReplyData RCPData */
+
+        $RCPReplyData = $this->Send($RCPData);
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            return $RCPReplyData->Payload;
+        }
+
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+            trigger_error($this->InstanceID . ':' . 'READ NBR_OF_CPU - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+        }
+
+        return 0;
+    }
+
+    protected function ReadNBRofETH()
+    {
+        $RCPData = new RCPData();
+        $RCPData->Tag = RCPTag::TAG_NBR_OF_EXT_ETH_PORTS;
+        $RCPData->DataType = RCPDataType::RCP_T_DWORD;
+        $RCPData->RW = RCPReadWrite::RCP_DO_READ;
+        $RCPData->Num = 0;
+        /* @var $RCPReplyData RCPData */
+
+        $RCPReplyData = $this->Send($RCPData);
+        if ($RCPReplyData->Error == RCPError::RCP_ERROR_NO_ERROR) {
+            return $RCPReplyData->Payload;
+        }
+
+        if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
+            trigger_error($this->InstanceID . ':' . 'READ NBR_OF_EXT_ETH_PORTS - ' . $this->Translate(RCPError::ToString($RCPReplyData->Error)), E_USER_NOTICE);
+        }
+
+        return 0;
     }
 
     protected function GetOrCreateVariableRPM(string $Ident)

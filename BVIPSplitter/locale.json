@@ -5,16 +5,16 @@
             "Password": "Passwort",
             "Interface is open": "Verbindung hergestellt",
             "Interface is closed": "Verbindung geschlossen",
-            "Interface is an error state. Please check message log for more information.": "Verbindung fehlerhaft. Bitte Meldungslog prüfen für mehr Informationen.",
+            "Interface is an error state. Please check message log for more information.": "Verbindung fehlerhaft. Bitte Meldungprotokoll prüfen für mehr Informationen.",
             "No connect. Please check adresse.": "Keine Verbindung. Bitte Adresse prüfen.",
             "Login invalid. Please check password.": "Login Fehler. Bitte Passwort prüfen.",
             "Could not login.": "Login fehlerhaft.",
-            "Device capability read succesfully": "Geräte Fähigkeiten lesen erfolgreich",
+            "Device capability read successfully": "Geräte Fähigkeiten lesen erfolgreich",
             "Device capability are unknown": "Geräte Fähigkeiten sind nicht bekannt",
             "No active parent": "Keine aktive übergeordnete Instanz",
             "Timeout": "Zeitüberschreitung",
             "Send error": "Sendefehler",
-            "Unkown Error": "unbekannter Fehler",
+            "Unknown Error": "unbekannter Fehler",
             "invalid Version": "ungültige Version",
             "not registered": "nicht registriert",
             "invalid ClientID2": "ungültige ClientID2",
@@ -30,7 +30,7 @@
             "invalid session id": "ungültige Session ID",
             "try later": "später versuchen",
             "Command specific error": "Kommando spezifischer Fehler",
-            "Adress format error": "Addressformat Fehler"
+            "Adress format error": "Adressformat Fehler"
         }
     }
 }

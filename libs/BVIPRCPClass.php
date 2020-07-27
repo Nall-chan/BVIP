@@ -16,7 +16,7 @@ class RCPTag
     //
     // TAG= 0xffff = Alle Tags
     const TAG_CLIENT_UNREGISTER = 0xff01; // only write (P_OCTET)                                   **
-    const TAG_CLIENT_TIMEOUT_WARNING = 0xff03; //only incoming 1min befor Server kick Client             **
+    const TAG_CLIENT_TIMEOUT_WARNING = 0xff03; //only incoming 1min before Server kick Client             **
     const TAG_REG_MD5_RANDOM = 0xff05;
     const TAG_TRANSFER_TRANSPARENT_DATA = 0xffdd;                //                                  **
     /* {CONNECT_PRIMITIVE
@@ -83,7 +83,7 @@ class RCPTag
     //--------------------------------------VIDPROC-------------------------------//
     const TAG_VIPROC_ALARM = 0x0807; // only read [or pushed] (P_OCTET) num:video line       **
     //PAYLOAD:
-    //ALAM FLAGs:
+    //ALARM FLAGs:
     //1.Byte
     /* {
       VIDPROC_ALARM_MOTION               =      0x80;
@@ -286,7 +286,7 @@ class RCPTag
     const TAG_VIRTUAL_ALARM_STATE = 0x0a8b; // R/W(FLAG) 0=off, 1=Alarm num:Virtual Alarm Input **
     const TAG_SET_VIRTUAL_ALARM_ID = 0x0b41; // R/W (P_UNICODE) 32char   num:Virtual Alarm Input
     const TAG_NBR_OF_VIRTUAL_ALARMS = 0x0aed; // veraltet only Read (T_DWORD)
-    const TAG_MANIPULATION_ALARM_STATE = 0x0af0; //only Read (FLAG) 0=off, 1=Alarm num: Manipul Alarm Input
+    const TAG_MANIPULATION_ALARM_STATE = 0x0af0; //only Read (FLAG) 0=off, 1=Alarm num: Manipulate Alarm Input
     const TAG_NBR_OF_MANIPULATION_ALARMS = 0x0af1; // only Read (T_DWORD)
     const TAG_RELAIS_NAME = 0x0109; // R/W Input Name (P_UNICODE) num:Relay             **
 //RELAIS_SWITCH
@@ -383,7 +383,7 @@ class RCPTag
       DIFF_SERV_POST_ALARM_TIME
       IPV4_FILTER
       } */
-    //DDNS
+    //DYNDNS
     /* {
       DYNDNS_SERVER
       DYNDNS_TIMEOUT
@@ -711,7 +711,7 @@ class RCPAction
     {
         switch ($Action) {
             case self::RCP_Request:
-                return'Request';
+                return 'Request';
             case self::RCP_Reply:
                 return 'Reply';
             case self::RCP_Message:
@@ -761,7 +761,7 @@ class RCPError
             case self::RCP_ERROR_SEND_ERROR:
                 return 'Send error';
             case self::RCP_ERROR_UNKNOWN:
-                return 'Unkown Error';
+                return 'Unknown Error';
             case self::RCP_ERROR_INVALID_VERSION:
                 return 'invalid Version';
             case self::RCP_ERROR_NOT_REGISTERED:

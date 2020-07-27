@@ -11,9 +11,9 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * @package       BVIP
  * @file          module.php
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
- * @version       3.0
+ * @version       3.1
  *
  */
 
@@ -22,10 +22,10 @@ require_once __DIR__ . '/../libs/BVIPBase.php';
  * Erweitert BVIPBase.
  *
  * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2019 Michael Tröger
+ * @copyright     2020 Michael Tröger
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  *
- * @version       3.0
+ * @version       3.1
  *
  * @example <b>Ohne</b>
  *
@@ -57,22 +57,6 @@ class BVIPVidProc extends BVIPBase
 
         if ($this->HasActiveParent()) {
             $this->IOChangeState(IS_ACTIVE);
-        }
-    }
-
-    protected function IOChangeState($State)
-    {
-        parent::IOChangeState($State);
-        if ($State == IS_ACTIVE) {
-            if ($this->ReadPropertyBoolean('Rename') === true) {
-                $this->RequestName();
-            }
-            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line')) {
-                $this->SetStatus(IS_ACTIVE);
-            } else {
-                $this->SetStatus(IS_EBASE + 2);
-                trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
-            }
         }
     }
 
@@ -115,12 +99,12 @@ class BVIPVidProc extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
@@ -146,12 +130,12 @@ class BVIPVidProc extends BVIPBase
     {
         $Line = $this->ReadPropertyInteger('Line');
         if ($Line == 0) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
         if ($this->ReadNbrOfVideoIn() < $Line) {
-            trigger_error($this->InstanceID . ':' . $this->Translate('Cameraline not valid.'), E_USER_NOTICE);
+            trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
 
             return false;
         }
@@ -174,6 +158,22 @@ class BVIPVidProc extends BVIPBase
         }
 
         return false;
+    }
+
+    protected function IOChangeState($State)
+    {
+        parent::IOChangeState($State);
+        if ($State == IS_ACTIVE) {
+            if ($this->ReadPropertyBoolean('Rename') === true) {
+                $this->RequestName();
+            }
+            if ($this->ReadNbrOfVideoIn() >= $this->ReadPropertyInteger('Line')) {
+                $this->SetStatus(IS_ACTIVE);
+            } else {
+                $this->SetStatus(IS_EBASE + 2);
+                trigger_error($this->InstanceID . ':' . $this->Translate('Videoline not valid.'), E_USER_NOTICE);
+            }
+        }
     }
 
     protected function GetOrCreateVariable(string $Ident)

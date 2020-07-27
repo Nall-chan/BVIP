@@ -1,28 +1,27 @@
 {
-    "elements":
-            [{
-                    "name": "Line",
-                    "type": "Select",
-                    "caption": "Videoline:",
-                    "options": [
-                        {
-                            "caption": "1",
-                            "value": 1
-                        }
-                    ]
-                },
+    "elements": [
+        {
+            "name": "Line",
+            "type": "Select",
+            "caption": "Videoline:",
+            "options": [
                 {
-                    "name": "Rename",
-                    "type": "CheckBox",
-                    "caption": "Rename instance"
-                }
-            ],
-    "actions":
-            [
-                {
-                    "type": "Button",
-                    "caption": "Read Device",
-                    "onClick": "BVIP_RequestState($id);"
+                    "caption": "1",
+                    "value": 1
                 }
             ]
+        },
+        {
+            "name": "Rename",
+            "type": "CheckBox",
+            "caption": "Rename instance"
+        }
+    ],
+    "actions": [
+        {
+            "type": "Button",
+            "caption": "Read Device",
+            "onClick": "BVIP_RequestState($id);"
+        }
+    ]
 }

@@ -1,60 +1,55 @@
 {
-    "elements":
-            [
+    "elements": [
+        {
+            "name": "User",
+            "type": "Select",
+            "caption": "Authority",
+            "options": [
                 {
-                    "name": "User",
-                    "type": "Select",
-                    "caption": "Authority",
-                    "options": [
-                        {
-                            "caption": "live",
-                            "value": "live"
-                        },
-                        {
-                            "caption": "user",
-                            "value": "user"
-                        },
-                        {
-                            "caption": "service",
-                            "value": "service"
-                        }
-                    ]
+                    "caption": "live",
+                    "value": "live"
                 },
                 {
-                    "name": "Password",
-                    "type": "PasswordTextBox",
-                    "caption": "Password"
-                }
-            ],
-    "status":
-            [
-                {
-                    "code": 102,
-                    "icon": "active",
-                    "caption": "Interface is open"
+                    "caption": "user",
+                    "value": "user"
                 },
                 {
-                    "code": 104,
-                    "icon": "inactive",
-                    "caption": "Interface is closed"
-                },
-
-                {
-                    "code": 200,
-                    "icon": "error",
-                    "caption": "Interface is an error state. Please check message log for more information."
-                },
-
-                {
-                    "code": 201,
-                    "icon": "error",
-                    "caption": "No connect. Please check adresse."
-                },
-
-                {
-                    "code": 202,
-                    "icon": "error",
-                    "caption": "Login invalid. Please check password."
+                    "caption": "service",
+                    "value": "service"
                 }
             ]
+        },
+        {
+            "name": "Password",
+            "type": "PasswordTextBox",
+            "caption": "Password"
+        }
+    ],
+    "status": [
+        {
+            "code": 102,
+            "icon": "active",
+            "caption": "Interface is open"
+        },
+        {
+            "code": 104,
+            "icon": "inactive",
+            "caption": "Interface is closed"
+        },
+        {
+            "code": 200,
+            "icon": "error",
+            "caption": "Interface is an error state. Please check message log for more information."
+        },
+        {
+            "code": 201,
+            "icon": "error",
+            "caption": "No connect. Please check adresse."
+        },
+        {
+            "code": 202,
+            "icon": "error",
+            "caption": "Login invalid. Please check password."
+        }
+    ]
 }

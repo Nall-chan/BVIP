@@ -2,15 +2,15 @@
     "translations": {
         "de": {
             "Videoline:": "Videokanal:",
-            "Rename instance": "Instanz umbenenen",
-            "Cameraline not valid.": "Videokanal ungültig.",
-            "Use authentification": "Benutze Authentifizierung",
-            "Read name of cameraline ": "Lese Name vom Videokanal ",
-            "Write name of Cameraline ": "Schreibe Name vom Videokanal ",
+            "Rename instance": "Instanz umbenennen",
+            "Videoline not valid.": "Videokanal ungültig.",
+            "Use authentication": "Benutze Authentifizierung",
+            "Read name of videoline ": "Lese Name vom Videokanal ",
+            "Write name of videoline ": "Schreibe Name vom Videokanal ",
             "No active parent": "Keine aktive übergeordnete Instanz",
             "Timeout": "Zeitüberschreitung",
             "Send error": "Sendefehler",
-            "Unkown Error": "unbekannter Fehler",
+            "Unknown Error": "unbekannter Fehler",
             "invalid Version": "ungültige Version",
             "not registered": "nicht registriert",
             "invalid ClientID2": "ungültige ClientID2",
@@ -26,7 +26,7 @@
             "invalid session id": "ungültige Session ID",
             "try later": "später versuchen",
             "Command specific error": "Kommando spezifischer Fehler",
-            "Adress format error": "Addressformat Fehler"
+            "Adress format error": "Adressformat Fehler"
         }
     }
 }

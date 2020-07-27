@@ -2,15 +2,15 @@
     "translations": {
         "de": {
             "Videoline:": "Videokanal:",
-            "Rename instance": "Instanz umbenenen",
+            "Rename instance": "Instanz umbenennen",
             "Read Device": "Gerät auslesen",
             "MOTION_SUMMARY": "Summe Bewegung",
             "VIDEOLOSS": "Signalverlust",
-            "Cameraline not valid.": "Videokanal ungültig.",
+            "Videoline not valid.": "Videokanal ungültig.",
             "No active parent": "Keine aktive übergeordnete Instanz",
             "Timeout": "Zeitüberschreitung",
             "Send error": "Sendefehler",
-            "Unkown Error": "unbekannter Fehler",
+            "Unknown Error": "unbekannter Fehler",
             "invalid Version": "ungültige Version",
             "not registered": "nicht registriert",
             "invalid ClientID2": "ungültige ClientID2",
@@ -26,7 +26,7 @@
             "invalid session id": "ungültige Session ID",
             "try later": "später versuchen",
             "Command specific error": "Kommando spezifischer Fehler",
-            "Adress format error": "Addressformat Fehler"
+            "Adress format error": "Adressformat Fehler"
         }
     }
 }

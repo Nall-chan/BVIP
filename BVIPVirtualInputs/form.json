@@ -1,13 +1,12 @@
 {
-    "actions":
-            [
-                {
-                    "type": "TestCenter"
-                },
-                {
-                    "type": "Button",
-                    "caption": "Request State",
-                    "onClick": "BVIP_RequestState($id);"
-                }
-            ]
+    "actions": [
+        {
+            "type": "TestCenter"
+        },
+        {
+            "type": "Button",
+            "caption": "Request State",
+            "onClick": "BVIP_RequestState($id);"
+        }
+    ]
 }
