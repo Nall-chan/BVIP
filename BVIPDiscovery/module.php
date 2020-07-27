@@ -27,13 +27,11 @@ require_once __DIR__ . '/../libs/BVIPTraits.php';  // diverse Klassen
  *
  * @example <b>Ohne</b>
  *
- * @property array $Devices
  */
 class BVIPDiscovery extends IPSModule
 {
     use \bvip\DebugHelper;
-    use
-        \bvip\BufferHelper;
+    use \bvip\BufferHelper;
 
     /**
      * Interne Funktion des SDK.
@@ -41,10 +39,8 @@ class BVIPDiscovery extends IPSModule
     public function Create()
     {
         parent::Create();
-        $this->Devices = [];
         $this->RegisterPropertyString('User', 'service');
         $this->RegisterPropertyString('Password', '');
-        $this->RegisterTimer('Discovery', 0, 'BVIP_Discover($_IPS[\'TARGET\']);');
     }
 
     /**
@@ -52,32 +48,7 @@ class BVIPDiscovery extends IPSModule
      */
     public function ApplyChanges()
     {
-        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         parent::ApplyChanges();
-
-        if (IPS_GetKernelRunlevel() != KR_READY) {
-            return;
-        }
-        $this->Devices = $this->DiscoverDevices();
-        $this->SetTimerInterval('Discovery', 300000);
-    }
-
-    /**
-     * Interne Funktion des SDK.
-     * Verarbeitet alle Nachrichten auf die wir uns registriert haben.
-     *
-     * @param int       $TimeStamp
-     * @param int       $SenderID
-     * @param int       $Message
-     * @param array|int $Data
-     */
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
-    {
-        switch ($Message) {
-            case IPS_KERNELSTARTED:
-                $this->Devices = $this->DiscoverDevices();
-                break;
-        }
     }
 
     /**
@@ -145,29 +116,15 @@ class BVIPDiscovery extends IPSModule
         }
 
         $Values = array_merge($Devices, $MissingConfigurator); // $Sensors, $MissingSensors);
-        /* if (count($Values) > 0) {
-          foreach ($Values as $key => $row) {
-          $SortDevice[$key] = $row['device'];
-          $SortType[$key] = $row['type'];
-          }
-          array_multisort($SortDevice, SORT_ASC, $SortType, SORT_ASC, $Values);
-          } */
         $Form['actions'][0]['values'] = $Values;
         $this->SendDebug('FORM', json_encode($Form), 0);
         $this->SendDebug('FORM', json_last_error_msg(), 0);
         return json_encode($Form);
     }
 
-    public function Discover()
-    {
-        $this->LogMessage($this->Translate('Background Discovery of BVIP Devices'), KL_NOTIFY);
-
-        $this->Devices = $this->DiscoverDevices();
-        // Alt neu vergleich fehlt, sowie die Events an IPS senden wenn neues Gerät im Netz gefunden wurde.
-    }
-
     private function DiscoverDevices(): array
     {
+        $this->LogMessage($this->Translate('Background Discovery of BVIP Devices'), KL_NOTIFY);
         $DeviceData = [];
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         if (!$socket) {

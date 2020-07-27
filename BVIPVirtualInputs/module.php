@@ -80,8 +80,6 @@ class BVIPVirtualInputs extends BVIPBase
 
                 return false;
             }
-            //$this->SetValueBoolean($Ident, $Value);
-
             return true;
         }
         if ($RCPReplyData->Error != RCPError::RCP_ERROR_SEND_ERROR) {
