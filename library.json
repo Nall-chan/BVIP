@@ -1,6 +1,6 @@
 {
     "id": "{4F642110-419C-4F90-9363-295F9A90F681}",
-    "author": "Michael Tr\u00f6ger",
+    "author": "Michael Tröger",
     "name": "BOSCH Video Library",
     "url": "https://github.com/Nall-chan/BVIP",
     "compatibility": {
@@ -8,5 +8,5 @@
     },
     "version": "3.0",
     "build": 220,
-    "date": 1556897642 
+    "date": 1556897642
 }
